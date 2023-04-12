@@ -75,16 +75,6 @@ function App() {
                   <ExplorerPage />
                 </ExplorerProvider>
               </Route>
-              <Route exact path={ROUTE_LINKS.ExplorerDetailed}>
-                <ExplorerProvider>
-                  <ExplorerPage />
-                </ExplorerProvider>
-              </Route>
-              <Route exact path={ROUTE_LINKS.TransactionPage}>
-                <ExplorerProvider>
-                  <TransactionPage />
-                </ExplorerProvider>
-              </Route>
             </Switch>
           </Router>
         </SygmaProvider>

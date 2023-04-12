@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useInterval from "@use-it/interval";
+import { useInterval} from 'usehooks-ts'
 import {
   useExplorer,
   fetchTransaction,
