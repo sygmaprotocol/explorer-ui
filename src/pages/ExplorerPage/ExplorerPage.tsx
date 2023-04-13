@@ -10,7 +10,6 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useSygma } from "@chainsafe/sygma-ui-core";
 import { ExplorerTable } from "../../components";
 import MyAllSwitch from "./MyAllSwitch";
 import SelectNetwork from "./SelectNetwork";
@@ -42,7 +41,6 @@ const ExplorerPage = () => {
   const [active, setActive] = useState(false);
   const [myAllSwitchValue, setMyAllSwitchValue] = useState("all");
 
-  const { isReady, address } = useSygma();
   useEffect(() => {
     if (isReady) {
       setMyAllSwitchValue("my");
@@ -164,7 +162,7 @@ const ExplorerPage = () => {
               }}
             />
           </Box>
-          {isReady && address && (
+          {true && '0x' && (
             <Box
               sx={{
                 ml: 1,

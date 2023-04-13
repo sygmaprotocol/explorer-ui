@@ -1,6 +1,6 @@
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { makeStyles, createStyles, Theme } from "@mui/material";
 
-export const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
+export const useStyles = makeStyles(({ constants, breakpoints }: Theme) =>
   createStyles({
     root: {
       padding: constants.generalUnit * 6,

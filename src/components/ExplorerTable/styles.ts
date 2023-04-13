@@ -1,4 +1,4 @@
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { makeStyles, createStyles, Theme } from "@mui/material";
 
 type CustomProperties = {
   pillColorSchema: {
@@ -8,7 +8,7 @@ type CustomProperties = {
   transferDetailPage?: boolean;
 };
 
-export const useStyles = makeStyles(({ breakpoints }: ITheme) =>
+export const useStyles = makeStyles(({ breakpoints }: Theme) =>
   createStyles({
     root: {
       display: "table",
@@ -95,7 +95,7 @@ export const useStyles = makeStyles(({ breakpoints }: ITheme) =>
     },
     transferDetails: {
       minWidth: 768,
-      width: ({ transferDetailPage }) => (transferDetailPage ? "50%" : "100%"),
+      width: ({ transferDetailPage }: { transferDetailPage: unknown }) => (transferDetailPage ? "50%" : "100%"),
       [breakpoints.down("sm")]: {
         minWidth: 411,
       },

@@ -1,7 +1,7 @@
-import { createStyles, ITheme, makeStyles } from "@chainsafe/common-theme";
+import { createStyles, Theme, makeStyles } from "@mui/material";
 
 export const useStyles = makeStyles(
-  ({ constants, palette, zIndex, breakpoints }: ITheme) => {
+  ({ constants, palette, zIndex, breakpoints }: Theme) => {
     return createStyles({
       root: {
         display: "flex",
@@ -16,7 +16,7 @@ export const useStyles = makeStyles(
         borderBottom: `1px solid ${palette.additional["header"][3]}`,
         color: palette.additional["header"][2],
         alignItems: "center",
-        zIndex: zIndex?.layer2,
+        zIndex: zIndex?.appBar,
         [breakpoints.down("sm")]: {
           flexDirection: "column",
         },

@@ -1,18 +1,13 @@
 import React from "react";
 import clsx from "clsx";
-// import { Typography } from "@chainsafe/common-components";
 import Typography from "@mui/material/Typography";
-import { Switch, NavLink, Link } from "react-router-dom";
 
-import { shortenAddress } from "../../utils/Helpers";
-import { useSygma } from "@chainsafe/sygma-ui-core";
 import { useStyles } from "./styles";
 
 interface IAppHeader {}
 
 const AppHeader: React.FC<IAppHeader> = () => {
   const classes = useStyles();
-  const { homeConfig, isReady, address } = useSygma();
 
   const { __RUNTIME_CONFIG__ } = window;
 
