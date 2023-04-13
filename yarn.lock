@@ -326,6 +326,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.57
     "@mui/material": ^5.2.1
     "@mui/styled-engine-sc": ^5.1.0
+    "@mui/styles": 5.12.0
     "@testing-library/jest-dom": ^5.11.4
     "@testing-library/react": ^11.0.4
     "@testing-library/user-event": ^12.1.7
@@ -1016,6 +1017,37 @@ __metadata:
     "@emotion/styled":
       optional: true
   checksum: 4a415473cf62aa05012f667dd2e9b1dc2fb175be5b0c4d0b8df541e2dac3d7db410e920e0d5910c8e2b8996a4fb51f74d79483e2878a9b5c0d334498f5537d74
+  languageName: node
+  linkType: hard
+
+"@mui/styles@npm:5.12.0":
+  version: 5.12.0
+  resolution: "@mui/styles@npm:5.12.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+    "@emotion/hash": ^0.9.0
+    "@mui/private-theming": ^5.12.0
+    "@mui/types": ^7.2.4
+    "@mui/utils": ^5.12.0
+    clsx: ^1.2.1
+    csstype: ^3.1.2
+    hoist-non-react-statics: ^3.3.2
+    jss: ^10.10.0
+    jss-plugin-camel-case: ^10.10.0
+    jss-plugin-default-unit: ^10.10.0
+    jss-plugin-global: ^10.10.0
+    jss-plugin-nested: ^10.10.0
+    jss-plugin-props-sort: ^10.10.0
+    jss-plugin-rule-value-function: ^10.10.0
+    jss-plugin-vendor-prefixer: ^10.10.0
+    prop-types: ^15.8.1
+  peerDependencies:
+    "@types/react": ^17.0.0
+    react: ^17.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 1e255fc7e5e515ef5433d09d14d82999a6201448da513813b090f4ffd4d2556f547cdb86eba1a6e53af5b877378fe08a964c331bd580d3a427774004c75b6849
   languageName: node
   linkType: hard
 
@@ -4781,7 +4813,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-camel-case@npm:^10.0.3":
+"jss-plugin-camel-case@npm:^10.0.3, jss-plugin-camel-case@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-camel-case@npm:10.10.0"
   dependencies:
@@ -4792,7 +4824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-default-unit@npm:^10.0.3":
+"jss-plugin-default-unit@npm:^10.0.3, jss-plugin-default-unit@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-default-unit@npm:10.10.0"
   dependencies:
@@ -4802,7 +4834,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-global@npm:^10.0.3":
+"jss-plugin-global@npm:^10.0.3, jss-plugin-global@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-global@npm:10.10.0"
   dependencies:
@@ -4812,7 +4844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-nested@npm:^10.0.3":
+"jss-plugin-nested@npm:^10.0.3, jss-plugin-nested@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-nested@npm:10.10.0"
   dependencies:
@@ -4823,7 +4855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-props-sort@npm:^10.0.3":
+"jss-plugin-props-sort@npm:^10.0.3, jss-plugin-props-sort@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-props-sort@npm:10.10.0"
   dependencies:
@@ -4833,7 +4865,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-rule-value-function@npm:^10.0.3":
+"jss-plugin-rule-value-function@npm:^10.0.3, jss-plugin-rule-value-function@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-rule-value-function@npm:10.10.0"
   dependencies:
@@ -4844,7 +4876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-vendor-prefixer@npm:^10.0.3":
+"jss-plugin-vendor-prefixer@npm:^10.0.3, jss-plugin-vendor-prefixer@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss-plugin-vendor-prefixer@npm:10.10.0"
   dependencies:
@@ -4855,7 +4887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss@npm:10.10.0, jss@npm:^10.0.3":
+"jss@npm:10.10.0, jss@npm:^10.0.3, jss@npm:^10.10.0":
   version: 10.10.0
   resolution: "jss@npm:10.10.0"
   dependencies:

@@ -1,4 +1,4 @@
-import { makeStyles, createStyles, Theme } from "@mui/material";
+import { makeStyles, createStyles } from "@mui/styles";
 
 type CustomProperties = {
   pillColorSchema: {
@@ -8,7 +8,7 @@ type CustomProperties = {
   transferDetailPage?: boolean;
 };
 
-export const useStyles = makeStyles(({ breakpoints }: Theme) =>
+export const useStyles = makeStyles(() =>
   createStyles({
     root: {
       display: "table",
@@ -88,17 +88,11 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
       "& > section": {
         maxWidth: "768px !important",
         width: "100%",
-        [breakpoints.down("sm")]: {
-          width: "411px !important",
-        },
       },
     },
     transferDetails: {
       minWidth: 768,
       width: ({ transferDetailPage }: { transferDetailPage: unknown }) => (transferDetailPage ? "50%" : "100%"),
-      [breakpoints.down("sm")]: {
-        minWidth: 411,
-      },
     },
     transferDetailExpandedDesktop: {},
     transferDetailExpanded: {
@@ -106,10 +100,6 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
       transition: "height 0.5s ease-out",
     },
     transferDetailNotExpanded: {
-      [breakpoints.down("sm")]: {
-        height: 700,
-        transition: "height 0.5s ease-out",
-      },
     },
     timelineSection: {
       paddingBottom: 15,
@@ -158,11 +148,6 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
       display: "grid",
       gridTemplateColumns: "1fr 1fr 1fr",
       marginBottom: 26,
-      [breakpoints.down("sm")]: {
-        "& > div:nth-child(2)": {
-          gridColumn: "3/3",
-        },
-      },
     },
     proposalStatus: {
       gridColumn: "3",
@@ -184,15 +169,8 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
         marginTop: 10,
         fontsize: 16,
       },
-      [breakpoints.down("sm")]: {
-        gridColumn: "span 3",
-        marginBottom: 16,
-      },
     },
     toDetailView: {
-      [breakpoints.down("sm")]: {
-        gridColumn: "3/3",
-      },
       "& > div": {
         marginTop: 12,
         display: "flex",
@@ -220,17 +198,11 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
       display: "flex",
       justifyContent: "center",
       borderRadius: 16,
-      background: ({ pillColorSchema }: CustomProperties) =>
-        pillColorSchema.background,
-      border: ({ pillColorSchema }: CustomProperties) =>
-        `1px solid ${pillColorSchema.borderColor}`,
       width: 75,
       height: 22,
       fontSize: 14,
       padding: "0px 8px 0px 8px",
       margin: "10px 0px",
-      color: ({ pillColorSchema }: CustomProperties) =>
-        pillColorSchema.borderColor,
       fontWeight: 400,
     },
     fromAddressDetails: {
@@ -319,44 +291,16 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
     },
     timelineButton: {
       display: "block",
-      [breakpoints.down("sm")]: {
-        borderRadius: 16,
-        width: 114,
-        display: "flex",
-        alignSelf: "center",
-        justifySelf: "center",
-        border: "1px solid #D9D9D9",
-        fontSize: 14,
-        zIndex: 10,
-      },
     },
     timelineButtonClicked: {
       display: "none",
     },
     messageCollapsed: {
-      [breakpoints.down("sm")]: {
-        display: "none",
-      },
     },
     messageNotCollapsed: {
-      [breakpoints.down("sm")]: {
-        display: "grid",
-        marginBottom: 10,
-      },
     },
     buttonTimelineContainer: {
       display: "none",
-      [breakpoints.down("sm")]: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        "& > hr": {
-          position: "absolute",
-          width: 325,
-          zIndex: 0,
-          border: "0.2px solid #E8E8E8",
-        },
-      },
     },
     buttonTimelineContainerClicked: {
       "& > hr": {
@@ -368,10 +312,6 @@ export const useStyles = makeStyles(({ breakpoints }: Theme) =>
       height: 39,
     },
     time: {
-      [breakpoints.down("sm")]: {
-        display: "flex",
-        justifySelf: "center",
-      },
     },
     secondElementGreybar: {
       height: 77,

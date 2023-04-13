@@ -37,6 +37,9 @@ const ExplorerPage = () => {
 
   const navigate = useNavigate();
 
+  const [isReady, setIsReady] = useState(true);
+  const [address, setAddress] = useState("0x");
+
   const classes = useStyles();
   const [active, setActive] = useState(false);
   const [myAllSwitchValue, setMyAllSwitchValue] = useState("all");
