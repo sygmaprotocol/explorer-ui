@@ -1,13 +1,5 @@
 import { makeStyles, createStyles } from "@mui/styles";
 
-type CustomProperties = {
-  pillColorSchema: {
-    borderColor: string;
-    background: string;
-  };
-  transferDetailPage?: boolean;
-};
-
 export const useStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -92,7 +84,6 @@ export const useStyles = makeStyles(() =>
     },
     transferDetails: {
       minWidth: 768,
-      width: ({ transferDetailPage }: { transferDetailPage: unknown }) => (transferDetailPage ? "50%" : "100%"),
     },
     transferDetailExpandedDesktop: {},
     transferDetailExpanded: {

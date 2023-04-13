@@ -13,7 +13,7 @@ import {
   DepositRecord,
   TransferDetails,
   EvmBridgeConfig,
-} from "@chainsafe/sygma-ui-core";
+} from "../../types";
 import {
   formatTransferDate,
   getRandomSeed,
@@ -49,9 +49,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   handleTimelineButtonClick,
   timelineButtonClicked,
 }: ExplorerTable) => {
-  const classes = useStyles({
-    pillColorSchema: transferDetails.pillColorStatus,
-  });
+  const classes = useStyles();
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {

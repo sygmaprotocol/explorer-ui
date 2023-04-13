@@ -59,6 +59,7 @@ const ExplorerPage = () => {
     });
     setActive(true);
 
+    // @ts-ignore-next-line
     setExplorerStateContext({
       ...explorerState,
       transferDetails: txDetail,
