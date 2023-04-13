@@ -1,17 +1,11 @@
 import React from "react";
-import { ThemeSwitcher } from "@chainsafe/common-theme";
 import CssBaseline from "@mui/material/CssBaseline";
-import { lightTheme } from "./themes/LightTheme";
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
-import {
-  ExplorerProvider,
-  sygmaConfig,
-  SygmaProvider,
-  LocalProvider,
-} from "@chainsafe/sygma-ui-core";
+import { ThemeProvider } from "@mui/material/styles";
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { ExplorerPage, TransactionPage } from "./pages";
-import { utils } from "ethers";
+import { ethers } from "ethers";
 import { Header } from "./components";
+import { SygmaTheme } from "./themes/SygmaTheme";
 
 export const ROUTE_LINKS = {
   Explorer: "/",
@@ -20,6 +14,7 @@ export const ROUTE_LINKS = {
 };
 
 function App() {
+  // ADD HERE SHARED CONFIG SUPPORT
   const { chains } = sygmaConfig();
 
   const tokens = chains
@@ -41,9 +36,9 @@ function App() {
   );
   console.log("explorer UI", chains);
   return (
-    <ThemeSwitcher themes={{ light: lightTheme }}>
+    <ThemeProvider theme={SygmaTheme}>
       <CssBaseline />
-      <LocalProvider
+      {/* <LocalProvider
         networkIds={[5]}
         checkNetwork={false}
         tokensToWatch={tokens}
@@ -62,24 +57,24 @@ function App() {
             network: (network: any) =>
               network && console.log("domainId: ", network),
             balance: (amount: any) =>
-              amount && console.log("balance: ", utils.formatEther(amount)),
+              amount && console.log("balance: ", ethers.formatEther(amount)),
           },
         }}
       >
-        <SygmaProvider chains={chains}>
+        <SygmaProvider chains={chains}> */}
           <Header />
           <Router>
-            <Switch>
+            <Routes>
               <Route exact path={ROUTE_LINKS.Explorer}>
                 <ExplorerProvider>
                   <ExplorerPage />
                 </ExplorerProvider>
               </Route>
-            </Switch>
+            </Routes>
           </Router>
-        </SygmaProvider>
-      </LocalProvider>
-    </ThemeSwitcher>
+        {/* </SygmaProvider> */}
+      {/* </LocalProvider> */}
+    </ThemeProvider>
   );
 }
 
