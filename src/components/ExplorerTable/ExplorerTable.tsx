@@ -5,17 +5,15 @@ import {
   TableCell,
   TableBody,
   TableRow,
-  TableHeadCell,
   SvgIcon,
   Button,
   Avatar,
-  Blockies,
-} from "@chainsafe/common-components";
+} from "@mui/material";
 import {
   DepositRecord,
   TransferDetails,
   EvmBridgeConfig,
-} from "@chainsafe/sygma-ui-core";
+} from "../../types";
 import {
   formatTransferDate,
   getRandomSeed,
@@ -26,7 +24,6 @@ import {
   getNetworkIcon,
 } from "../../utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
-import DetailView from "../DetailView/DetailView";
 import { useStyles } from "./styles";
 
 // TODO: just for mocking purposes
@@ -52,9 +49,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   handleTimelineButtonClick,
   timelineButtonClicked,
 }: ExplorerTable) => {
-  const classes = useStyles({
-    pillColorSchema: transferDetails.pillColorStatus,
-  });
+  const classes = useStyles();
 
   const renderTransferList = (transferData: DepositRecord[]) =>
     transferData.map((transfer: DepositRecord, idx: number) => {
@@ -79,14 +74,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell>
             <div className={classes.accountAddress}>
-              <Avatar size="small" className={classes.avatar}>
+              {/* <Avatar size="small" className={classes.avatar}>
                 <Blockies
                   seed={randomString}
                   size={15}
                   color={"pink"}
                   bgColor={"white"}
                 />
-              </Avatar>
+              </Avatar> */}
               <span>{transfer.fromAddress}</span>
             </div>
           </TableCell>
@@ -137,27 +132,17 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
     });
 
   return (
-    <Table fullWidth={true} className={classes.root}>
+    <Table className={classes.root}>
       <TableHead>
         <TableRow className={classes.row}>
-          <TableHeadCell>Date</TableHeadCell>
-          <TableHeadCell>From</TableHeadCell>
-          <TableHeadCell>Transfer</TableHeadCell>
-          <TableHeadCell>Value</TableHeadCell>
-          <TableHeadCell></TableHeadCell>
+          <TableCell>Date</TableCell>
+          <TableCell>From</TableCell>
+          <TableCell>Transfer</TableCell>
+          <TableCell>Value</TableCell>
+          <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>{renderTransferList(transactionList)}</TableBody>
-      <>
-        <DetailView
-          active={active}
-          transferDetails={transferDetails}
-          handleClose={handleClose}
-          classes={classes}
-          handleTimelineButtonClick={handleTimelineButtonClick}
-          timelineButtonClicked={timelineButtonClicked}
-        />
-      </>
     </Table>
   );
 };

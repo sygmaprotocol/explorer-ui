@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { EvmBridgeConfig } from "@chainsafe/sygma-ui-core";
+import { EvmBridgeConfig } from "../../types";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 

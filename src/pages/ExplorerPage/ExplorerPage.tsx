@@ -1,6 +1,6 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,12 +10,12 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useExplorer, useSygma } from "@chainsafe/sygma-ui-core";
 import { ExplorerTable } from "../../components";
 import MyAllSwitch from "./MyAllSwitch";
 import SelectNetwork from "./SelectNetwork";
 
 import { useStyles } from "./styles";
+import { useExplorer } from '../../context'
 
 type PreflightDetails = {
   tokenAmount: number;
@@ -35,13 +35,15 @@ const ExplorerPage = () => {
   } = explorerContext;
   const { chains, transfers, pageInfo, isLoading } = explorerState;
 
-  const history = useHistory();
+  const navigate = useNavigate();
+
+  const [isReady, setIsReady] = useState(true);
+  const [address, setAddress] = useState("0x");
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
   const [myAllSwitchValue, setMyAllSwitchValue] = useState("all");
 
-  const { isReady, address } = useSygma();
   useEffect(() => {
     if (isReady) {
       setMyAllSwitchValue("my");
@@ -56,11 +58,14 @@ const ExplorerPage = () => {
       payload: txDetail!,
     });
     setActive(true);
+
+    // @ts-ignore-next-line
     setExplorerStateContext({
       ...explorerState,
       transferDetails: txDetail,
     });
-    history.push(`/transaction/detail-view/${txDetail?.id}`);
+
+    navigate(`/transaction/detail-view/${txDetail?.id}`);
   };
 
   const handleClose = () => {
@@ -68,7 +73,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({
       type: "cleanTransferDetails",
     });
-    history.push("/");
+    navigate("/");
   };
 
   const handleTimelineButtonClick = () =>
@@ -161,7 +166,7 @@ const ExplorerPage = () => {
               }}
             />
           </Box>
-          {isReady && address && (
+          {true && '0x' && (
             <Box
               sx={{
                 ml: 1,

@@ -1,18 +1,15 @@
-import { makeStyles, createStyles, ITheme } from "@chainsafe/common-theme";
+import { makeStyles, createStyles, DefaultTheme } from "@mui/styles";
 
-export const useStyles = makeStyles(({ constants, breakpoints }: ITheme) =>
+export const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      padding: constants.generalUnit * 6,
+      padding: "10px",
       position: "relative",
     },
     mainContent: {
       display: "grid",
       gridTemplateRows: "repeat(1, 1fr)",
       width: "70%",
-      [breakpoints.down("lg")]: {
-        width: "80%",
-      },
     },
     networkInfoContainer: {
       display: "flex",

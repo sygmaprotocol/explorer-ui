@@ -10,12 +10,8 @@ import EtcIcon from "../media/networks/etc.svg";
 import CosmosIcon from "../media/networks/cosmos.svg";
 import EthermintIcon from "../media/networks/ethermint.svg";
 import PolkadotIcon from "../media/networks/polkadot.svg";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import {
-  DepositRecord,
-  TransferDetails,
-  EvmBridgeConfig,
-} from "@chainsafe/sygma-ui-core";
+import { BigNumberish, ethers } from "ethers";
+import { DepositRecord, EvmBridgeConfig, TransferDetails } from "../types";
 
 export const isCelo = (networkId?: number) =>
   [42220, 44787, 62320].includes(networkId ?? 0);
@@ -101,7 +97,7 @@ export const formatTransferDate = (transferDate: number | undefined) =>
   transferDate ? dayjs(transferDate * 1000).format("MMM D, h:mmA") : "";
 
 export const formatAmount = (amount: BigNumberish) =>
-  ethers.utils.formatUnits(amount);
+  ethers.formatUnits(amount);
 
 export const getRandomSeed = () => {
   const arr = new Uint8Array(20);
@@ -161,8 +157,7 @@ export const getColorSchemaTransferStatus = (status: number | undefined) => {
 export const computeAndFormatAmount = (amount: string) => {
   const amountParsed = parseInt(amount);
   const toBigInt = BigInt(amountParsed);
-  const toBigNumber = BigNumber.from(toBigInt);
-  return formatAmount(toBigNumber);
+  return formatAmount(toBigInt);
 };
 
 const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
