@@ -4,6 +4,7 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { ExplorerPage } from "./pages";
 import { SygmaTheme } from "./themes/SygmaTheme";
 import { ExplorerProvider } from "./context";
+import { Header } from "./components";
 
 export const ROUTE_LINKS = {
   Explorer: "/",
@@ -17,12 +18,16 @@ function App() {
     <ThemeProvider theme={SygmaTheme}>
       <CssBaseline />
       <Router>
+        <Header />
         <Routes>
-          <Route path={ROUTE_LINKS.Explorer} element={
+          <Route
+            path={ROUTE_LINKS.Explorer}
+            element={
               <ExplorerProvider>
-              <ExplorerPage />
-            </ExplorerProvider>
-          }/>            
+                <ExplorerPage />
+              </ExplorerProvider>
+            }
+          />
         </Routes>
       </Router>
     </ThemeProvider>
