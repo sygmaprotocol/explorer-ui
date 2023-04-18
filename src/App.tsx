@@ -17,19 +17,14 @@ function App() {
   return (
     <ThemeProvider theme={SygmaTheme}>
       <CssBaseline />
-      <Router>
-        <Header />
-        <Routes>
-          <Route
-            path={ROUTE_LINKS.Explorer}
-            element={
-              <ExplorerProvider>
-                <ExplorerPage />
-              </ExplorerProvider>
-            }
-          />
-        </Routes>
-      </Router>
+      <ExplorerProvider>
+        <Router>
+          <Header />
+          <Routes>
+            <Route path={ROUTE_LINKS.Explorer} element={<ExplorerPage />} />
+          </Routes>
+        </Router>
+      </ExplorerProvider>
     </ThemeProvider>
   );
 }

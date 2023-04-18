@@ -1,0 +1,1 @@
+export { getAccount } from './connection'

@@ -1,13 +1,16 @@
 import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import clsx from "clsx";
 import TopBarNetworkConnect from "../TopBarNetworkComponent";
 import { useStyles } from "./styles";
+import { useExplorer } from "../../context";
 
 export default function Header() {
   const { classes } = useStyles();
+  const explorerContext = useExplorer();
   const nftTokenPage = false;
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="static" color="transparent" className={clsx(classes.root)}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <div className={classes.left}>
@@ -57,10 +60,12 @@ export default function Header() {
             </Box>
           </div>
           <TopBarNetworkConnect
-            isReady={false}
             walletConnecting={false}
             homeConfig={undefined}
             address={"0x0000"}
+            getAccount={explorerContext.getAccount}
+            setExplorerState={explorerContext.setExplorerState}
+            explorerState={explorerContext.explorerState}
           />
         </Toolbar>
       </Container>

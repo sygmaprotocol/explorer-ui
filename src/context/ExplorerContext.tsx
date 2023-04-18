@@ -6,6 +6,7 @@ import {
   ExplorerState,
   PaginationParams,
 } from "../types";
+import { getAccount } from './connection'
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
   undefined,
@@ -23,14 +24,11 @@ const ExplorerProvider = ({
     chains: [],
     transferDetails: undefined,
     pillColorStatus: undefined,
+    account: undefined,
   });
 
   // TO BE DEFINED
   const loadMore = (options: PaginationParams) => null;
-
-  const setExplorerStateContext = (state: ExplorerState) => {
-    setExplorerState(state);
-  };
 
   const explorerPageState: ExplorerPageState = {
     fromDomainId: undefined,
@@ -51,9 +49,10 @@ const ExplorerProvider = ({
       value={{
         explorerState,
         loadMore,
-        setExplorerStateContext,
+        setExplorerState,
         explorerPageState,
         explorerPageDispatcher,
+        getAccount
       }}
     >
       {children}

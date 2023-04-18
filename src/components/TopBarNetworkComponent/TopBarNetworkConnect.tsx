@@ -1,5 +1,7 @@
 import { Button, Typography } from "@mui/material";
-import { BridgeConfig } from "../../types";
+import React from "react";
+import { BridgeConfig, ExplorerState } from "../../types";
+import { shortenAddress } from "../../utils/Helpers";
 
 // import { shortenAddress } from "../../utils/Helpers";
 
@@ -10,17 +12,33 @@ type TopBarNetworkConnectProps = {
   walletConnecting: boolean;
   homeConfig: BridgeConfig | undefined;
   address: string | undefined;
+  getAccount: () => Promise<string>;
+  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
+  explorerState: ExplorerState;
 };
 
 export default function TopBarNetworkConnect({
-  isReady,
   homeConfig,
   address,
+  getAccount,
+  setExplorerState,
+  explorerState,
 }: TopBarNetworkConnectProps) {
   const { classes } = useStyles();
+  const [localAddress, setLocalAddress] = React.useState<string | undefined>(
+    "",
+  );
+  const [isReady, setIsReady] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
     // dispatcher({ type: "setShowConnectionDialog", payload: true });
+    const account = await getAccount();
+    setLocalAddress(account);
+    setExplorerState({
+      ...explorerState,
+      account,
+    });
+    setIsReady(true);
   };
 
   return (
@@ -37,7 +55,15 @@ export default function TopBarNetworkConnect({
           </Button>
         ) : (
           <>
-            <div className={classes.mainInfo}>
+            <div
+              className={classes.mainInfo}
+              style={{
+                paddingTop: 3,
+                paddingBottom: 3,
+                background: "#CDC2B1",
+                borderRadius: 10,
+              }}
+            >
               <Typography variant="h6" className={classes.address}>
                 {homeConfig && (
                   <img
@@ -49,7 +75,7 @@ export default function TopBarNetworkConnect({
               </Typography>
               <div className={classes.accountInfo}>
                 <Typography variant="h6" className={classes.address}>
-                  {address}
+                  {shortenAddress(localAddress!)}
                 </Typography>
               </div>
             </div>

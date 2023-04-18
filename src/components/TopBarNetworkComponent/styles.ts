@@ -10,17 +10,17 @@ export const useStyles = makeStyles()((theme) => {
 
     mainInfo: {
       display: "flex",
-      background: "#DBD3C7",
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
       paddingTop: 3,
       paddingBottom: 3,
-      borderRadius: theme.shape.borderRadius,
+      background: "#CDC2B1",
+      borderRadius: 10
     },
     address: {
       display: "flex",
       alignItems: "center",
-      color: "#000",
+      color: "#DBD3C7",
     },
     indicator: {
       display: "block",
@@ -32,7 +32,7 @@ export const useStyles = makeStyles()((theme) => {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "center"
     },
   };
 });
