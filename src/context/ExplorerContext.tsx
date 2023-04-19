@@ -45,11 +45,21 @@ const ExplorerProvider = ({
   const explorerPageDispatcher = (action: Actions) => null;
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
+  const [account, setAccount] = React.useState<string | undefined>(undefined);
 
   useEffect(() => {
     window.ethereum!.on('chainChanged', (chainId: unknown) => {
       setChainId(Number(chainId as string));
     });
+
+    window.ethereum!.on('accountsChanged', (accounts: unknown) => {
+      setAccount((accounts as Array<string>)[0] as string);
+    });
+
+    return () => {
+      window.ethereum!.removeAllListeners('chainChanged');
+      window.ethereum!.removeAllListeners('accountsChanged');
+    }
   }, [])
 
   return (
@@ -62,7 +72,8 @@ const ExplorerProvider = ({
         explorerPageDispatcher,
         getAccount,
         getChainId,
-        chainId
+        chainId,
+        account
       }}
     >
       {children}

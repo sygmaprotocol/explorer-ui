@@ -180,4 +180,5 @@ export type ExplorerContext = {
   getAccount: () => Promise<string>;
   getChainId: () => Promise<number>;
   chainId: number | undefined;
+  account: string | undefined;
 }

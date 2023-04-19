@@ -14,6 +14,7 @@ type TopBarNetworkConnectProps = {
   explorerState: ExplorerState;
   getChainId: ExplorerContext["getChainId"];
   chainId: ExplorerContext["chainId"]
+  account: ExplorerContext["account"]
 };
 
 export default function TopBarNetworkConnect({
@@ -24,6 +25,7 @@ export default function TopBarNetworkConnect({
   explorerState,
   getChainId,
   chainId,
+  account
 }: TopBarNetworkConnectProps) {
   const { classes } = useStyles();
   const [localAddress, setLocalAddress] = React.useState<string | undefined>(
@@ -51,7 +53,11 @@ export default function TopBarNetworkConnect({
     if(chainId !== undefined && chainId !== currentChainId) {
       setCurrentChainId(chainId);
     }
-  }, [chainId]);
+
+    if(account !== undefined && account !== localAddress) {
+      setLocalAddress(account);
+    }
+  }, [chainId, account]);
 
   return (
     <>

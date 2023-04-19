@@ -99,6 +99,7 @@ export default function Header() {
             explorerState={explorerContext.explorerState}
             getChainId={explorerContext.getChainId}
             chainId={explorerContext.chainId}
+            account={explorerContext.account}
           />
         </Toolbar>
       </Container>
