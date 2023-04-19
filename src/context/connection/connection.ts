@@ -17,3 +17,15 @@ export const getAccount = async (): Promise<string> => {
   return account as string
 
 }
+
+export const getChainId = async (): Promise<number> => {
+  let chainId
+
+  try {
+    chainId = await window .ethereum!.request({ method: 'eth_chainId' })
+  } catch(e){
+    console.error("Error getting chainId: ", e)
+  }
+
+  return parseInt(chainId as string, 16)
+}

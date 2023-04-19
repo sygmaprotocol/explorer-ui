@@ -66,6 +66,8 @@ export default function Header() {
             getAccount={explorerContext.getAccount}
             setExplorerState={explorerContext.setExplorerState}
             explorerState={explorerContext.explorerState}
+            getChainId={explorerContext.getChainId}
+            chainId={explorerContext.chainId}
           />
         </Toolbar>
       </Container>

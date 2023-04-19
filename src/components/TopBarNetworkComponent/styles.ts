@@ -20,19 +20,20 @@ export const useStyles = makeStyles()((theme) => {
     address: {
       display: "flex",
       alignItems: "center",
-      color: "#DBD3C7",
+      color: "black",
     },
     indicator: {
       display: "block",
-      height: 16,
-      width: 16,
+      height: 20,
+      width: 20,
       marginRight: theme.spacing(1),
     },
     accountInfo: {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      color: "black",
     },
   };
 });

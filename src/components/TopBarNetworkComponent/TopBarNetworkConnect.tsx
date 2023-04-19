@@ -1,20 +1,19 @@
 import { Button, Typography } from "@mui/material";
-import React from "react";
-import { BridgeConfig, ExplorerState } from "../../types";
-import { shortenAddress } from "../../utils/Helpers";
+import React, { useEffect } from "react";
+import { BridgeConfig, ExplorerContext, ExplorerState } from "../../types";
+import { getIconNamePerChainId, shortenAddress } from "../../utils/Helpers";
 
-// import { shortenAddress } from "../../utils/Helpers";
-
-import { useStyles } from "../Header/styles";
+import { useStyles } from "./styles";
 
 type TopBarNetworkConnectProps = {
-  isReady: boolean | undefined;
   walletConnecting: boolean;
   homeConfig: BridgeConfig | undefined;
   address: string | undefined;
-  getAccount: () => Promise<string>;
-  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
+  getAccount: ExplorerContext["getAccount"];
+  setExplorerState: ExplorerContext["setExplorerState"];
   explorerState: ExplorerState;
+  getChainId: ExplorerContext["getChainId"];
+  chainId: ExplorerContext["chainId"]
 };
 
 export default function TopBarNetworkConnect({
@@ -23,16 +22,23 @@ export default function TopBarNetworkConnect({
   getAccount,
   setExplorerState,
   explorerState,
+  getChainId,
+  chainId,
 }: TopBarNetworkConnectProps) {
   const { classes } = useStyles();
   const [localAddress, setLocalAddress] = React.useState<string | undefined>(
     "",
   );
   const [isReady, setIsReady] = React.useState(false);
+  const [currentChainId, setCurrentChainId] = React.useState<
+    number | undefined
+  >(undefined);
 
   const handleClickOpen = async () => {
-    // dispatcher({ type: "setShowConnectionDialog", payload: true });
     const account = await getAccount();
+    const chainId = Number(await getChainId());
+
+    setCurrentChainId(chainId);
     setLocalAddress(account);
     setExplorerState({
       ...explorerState,
@@ -40,6 +46,12 @@ export default function TopBarNetworkConnect({
     });
     setIsReady(true);
   };
+
+  useEffect(() => {
+    if(chainId !== undefined && chainId !== currentChainId) {
+      setCurrentChainId(chainId);
+    }
+  }, [chainId]);
 
   return (
     <>
@@ -65,12 +77,12 @@ export default function TopBarNetworkConnect({
               }}
             >
               <Typography variant="h6" className={classes.address}>
-                {homeConfig && (
-                  <img
-                    src={`/assets/images/networks/${homeConfig.nativeTokenSymbol.toLocaleLowerCase()}.svg`}
-                    alt={"native token icon"}
-                    className={classes.indicator}
-                  />
+                {currentChainId !== undefined && (
+                   <img
+                   src={`/assets/icons/${getIconNamePerChainId(currentChainId)}`}
+                   alt={"native token icon"}
+                   className={classes.indicator}
+                 />
                 )}
               </Typography>
               <div className={classes.accountInfo}>

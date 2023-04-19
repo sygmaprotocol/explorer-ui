@@ -178,4 +178,6 @@ export type ExplorerContext = {
   explorerPageState: ExplorerPageState;
   explorerPageDispatcher: React.Dispatch<Actions>;
   getAccount: () => Promise<string>;
+  getChainId: () => Promise<number>;
+  chainId: number | undefined;
 }

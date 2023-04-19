@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Actions,
   ExplorerContext as ExplorerContextType,
@@ -6,7 +6,7 @@ import {
   ExplorerState,
   PaginationParams,
 } from "../types";
-import { getAccount } from './connection'
+import { getAccount, getChainId } from './connection'
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
   undefined,
@@ -44,6 +44,14 @@ const ExplorerProvider = ({
   // TO BE DEFINED
   const explorerPageDispatcher = (action: Actions) => null;
 
+  const [chainId, setChainId] = React.useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    window.ethereum!.on('chainChanged', (chainId: unknown) => {
+      setChainId(Number(chainId as string));
+    });
+  }, [])
+
   return (
     <ExplorerCtx.Provider
       value={{
@@ -52,7 +60,9 @@ const ExplorerProvider = ({
         setExplorerState,
         explorerPageState,
         explorerPageDispatcher,
-        getAccount
+        getAccount,
+        getChainId,
+        chainId
       }}
     >
       {children}
