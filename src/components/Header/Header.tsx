@@ -8,9 +8,14 @@ import { useExplorer } from "../../context";
 export default function Header() {
   const { classes } = useStyles();
   const explorerContext = useExplorer();
-  const nftTokenPage = false;
+  const nftTokenPage = true;
+  const active = true;
   return (
-    <AppBar position="static" color="transparent" className={clsx(classes.root)}>
+    <AppBar
+      position="static"
+      color="transparent"
+      className={clsx(classes.root)}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <div className={classes.left}>
@@ -28,14 +33,12 @@ export default function Header() {
             >
               <Button
                 component={NavLink}
-                to="/transfer"
+                to="/"
                 sx={{
                   px: 2,
                   display: "block",
                   fontSize: 18,
-                  "&.active": {
-                    background: "#CDC2B1",
-                  },
+                  // background: active ? "#CDC2B1" : "#DBD3C7",
                 }}
               >
                 Token Bridge
@@ -44,19 +47,47 @@ export default function Header() {
               {nftTokenPage && (
                 <Button
                   component={NavLink}
-                  to="/nft_transfer"
+                  to="/"
                   sx={{
                     px: 2,
                     display: "block",
                     fontSize: 18,
-                    "&.active": {
-                      background: "#CDC2B1",
-                    },
+                    // "&.active": {
+                    //   background: "#CDC2B1",
+                    // },
                   }}
                 >
                   NFT Bridge
                 </Button>
               )}
+
+              <Button
+                component={NavLink}
+                to="/"
+                sx={{
+                  px: 2,
+                  display: "block",
+                  fontSize: 18,
+                  background: active ? "#CDC2B1" : "#DBD3C7",
+                }}
+              >
+                Explorer
+              </Button>
+
+              <Button
+                component={NavLink}
+                to="/"
+                sx={{
+                  px: 2,
+                  display: "block",
+                  fontSize: 18,
+                  // "&.active": {
+                  //   background: "#CDC2B1",
+                  // },
+                }}
+              >
+                Faucet
+              </Button>
             </Box>
           </div>
           <TopBarNetworkConnect
