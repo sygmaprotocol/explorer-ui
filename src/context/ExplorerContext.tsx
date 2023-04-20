@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Actions,
   ExplorerContext as ExplorerContextType,
@@ -6,6 +6,7 @@ import {
   ExplorerState,
   PaginationParams,
 } from "../types";
+import { getAccount, getChainId } from './connection'
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
   undefined,
@@ -23,14 +24,11 @@ const ExplorerProvider = ({
     chains: [],
     transferDetails: undefined,
     pillColorStatus: undefined,
+    account: undefined,
   });
 
   // TO BE DEFINED
   const loadMore = (options: PaginationParams) => null;
-
-  const setExplorerStateContext = (state: ExplorerState) => {
-    setExplorerState(state);
-  };
 
   const explorerPageState: ExplorerPageState = {
     fromDomainId: undefined,
@@ -46,14 +44,36 @@ const ExplorerProvider = ({
   // TO BE DEFINED
   const explorerPageDispatcher = (action: Actions) => null;
 
+  const [chainId, setChainId] = React.useState<number | undefined>(undefined);
+  const [account, setAccount] = React.useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    window.ethereum!.on('chainChanged', (chainId: unknown) => {
+      setChainId(Number(chainId as string));
+    });
+
+    window.ethereum!.on('accountsChanged', (accounts: unknown) => {
+      setAccount((accounts as Array<string>)[0] as string);
+    });
+
+    return () => {
+      window.ethereum!.removeAllListeners('chainChanged');
+      window.ethereum!.removeAllListeners('accountsChanged');
+    }
+  }, [])
+
   return (
     <ExplorerCtx.Provider
       value={{
         explorerState,
         loadMore,
-        setExplorerStateContext,
+        setExplorerState,
         explorerPageState,
         explorerPageDispatcher,
+        getAccount,
+        getChainId,
+        chainId,
+        account
       }}
     >
       {children}

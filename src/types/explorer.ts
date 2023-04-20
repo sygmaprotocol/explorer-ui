@@ -126,6 +126,7 @@ export type ExplorerState = {
     borderColor: string;
     background: string;
   };
+  account: string | undefined
 }
 
 export type PaginationParams = {
@@ -173,7 +174,11 @@ export type Actions = {
 export type ExplorerContext = {
   explorerState: ExplorerState;
   loadMore: (options: PaginationParams) => void;
-  setExplorerStateContext: unknown;
+  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
   explorerPageState: ExplorerPageState;
   explorerPageDispatcher: React.Dispatch<Actions>;
+  getAccount: () => Promise<string>;
+  getChainId: () => Promise<number>;
+  chainId: number | undefined;
+  account: string | undefined;
 }

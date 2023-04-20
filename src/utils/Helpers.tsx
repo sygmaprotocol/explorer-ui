@@ -49,38 +49,10 @@ export const getNetworkName = (id: any) => {
   }
 };
 
-export const PredefinedIcons: any = {
-  ETHIcon: ETHIcon,
-  WETHIcon: WETHIcon,
-  DAIIcon: DAIIcon,
-  celoUSD: celoUSD,
-};
-
-const PredefinedNetworkIcons: any = {
-  EthIcon: EthIcon,
-  CeloUSD: CeloIcon,
-  EtcIcon: EtcIcon,
-  CosmosIcon: CosmosIcon,
-  EthermintIcon: EthermintIcon,
-};
-
-export const showImageUrl = (url?: string) =>
-  url && PredefinedIcons[url] ? PredefinedIcons[url] : url;
-
-export const showImageUrlNetworkIcons = (url?: string) =>
-  url && PredefinedNetworkIcons[url]
-    ? PredefinedNetworkIcons[url]
-    : PredefinedIcons[url!] || url;
-
 export const selectToken = (
   config: EvmBridgeConfig | undefined,
-  tokenAddress: string
+  tokenAddress: string,
 ) => config?.tokens.find((token) => token.address === tokenAddress);
-
-// TODO: for now just ERC20 token Icon
-export const getTokenIcon = () => {
-  return PredefinedIcons["ETHIcon"];
-};
 
 export const getNetworkIcon = (config: EvmBridgeConfig | undefined) => {
   if (config === undefined) {
@@ -103,7 +75,7 @@ export const getRandomSeed = () => {
   const arr = new Uint8Array(20);
   const randomValues = crypto.getRandomValues(arr);
   const randomString = Array.from(randomValues, (val) =>
-    val.toString(16).padStart(2, "0")
+    val.toString(16).padStart(2, "0"),
   ).join("");
 
   return randomString;
@@ -165,7 +137,7 @@ const formatDateTimeline = (date: number) => dayjs(date).format("h:mma");
 export const selectChains = (
   chains: Array<EvmBridgeConfig>,
   fromDomainId: number,
-  toDomainId: number
+  toDomainId: number,
 ) => {
   const fromChain = chains.find((chain) => chain.domainId === fromDomainId);
   const toChain = chains.find((chain) => chain.domainId === toDomainId);
@@ -175,7 +147,7 @@ export const selectChains = (
 
 export const computeTransferDetails = (
   txDetails: DepositRecord,
-  chains: Array<EvmBridgeConfig>
+  chains: Array<EvmBridgeConfig>,
 ): TransferDetails => {
   const {
     timestamp,
@@ -195,7 +167,7 @@ export const computeTransferDetails = (
   const { fromChain, toChain } = selectChains(
     chains,
     fromDomainId!,
-    toDomainId!
+    toDomainId!,
   );
 
   const formatedTransferDate = formatTransferDate(timestamp);
@@ -346,4 +318,22 @@ export const computeTransferDetails = (
     toChain,
     pillColorStatus,
   };
+};
+
+// NOTE: this is provisional until we fetch shared config and we match what we are getting from the ethereum provider with the networkId property in the shared config
+export const getIconNamePerChainId = (chainId: number) => {
+  switch (chainId) {
+    case 5: {
+      return "all.svg";
+    }
+    case 80001: {
+      return "polygon.svg";
+    }
+    case 1287: {
+      return  "moonbeam.svg";
+    }
+    case 11155111: {
+      return "all.svg";
+    }
+  }
 };

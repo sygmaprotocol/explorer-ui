@@ -51,6 +51,22 @@ const theme = createTheme({
 });
 
 export const SygmaTheme = createTheme(theme, {
+  constants: {
+    generalUnit: 8,
+    icon: {
+      width: 25,
+      height: 25,
+    },
+    modal: {
+      inner: {
+        minWidth: 30,
+        maxWidth: theme.breakpoints.values["md"],
+        // maxWidth: 900
+      },
+      backgroundFade: 0.4,
+    },
+  },
+  
   palette: {
     primary: {
       light: "#FF7A45",

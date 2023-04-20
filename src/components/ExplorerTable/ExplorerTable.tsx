@@ -20,10 +20,9 @@ import {
   computeAndFormatAmount,
   selectChains,
   selectToken,
-  showImageUrlNetworkIcons,
   getNetworkIcon,
 } from "../../utils/Helpers";
-import { ReactComponent as DirectionalIcon } from "../../media/Icons/directional.svg";
+import { ReactComponent as DirectionalIcon } from "../../media/icons/directional.svg";
 import { useStyles } from "./styles";
 
 // TODO: just for mocking purposes
@@ -109,7 +108,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
             <span className={classes.amountInfo}>
               <img
                 className={classes.imageValueToken}
-                src={showImageUrlNetworkIcons(fromToken?.imageUri!)}
+                // src={showImageUrlNetworkIcons(fromToken?.imageUri!)}
                 alt={fromToken?.symbol}
               />
               <span>
