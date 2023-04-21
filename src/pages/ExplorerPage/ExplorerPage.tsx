@@ -15,7 +15,8 @@ import MyAllSwitch from "./MyAllSwitch";
 import SelectNetwork from "./SelectNetwork";
 
 import { useStyles } from "./styles";
-import { useExplorer } from '../../context'
+import { useExplorer } from "../../context";
+import { Transfer } from "../../types";
 
 type PreflightDetails = {
   tokenAmount: number;
@@ -29,71 +30,55 @@ const ExplorerPage = () => {
   const {
     explorerState,
     loadMore,
-    setExplorerStateContext,
+    setExplorerState,
     explorerPageState,
     explorerPageDispatcher,
+    routes,
   } = explorerContext;
-  const { chains, transfers, pageInfo, isLoading } = explorerState;
+  const { chains, pageInfo, isLoading } = explorerState;
 
   const navigate = useNavigate();
 
   const [isReady, setIsReady] = useState(true);
-  const [address, setAddress] = useState("0x");
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
-  const [myAllSwitchValue, setMyAllSwitchValue] = useState("all");
+  const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
 
-  useEffect(() => {
-    if (isReady) {
-      setMyAllSwitchValue("my");
-    }
-  }, [isReady, address]);
-
-  const handleOpenModal = (txId: string | undefined) => () => {
-    const txDetail = transfers.find((tx) => tx.id === txId);
-
-    explorerPageDispatcher({
-      type: "setTransferDetails",
-      payload: txDetail!,
-    });
-    setActive(true);
-
-    // @ts-ignore-next-line
-    setExplorerStateContext({
-      ...explorerState,
-      transferDetails: txDetail,
-    });
-
-    navigate(`/transaction/detail-view/${txDetail?.id}`);
-  };
-
-  const handleClose = () => {
-    setActive(false);
-    explorerPageDispatcher({
-      type: "cleanTransferDetails",
-    });
-    navigate("/");
-  };
+  const [state, setState] = useState<{ transfers: Transfer[] | never[], loading: "none" | "loading" | "done", isReady: boolean }>({
+    transfers: [],
+    loading: "none",
+    isReady: false
+  })
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
+  const transferData = async () => {
+    const transfersResponse = await routes().transfers(
+      queryParams.page,
+      queryParams.limit,
+    );
+    setState((prevState) => ({
+      ...prevState,
+      transfers: transfersResponse,
+      loading: "loading",
+      isReady: true
+    }))
+  };
+
   useEffect(() => {
-    const {
-      location: { href },
-    } = window;
+    transferData();
+  }, []);
 
-    const activeTx = transfers.find((item) => href.includes(item.id));
-
-    if (activeTx !== undefined) {
-      explorerPageDispatcher({
-        type: "setTransferDetails",
-        payload: activeTx,
-      });
-      setActive(true);
+  useEffect(() => {
+    if (state.isReady) {
+      setState((prevState) => ({
+        ...prevState,
+        loading: "done",
+      }))
     }
-  }, [transfers]);
+  }, [state.isReady]);
 
   return (
     <Box
@@ -105,100 +90,15 @@ const ExplorerPage = () => {
       }}
     >
       <section className={classes.mainContent}>
-        <section className={classes.networkInfoContainer}>
-          <div className={classes.networkInfo}>
-            <div className={classes.networkSelection}>
-              <Typography
-                component="h5"
-                variant="h5"
-                noWrap
-                sx={{ flexShrink: 0 }}
-              >
-                Transfers from
-              </Typography>
-              <SelectNetwork
-                className={classes.networkSelector}
-                onChange={(val: number) => {
-                  explorerPageDispatcher({
-                    type: "selectFromDomainId",
-                    payload: val,
-                  });
-                }}
-                chains={chains}
-                value={explorerPageState.fromDomainId?.toString() ?? ""}
-              />
-              <Typography
-                component="h5"
-                variant="h5"
-                sx={{ marginLeft: "15px" }}
-              >
-                to
-              </Typography>
-              <SelectNetwork
-                className={classes.networkSelector}
-                onChange={(val: number) => {
-                  explorerPageDispatcher({
-                    type: "selectToDomainId",
-                    payload: val,
-                  });
-                }}
-                chains={chains}
-                value={explorerPageState.toDomainId?.toString() ?? ""}
-              />
-            </div>
-          </div>
-          <Box sx={{ display: "grid", gridRow: "1", width: "50ch" }}>
-            <TextField
-              placeholder="Search by deposit hash"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              value={explorerPageState.depositTransactionHash}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                explorerPageDispatcher({
-                  type: "setDepositTransactionHash",
-                  payload: e.target.value,
-                });
-              }}
-            />
-          </Box>
-          {true && '0x' && (
-            <Box
-              sx={{
-                ml: 1,
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <MyAllSwitch
-                switchValue={myAllSwitchValue}
-                onSwitchChange={(e: any, newSwitchValue: string) => {
-                  setMyAllSwitchValue(newSwitchValue);
-                  explorerPageDispatcher({
-                    type: "setMyAddress",
-                    payload: newSwitchValue === "my" ? address : "",
-                  });
-                }}
-              />
-            </Box>
-          )}
-        </section>
         <div className={classes.explorerTableContainer}>
           <div className={classes.explorerTable}>
             <ExplorerTable
-              transactionList={transfers || []}
               active={active}
               setActive={setActive}
-              handleOpenModal={handleOpenModal}
-              handleClose={handleClose}
-              transferDetails={explorerPageState.transferDetails || {}}
               chains={chains}
               handleTimelineButtonClick={handleTimelineButtonClick}
               timelineButtonClicked={explorerPageState.timelineButtonClicked}
+              state={state}
             />
             <div className={classes.paginationPanel}>
               <Button

@@ -1,40 +1,3 @@
-export enum ProposalStatus {
-  Inactive = 0,
-  Active = 1,
-  Passed = 2,
-  Executed = 3,
-  Cancelled = 4
-}
-
-export type Proposal = {
-  proposalStatus: ProposalStatus;
-  dataHash?: string;
-  proposalEventTransactionHash?: string;
-  proposalEventBlockNumber: number;
-  timestamp: number;
-  by: string;
-}
-
-export type DepositRecord = {
-  id: string;
-  fromAddress?: string;
-  fromDomainId?: number;
-  fromNetworkName?: string;
-  toAddress?: string;
-  toDomainId?: number;
-  toNetworkName?: string;
-  tokenAddress?: string;
-  amount?: string;
-  timestamp?: number;
-  depositTransactionHash?: string;
-  depositBlockNumber?: number;
-  proposalEvents: Array<Proposal>;
-  voteEvents: Array<Vote>;
-  status: number;
-  sourceTokenAddress: string;
-  destinationTokenAddress: string;
-}
-
 export type FeeSettings = {
   type: "basic" | "feeOracle" | "none";
   address: string;
@@ -84,44 +47,69 @@ export type EvmBridgeConfig = BridgeConfig & {
   deployedBlockNumber?: number;
 }
 
-export type Vote = {
-  voteStatus: boolean;
-  voteTransactionHash?: string;
-  voteBlockNumber: number;
-  timestamp: number;
-  dataHash: string;
-  by: string;
+export enum TransferStatus {
+  pending = "pending",
+  executed = "executed",
+  failed = "failed"
 }
 
-export type TransferDetails = {
+export type Resource = {
+  resourceId: string;
+  type: string;
+}
+
+export type Domain = {
   id: string;
-  formatedTransferDate: string;
-  fromAddress?: string;
-  formatedAmount: string;
-  fromNetworkName?: string;
-  toNetworkName?: string;
-  depositTransactionHash?: string;
-  fromDomainId?: number;
-  toDomainId?: number;
-  proposalStatus: number;
-  voteEvents: Array<Vote>;
-  proposalEvents: Array<Proposal>;
-  timelineMessages: Array<any>;
-  fromChain: EvmBridgeConfig | undefined;
-  toChain: EvmBridgeConfig | undefined;
-  pillColorStatus: {
-    borderColor: string;
-    background: string;
-  };
+  name: string;
+  lastIndexedBlock: string;
+}
+
+export type Deposit = {
+  id: string;
+  transfer: Transfer;
+  transferId: string;
+  type: string;
+  txHash: string;
+  blockNumber: string;
+  depositData: string;
+  handlerResponse: string;
+}
+
+export type Execution = {
+  id: string;
+  transfer: Transfer;
+  transferId: string;
+  type: string;
+  txHash: string;
+  blockNumber: string;
+  executionEvent: string;
+}
+
+
+export type Transfer = {
+  id: string;
+  depositNonce: number;
+  resourceID: Resource;
+  fromDomain: Domain
+  fromDomainId: string;
+  toDomain: Domain;
+  toDomainId: string;
+  sender: string;
+  destination: string;
+  amount: string;
+  timestamp?: number;
+  status: TransferStatus;
+  deposit?: Deposit;
+  execution?: Execution;
 }
 
 export type ExplorerState = {
   isLoading: boolean;
-  transfers: Array<DepositRecord>;
+  transfers: Array<Transfer>;
   pageInfo?: PageInfo;
   error: boolean;
   chains: Array<EvmBridgeConfig>;
-  transferDetails?: TransferDetails;
+  transferDetails?: any;
   pillColorStatus?: {
     borderColor: string;
     background: string;
@@ -142,7 +130,7 @@ export type ExplorerPageState = {
   depositTransactionHash?: string;
   fromAddress?: string;
   toAddress?: string;
-  transferDetails: TransferDetails;
+  transferDetails: any;
   timelineButtonClicked: boolean;
   chains: Array<EvmBridgeConfig>;
 }
@@ -161,7 +149,7 @@ export type Actions = {
   payload: number;
 } | {
   type: "setTransferDetails";
-  payload: DepositRecord;
+  payload: any;
 } | {
   type: "cleanTransferDetails";
 } | {
@@ -170,6 +158,10 @@ export type Actions = {
 } | {
   type: "timelineButtonClick";
 };
+
+export type Routes = {
+  transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>;
+}
 
 export type ExplorerContext = {
   explorerState: ExplorerState;
@@ -181,4 +173,5 @@ export type ExplorerContext = {
   getChainId: () => Promise<number>;
   chainId: number | undefined;
   account: string | undefined;
+  routes: () => Routes
 }

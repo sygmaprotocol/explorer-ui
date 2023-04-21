@@ -10,9 +10,8 @@ import {
   Avatar,
 } from "@mui/material";
 import {
-  DepositRecord,
-  TransferDetails,
   EvmBridgeConfig,
+  Transfer,
 } from "../../types";
 import {
   formatTransferDate,
@@ -27,121 +26,95 @@ import { useStyles } from "./styles";
 
 // TODO: just for mocking purposes
 type ExplorerTable = {
-  transactionList: DepositRecord[];
-  handleOpenModal: (fromAddress: string | undefined) => () => void;
-  handleClose: () => void;
   active: boolean;
   setActive: (state: boolean) => void;
-  transferDetails: TransferDetails;
   chains: Array<EvmBridgeConfig>;
   handleTimelineButtonClick: () => void;
   timelineButtonClicked: boolean;
+  state: { transfers: Transfer[] | never[], loading: "none" | "loading" | "done", isReady: boolean }
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
-  transactionList,
   active,
-  handleOpenModal,
-  handleClose,
-  transferDetails,
   chains,
   handleTimelineButtonClick,
   timelineButtonClicked,
+  state
 }: ExplorerTable) => {
   const classes = useStyles();
 
-  const renderTransferList = (transferData: DepositRecord[]) =>
-    transferData.map((transfer: DepositRecord, idx: number) => {
-      const { amount, fromDomainId, toDomainId } = transfer;
+  const renderTransferList = (transferData: Transfer[]) => {
 
-      const { fromChain, toChain } = selectChains(
-        chains,
-        fromDomainId!,
-        toDomainId!
-      );
-      const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
-      const randomString = getRandomSeed();
-      const transferDateFormated = formatTransferDate(transfer.timestamp);
+    return transferData.map((transfer: Transfer) => {
+      const {  deposit, status, fromDomain, toDomain, amount } = transfer;
+      let txHash: string | undefined
+      let type: string | undefined
 
-      //TODO check how to work better with BG and bigint
-      const amountFormated = computeAndFormatAmount(amount ?? "0");
+      if(status === "pending") {
+        txHash = deposit?.txHash!
+        type = deposit?.type!
+      }
+      const { name } = fromDomain;
+      const { name: toName } = toDomain;
+
 
       return (
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell className={classes.cellRow}>
-            {transferDateFormated}
+            { txHash !== undefined ? txHash : "-"}
           </TableCell>
           <TableCell>
             <div className={classes.accountAddress}>
-              {/* <Avatar size="small" className={classes.avatar}>
-                <Blockies
-                  seed={randomString}
-                  size={15}
-                  color={"pink"}
-                  bgColor={"white"}
-                />
-              </Avatar> */}
-              <span>{transfer.fromAddress}</span>
+              <span>{status}</span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <div>
               <span>
-                <img
-                  className={classes.imageToken}
-                  src={getNetworkIcon(fromChain)}
-                  alt="fromChain"
-                />
-                <span>{fromChain?.name ?? "Unknown chain"} to</span>
+                <span>{name}</span>
               </span>
+            </div>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <div>
               <span>
-                <img
-                  className={classes.imageToken}
-                  src={getNetworkIcon(toChain)}
-                  alt={fromToken?.symbol}
-                />
-                <span>{toChain?.name ?? "Unknown chain"}</span>
+                <span>{toName}</span>
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
-              <img
-                className={classes.imageValueToken}
-                // src={showImageUrlNetworkIcons(fromToken?.imageUri!)}
-                alt={fromToken?.symbol}
-              />
               <span>
-                {amountFormated} {fromToken?.name}
+                {type !== undefined ? type : "-"}
               </span>
             </span>
           </TableCell>
-          <TableCell className={classes.row}>
-            <div className={classes.viewDetailsInfo}>
-              <Button onClick={handleOpenModal(transfer.id)}>
-                <SvgIcon>
-                  <DirectionalIcon />
-                </SvgIcon>
-                View Details
-              </Button>
-            </div>
+           <TableCell className={classes.row}>
+            <span className={classes.amountInfo}>
+              <span>
+                {amount}
+              </span>
+            </span>
           </TableCell>
         </TableRow>
       );
     });
+  }
+
 
   return (
     <Table className={classes.root}>
       <TableHead>
         <TableRow className={classes.row}>
-          <TableCell>Date</TableCell>
+          <TableCell>Tx Hash</TableCell>
+          <TableCell>Status</TableCell>
           <TableCell>From</TableCell>
-          <TableCell>Transfer</TableCell>
+          <TableCell>To</TableCell>
+          <TableCell>Type</TableCell>
           <TableCell>Value</TableCell>
-          <TableCell></TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>{renderTransferList(transactionList)}</TableBody>
+      <TableBody>{ state.loading === "done" ? renderTransferList(state.transfers) : <TableRow><TableCell>Loading</TableCell></TableRow> }</TableBody>
     </Table>
   );
 };
