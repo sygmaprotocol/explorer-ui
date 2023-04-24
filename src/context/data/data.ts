@@ -7,7 +7,7 @@ export const fetchTransfers = async (url: string): Promise<Transfer[]> => {
 }
 
 export const routes = () => {
-  const { env: { VITE_INDEXER_URL } } = import.meta
+  const { VITE_INDEXER_URL } = import.meta.env
 
   const indexerUrl = `${VITE_INDEXER_URL}/api`
 

@@ -4,12 +4,14 @@ export const useStyles = makeStyles(() =>
   createStyles({
     root: {
       padding: "10px",
-      position: "relative",
+      position: "relative"
     },
     mainContent: {
       display: "grid",
       gridTemplateRows: "repeat(1, 1fr)",
       width: "70%",
+      boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 1px 12px rgba(0, 0, 0, 0.04)",
+      borderRadius: 12,
     },
     networkInfoContainer: {
       display: "flex",
@@ -50,20 +52,22 @@ export const useStyles = makeStyles(() =>
       display: "flex",
       justifyContent: "center",
       marginBottom: "100px",
+      background: "#E9E4DD",
     },
     explorerTable: {
       marginTop: 29,
       borderRadius: 4,
-      border: "1px solid #B6B6B6",
-      background: "#FAFAFA",
+      background: "#E9E4DD",
       minWidth: 955,
       width: "100%",
       height: "100%",
+      border: "none",
     },
     paginationPanel: {
       display: "flex",
       justifyContent: "flex-end",
       padding: "25px 16px 0",
+      background: "#E9E4DD",
     },
     paginationButtons: {
       marginLeft: "10px",

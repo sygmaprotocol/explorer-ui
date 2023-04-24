@@ -5,13 +5,15 @@ export const useStyles = makeStyles(() =>
     root: {
       display: "table",
       width: "100%",
+      background: "#E9E4DD",
       "& > thead > tr": {
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: 700,
       },
     },
     row: {
       fontWeight: 400,
+      fontSize: 14,
       verticalAlign: "middle",
       "& > td:nth-child(1)": {
         paddingLeft: 26,

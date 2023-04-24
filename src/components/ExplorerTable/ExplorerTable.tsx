@@ -104,7 +104,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
   return (
     <Table className={classes.root}>
-      <TableHead>
+      <TableHead sx={{
+        backgroundColor: "#DBD3C7",
+      }}>
         <TableRow className={classes.row}>
           <TableCell>Tx Hash</TableCell>
           <TableCell>Status</TableCell>
