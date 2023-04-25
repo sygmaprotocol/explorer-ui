@@ -89,7 +89,7 @@ export type Execution = {
 export type Transfer = {
   id: string;
   depositNonce: number;
-  resourceID: Resource;
+  resource: Resource;
   fromDomain: Domain
   fromDomainId: string;
   toDomain: Domain;

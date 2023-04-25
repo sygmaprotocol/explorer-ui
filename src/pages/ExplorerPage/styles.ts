@@ -51,12 +51,12 @@ export const useStyles = makeStyles(() =>
     explorerTableContainer: {
       display: "flex",
       justifyContent: "center",
-      marginBottom: "100px",
+      marginBottom: "35px",
       background: "#E9E4DD",
+      borderRadius: "12px"
     },
     explorerTable: {
-      marginTop: 29,
-      borderRadius: 4,
+      borderRadius: 12,
       background: "#E9E4DD",
       minWidth: 955,
       width: "100%",
