@@ -7,6 +7,7 @@ import {
   PaginationParams,
 } from "../types";
 import { getAccount, getChainId } from './connection'
+import { routes } from "./data";
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
   undefined,
@@ -73,7 +74,8 @@ const ExplorerProvider = ({
         getAccount,
         getChainId,
         chainId,
-        account
+        account,
+        routes
       }}
     >
       {children}

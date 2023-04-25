@@ -9,11 +9,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import {
-  DepositRecord,
-  TransferDetails,
-  EvmBridgeConfig,
-} from "../../types";
+import { EvmBridgeConfig, Transfer } from "../../types";
 import {
   formatTransferDate,
   getRandomSeed,
@@ -21,127 +17,215 @@ import {
   selectChains,
   selectToken,
   getNetworkIcon,
+  shortenAddress,
 } from "../../utils/Helpers";
 import { ReactComponent as DirectionalIcon } from "../../media/icons/directional.svg";
 import { useStyles } from "./styles";
 
 // TODO: just for mocking purposes
 type ExplorerTable = {
-  transactionList: DepositRecord[];
-  handleOpenModal: (fromAddress: string | undefined) => () => void;
-  handleClose: () => void;
   active: boolean;
   setActive: (state: boolean) => void;
-  transferDetails: TransferDetails;
   chains: Array<EvmBridgeConfig>;
   handleTimelineButtonClick: () => void;
   timelineButtonClicked: boolean;
+  state: {
+    transfers: Transfer[] | never[];
+    loading: "none" | "loading" | "done";
+    isReady: boolean;
+  };
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
-  transactionList,
   active,
-  handleOpenModal,
-  handleClose,
-  transferDetails,
   chains,
   handleTimelineButtonClick,
   timelineButtonClicked,
+  state,
 }: ExplorerTable) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
-  const renderTransferList = (transferData: DepositRecord[]) =>
-    transferData.map((transfer: DepositRecord, idx: number) => {
-      const { amount, fromDomainId, toDomainId } = transfer;
+  const renderStatusIcon = (status: string) => {
+    switch (status) {
+      case "pending":
+        return (
+          <img
+            src={`/assets/icons/pending.svg`}
+            alt="pending"
+            className={classes.statusPillIcon}
+          />
+        );
+      case "completed":
+        return (
+          <img
+            src={`/assets/icons/success.svg`}
+            alt="completed"
+            className={classes.statusPillIcon}
+          />
+        );
+      case "reverted":
+        return (
+          <img
+            src={`/assets/icons/reverted.svg`}
+            alt="reverted"
+            className={classes.statusPillIcon}
+          />
+        );
+      default:
+        return (
+          <img
+            src={`/assets/icons/pending.svg`}
+            alt="pending"
+            className={classes.statusPillIcon}
+          />
+        );
+    }
+  };
 
-      const { fromChain, toChain } = selectChains(
-        chains,
-        fromDomainId!,
-        toDomainId!
-      );
-      const fromToken = selectToken(fromChain, transfer.sourceTokenAddress);
-      const randomString = getRandomSeed();
-      const transferDateFormated = formatTransferDate(transfer.timestamp);
+  // NOTE: this is temporary, will be removed once we definition regarding shared config and api
+  // question to answer here: should we use chain id to mapp for icons? 
+  const renderNetworkIcon = (id: string) => {
+    switch (id) {
+      case "0":
+      case "3":
+        return (
+          <img
+            src={`/assets/icons/all.svg`}
+            alt="ethereum"
+            className={classes.networkIcon}
+          />
+        );
+      case "1":
+        return (
+          <img
+            src={`/assets/icons/polygon.svg`}
+            alt="polygon"
+            className={classes.networkIcon}
+          />
+        );
+      case "2":
+        return (
+          <img
+            src={`/assets/icons/moonbeam.svg`}
+            alt="moonbeam"
+            className={classes.networkIcon}
+          />
+        );
+      default:
+        return (
+          <img
+            src={`/assets/icons/all.svg`}
+            alt="ethereum"
+            className={classes.networkIcon}
+          />
+        );
+    }
+  };
 
-      //TODO check how to work better with BG and bigint
-      const amountFormated = computeAndFormatAmount(amount ?? "0");
+  const getDisplayedStatuses = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "Pending";
+      case "completed":
+        return "Completed";
+      case "reverted":
+        return "Reverted";
+      default:
+        return "Pending";
+    }
+  };
+
+  const renderTransferList = (transferData: Transfer[]) => {
+    return transferData.map((transfer: Transfer) => {
+      const {
+        deposit,
+        status,
+        fromDomain,
+        toDomain,
+        amount,
+        resource,
+        fromDomainId,
+        toDomainId,
+      } = transfer;
+      const { type } = resource;
+      let txHash: string | undefined;
+
+      if (status !== "pending") {
+        txHash = shortenAddress(deposit?.txHash!);
+      }
+      const { name } = fromDomain;
+      const { name: toName } = toDomain;
 
       return (
-        <TableRow className={classes.row} key={transfer.id}>
+        <TableRow className={classes.row} key={transfer.id} sx={{ borderBottom: "2px solid #CDC2B1"}}>
           <TableCell className={classes.cellRow}>
-            {transferDateFormated}
+            {txHash !== undefined ? (<a href="/" style={{ color: 'black'}}>{txHash}</a>) : "-"}
           </TableCell>
           <TableCell>
             <div className={classes.accountAddress}>
-              {/* <Avatar size="small" className={classes.avatar}>
-                <Blockies
-                  seed={randomString}
-                  size={15}
-                  color={"pink"}
-                  bgColor={"white"}
-                />
-              </Avatar> */}
-              <span>{transfer.fromAddress}</span>
+              <span className={classes.statusPill}>
+                {renderStatusIcon(status)} {getDisplayedStatuses(status)}
+              </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
-            <div>
-              <span>
-                <img
-                  className={classes.imageToken}
-                  src={getNetworkIcon(fromChain)}
-                  alt="fromChain"
-                />
-                <span>{fromChain?.name ?? "Unknown chain"} to</span>
+            <div style={{ width: '100%' }}>
+              <span style={{ display: 'flex' }}>
+                {renderNetworkIcon(fromDomainId)} {name}
               </span>
-              <span>
-                <img
-                  className={classes.imageToken}
-                  src={getNetworkIcon(toChain)}
-                  alt={fromToken?.symbol}
-                />
-                <span>{toChain?.name ?? "Unknown chain"}</span>
+            </div>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <div style={{ width: '100%' }}>
+              <span style={{ display: 'flex' }}>
+                {renderNetworkIcon(toDomainId)} {toName}
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
-              <img
-                className={classes.imageValueToken}
-                // src={showImageUrlNetworkIcons(fromToken?.imageUri!)}
-                alt={fromToken?.symbol}
-              />
-              <span>
-                {amountFormated} {fromToken?.name}
-              </span>
+              <span>{type !== undefined ? type : "-"}</span>
             </span>
           </TableCell>
           <TableCell className={classes.row}>
-            <div className={classes.viewDetailsInfo}>
-              <Button onClick={handleOpenModal(transfer.id)}>
-                <SvgIcon>
-                  <DirectionalIcon />
-                </SvgIcon>
-                View Details
-              </Button>
-            </div>
+            <span className={classes.amountInfo}>
+              <span>{amount}</span>
+            </span>
           </TableCell>
         </TableRow>
       );
     });
+  };
 
   return (
     <Table className={classes.root}>
-      <TableHead>
+      <TableHead
+        sx={{
+          backgroundColor: "#DBD3C7",
+          "& > tr > th": {
+            fontSize: '14px',
+            fontWeight: '400'
+          }
+        }}
+      >
         <TableRow className={classes.row}>
-          <TableCell>Date</TableCell>
+          <TableCell sx={{ borderTopLeftRadius: '12px !important' }}>Source Tx/Extr Hash</TableCell>
+          <TableCell>Status</TableCell>
           <TableCell>From</TableCell>
-          <TableCell>Transfer</TableCell>
-          <TableCell>Value</TableCell>
-          <TableCell></TableCell>
+          <TableCell>To</TableCell>
+          <TableCell>Type</TableCell>
+          <TableCell sx={{ borderTopRightRadius: '12px !important' }}>Value</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>{renderTransferList(transactionList)}</TableBody>
+      <TableBody>
+        {state.loading === "done" ? (
+          renderTransferList(state.transfers)
+        ) : (
+          <TableRow>
+            <TableCell>Loading</TableCell>
+          </TableRow>
+        )}
+      </TableBody>
     </Table>
   );
 };

@@ -1,17 +1,21 @@
-import { makeStyles, createStyles } from "@mui/styles";
+import { makeStyles } from "tss-react/mui";
 
-export const useStyles = makeStyles(() =>
-  createStyles({
+export const useStyles = makeStyles()((theme) => {
+  return {
     root: {
       display: "table",
       width: "100%",
+      background: "#E9E4DD",
+      borderTopRightRadius: '12px',
+      borderTopLeftRadius: '12px',
       "& > thead > tr": {
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: 700,
       },
     },
     row: {
       fontWeight: 400,
+      fontSize: 14,
       verticalAlign: "middle",
       "& > td:nth-child(1)": {
         paddingLeft: 26,
@@ -313,5 +317,19 @@ export const useStyles = makeStyles(() =>
     waitingForColor: {
       color: "#BFBFBF",
     },
-  })
-);
+    statusPillIcon: {
+      marginRight: 5,
+    },
+    statusPill: {
+      borderRadius: 32,
+      background: "#E2D9CC",
+      padding: '4px 8px 4px 4px'
+    },
+    networkIcon: {
+      display: "block",
+      height: 20,
+      width: 20,
+      marginRight: theme.spacing(1),
+    }
+  }
+});
