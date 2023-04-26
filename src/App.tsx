@@ -1,15 +1,14 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import { ExplorerPage } from "./pages";
+import { ExplorerPage, DetailView } from "./pages";
 import { SygmaTheme } from "./themes/SygmaTheme";
 import { ExplorerProvider } from "./context";
 import { Header } from "./components";
 
 export const ROUTE_LINKS = {
   Explorer: "/",
-  ExplorerDetailed: "/transaction/detail-view/:txId",
-  TransactionPage: "/transaction/:txHash",
+  ExplorerDetailed: "/transfer/:txHash",
 };
 
 function App() {
@@ -22,6 +21,10 @@ function App() {
           <Header />
           <Routes>
             <Route path={ROUTE_LINKS.Explorer} element={<ExplorerPage />} />
+            <Route
+              path={ROUTE_LINKS.ExplorerDetailed}
+              element={<DetailView />}
+            />
           </Routes>
         </Router>
       </ExplorerProvider>

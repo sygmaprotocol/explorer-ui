@@ -75,7 +75,7 @@ const ExplorerProvider = ({
         getChainId,
         chainId,
         account,
-        routes
+        routes: routes()
       }}
     >
       {children}

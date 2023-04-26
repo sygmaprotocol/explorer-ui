@@ -9,18 +9,13 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { EvmBridgeConfig, Transfer } from "../../types";
+import { Link } from 'react-router-dom'
+import { EvmBridgeConfig, ExplorerState, Transfer } from "../../types";
 import {
-  formatTransferDate,
-  getRandomSeed,
-  computeAndFormatAmount,
-  selectChains,
-  selectToken,
-  getNetworkIcon,
   shortenAddress,
 } from "../../utils/Helpers";
-import { ReactComponent as DirectionalIcon } from "../../media/icons/directional.svg";
 import { useStyles } from "./styles";
+import { renderStatusIcon, renderNetworkIcon } from './Helpers'
 
 // TODO: just for mocking purposes
 type ExplorerTable = {
@@ -34,6 +29,7 @@ type ExplorerTable = {
     loading: "none" | "loading" | "done";
     isReady: boolean;
   };
+  setExplorerState: React.SetStateAction<ExplorerState>
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
@@ -42,85 +38,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   handleTimelineButtonClick,
   timelineButtonClicked,
   state,
+  setExplorerState,
 }: ExplorerTable) => {
   const { classes } = useStyles();
-
-  const renderStatusIcon = (status: string) => {
-    switch (status) {
-      case "pending":
-        return (
-          <img
-            src={`/assets/icons/pending.svg`}
-            alt="pending"
-            className={classes.statusPillIcon}
-          />
-        );
-      case "completed":
-        return (
-          <img
-            src={`/assets/icons/success.svg`}
-            alt="completed"
-            className={classes.statusPillIcon}
-          />
-        );
-      case "reverted":
-        return (
-          <img
-            src={`/assets/icons/reverted.svg`}
-            alt="reverted"
-            className={classes.statusPillIcon}
-          />
-        );
-      default:
-        return (
-          <img
-            src={`/assets/icons/pending.svg`}
-            alt="pending"
-            className={classes.statusPillIcon}
-          />
-        );
-    }
-  };
-
-  // NOTE: this is temporary, will be removed once we definition regarding shared config and api
-  // question to answer here: should we use chain id to mapp for icons? 
-  const renderNetworkIcon = (id: string) => {
-    switch (id) {
-      case "0":
-      case "3":
-        return (
-          <img
-            src={`/assets/icons/all.svg`}
-            alt="ethereum"
-            className={classes.networkIcon}
-          />
-        );
-      case "1":
-        return (
-          <img
-            src={`/assets/icons/polygon.svg`}
-            alt="polygon"
-            className={classes.networkIcon}
-          />
-        );
-      case "2":
-        return (
-          <img
-            src={`/assets/icons/moonbeam.svg`}
-            alt="moonbeam"
-            className={classes.networkIcon}
-          />
-        );
-      default:
-        return (
-          <img
-            src={`/assets/icons/all.svg`}
-            alt="ethereum"
-            className={classes.networkIcon}
-          />
-        );
-    }
-  };
 
   const getDisplayedStatuses = (status: string) => {
     switch (status) {
@@ -146,6 +66,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         resource,
         fromDomainId,
         toDomainId,
+        id
       } = transfer;
       const { type } = resource;
       let txHash: string | undefined;
@@ -159,26 +80,26 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       return (
         <TableRow className={classes.row} key={transfer.id} sx={{ borderBottom: "2px solid #CDC2B1"}}>
           <TableCell className={classes.cellRow}>
-            {txHash !== undefined ? (<a href="/" style={{ color: 'black'}}>{txHash}</a>) : "-"}
+            {txHash !== undefined ? (<Link to={`/transfer/${deposit?.txHash}`} style={{ color: 'black'}} state={id}>{txHash}</Link>) : "-"}
           </TableCell>
           <TableCell>
             <div className={classes.accountAddress}>
               <span className={classes.statusPill}>
-                {renderStatusIcon(status)} {getDisplayedStatuses(status)}
+                {renderStatusIcon(status, classes)} {getDisplayedStatuses(status)}
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(fromDomainId)} {name}
+                {renderNetworkIcon(fromDomainId, classes)} {name}
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(toDomainId)} {toName}
+                {renderNetworkIcon(toDomainId, classes)} {toName}
               </span>
             </div>
           </TableCell>
