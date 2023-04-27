@@ -12,10 +12,12 @@ import {
 import { Link } from 'react-router-dom'
 import { EvmBridgeConfig, ExplorerState, Transfer } from "../../types";
 import {
+  getDisplayedStatuses,
   shortenAddress,
+  renderNetworkIcon,
+  renderStatusIcon,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
-import { renderStatusIcon, renderNetworkIcon } from './Helpers'
 
 // TODO: just for mocking purposes
 type ExplorerTable = {
@@ -29,7 +31,7 @@ type ExplorerTable = {
     loading: "none" | "loading" | "done";
     isReady: boolean;
   };
-  setExplorerState: React.SetStateAction<ExplorerState>
+  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
@@ -41,19 +43,6 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   setExplorerState,
 }: ExplorerTable) => {
   const { classes } = useStyles();
-
-  const getDisplayedStatuses = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "Pending";
-      case "completed":
-        return "Completed";
-      case "reverted":
-        return "Reverted";
-      default:
-        return "Pending";
-    }
-  };
 
   const renderTransferList = (transferData: Transfer[]) => {
     return transferData.map((transfer: Transfer) => {

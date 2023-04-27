@@ -101,6 +101,7 @@ export type Transfer = {
   status: TransferStatus;
   deposit?: Deposit;
   execution?: Execution;
+  fee: any
 }
 
 export type ExplorerState = {
