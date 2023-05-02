@@ -67,5 +67,13 @@ export const useStyles = makeStyles()((theme) => {
       background: "#E2D9CC",
       padding: '4px 8px 4px 4px'
     },
+    copyIcon: {
+      marginLeft: "5px",
+      display: "flex",
+      alignItems: "center",
+      ':hover': {
+        cursor: 'pointer'
+      }
+    }
   }
 });
