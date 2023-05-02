@@ -4,7 +4,36 @@ export const useStyles = makeStyles()((theme) => {
   return {
     root: {
       border: "none",
-      boxShadow: "none",
+      boxShadow: "none"
+    },
+    mainAppBar: {
+      display: "grid",
+      gridTemplateColumns: 'repeat(6, 1fr)',
+      [theme.breakpoints.down("lg")]: {
+        gridTemplateColumns: 'repeat(12, 1fr)',
+      }
+    },
+    toolBar: {
+      [theme.breakpoints.up("lg")]: {
+        gridColumn: '3/6',
+
+      },
+      [theme.breakpoints.down("lg")]: {
+        gridColumn: '2/span 6',
+      }
+    },
+    connectButtonContainer: {
+      display: "flex",
+      justifyContent: "flex-end",
+      [theme.breakpoints.up("lg")]: {
+        gridColumn: '6/6',
+      },
+      [theme.breakpoints.down("lg")]: {
+        gridColumn: '11/ span 2',
+        display: "flex",
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+      }
     },
     left: {
       flexGrow: 1,
@@ -15,6 +44,9 @@ export const useStyles = makeStyles()((theme) => {
     },
     logo: {
       marginRight: 11,
+      display: 'flex',
+      flexDirection: 'row',
+      alignSelf: 'center',
       height: theme.constants.generalUnit * 5,
       width: theme.constants.generalUnit * 5,
       "& svg, & img": {
