@@ -7,17 +7,24 @@ export const useStyles = makeStyles()((theme) => {
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'center',
+      
     },
     boxContainer: {
       width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
       marginTop: '65.5px',
-      alignItems: 'center'
+      display: 'grid',
+      gridTemplateColumns: 'repeat(12, 1fr)',
+      [theme.breakpoints.down('lg')]: {
+        gridTemplateColumns: 'repeat(12, 1fr)',
+      },
     },
     sectionContainer: {
       display: 'flex',
       flexDirection: 'column',
+      gridColumn: '4 / span 4',
+      [theme.breakpoints.down('lg')]: {
+        gridColumn: '2 / span 6',
+      },
     },
     transferDetailsContainer: {
       padding: '0 !important',
@@ -73,6 +80,19 @@ export const useStyles = makeStyles()((theme) => {
       alignItems: "center",
       ':hover': {
         cursor: 'pointer'
+      }
+    },
+    backIcon: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '70px',
+      height: '26px',
+      marginBottom: '15px',
+      ':hover': {
+        cursor: 'pointer',
+        borderRadius: '8px',
+        background: '#E2D9CC'
       }
     }
   }

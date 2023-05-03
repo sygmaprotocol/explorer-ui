@@ -1,8 +1,9 @@
 import { CircularProgress, Tooltip, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useExplorer } from "../../context";
 import { Transfer } from "../../types";
 import {
@@ -39,9 +40,9 @@ export default function DetailView() {
 
   useEffect(() => {
     let timerT1: ReturnType<typeof setTimeout>;
-    let timerT2: ReturnType<typeof setTimeout>
+    let timerT2: ReturnType<typeof setTimeout>;
 
-    if(clipboardMessageT1 === "Copied to clipboard!") {
+    if (clipboardMessageT1 === "Copied to clipboard!") {
       timerT1 = setTimeout(() => {
         setClipboardMessageT1("Copy to clipboard");
       }, 1000);
@@ -54,7 +55,7 @@ export default function DetailView() {
     return () => {
       clearTimeout(timerT1);
       clearTimeout(timerT2);
-    }
+    };
   }, [clipboardMessageT1, clipboardMessageT2]);
 
   const renderTransferDetails = (transfer: Transfer | null) => {
@@ -155,19 +156,32 @@ export default function DetailView() {
   }, []);
 
   return (
-    <Box className={classes.boxContainer}>
-      {transferStatus !== "none" ? (
-        <section className={classes.sectionContainer}>
-          <Typography variant="h4" sx={{ fontSize: "24px" }}>
-            Transaction Detail
-          </Typography>
-          <Container className={classes.transferDetailsContainer}>
-            {renderTransferDetails(transferDetails)}
-          </Container>
-        </section>
-      ) : (
-        <CircularProgress />
-      )}
-    </Box>
+    <Container maxWidth="xl">
+      <Box className={classes.boxContainer}>
+        {transferStatus !== "none" ? (
+          <section className={classes.sectionContainer}>
+            <span className={classes.backIcon}>
+              <Link to="/" style={{
+                color: "black",
+                textDecoration: "none",
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+                <ArrowBackIcon /> Back
+              </Link>
+            </span>
+            <Typography variant="h4" sx={{ fontSize: "24px" }}>
+              Transaction Detail
+            </Typography>
+            <Container className={classes.transferDetailsContainer}>
+              {renderTransferDetails(transferDetails)}
+            </Container>
+          </section>
+        ) : (
+          <CircularProgress />
+        )}
+      </Box>
+    </Container>
   );
 }
