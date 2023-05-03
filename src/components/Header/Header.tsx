@@ -11,21 +11,16 @@ export default function Header() {
   const nftTokenPage = true;
   const active = true;
   return (
-    <AppBar
-      position="static"
-      color="transparent"
-      className={clsx(classes.root)}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+    <AppBar position="static" color="transparent" className={classes.root}>
+      <Container maxWidth="xl" className={classes.mainAppBar}>
+        <a href="/" className={classes.logo}>
+          <img src="/assets/images/logo1.svg" alt="logo" />
+        </a>
+        <Toolbar disableGutters className={classes.toolBar}>
           <div className={classes.left}>
-            <a href="/" className={classes.logo}>
-              <img src="/assets/images/logo1.svg" alt="logo" />
-            </a>
             <Box
               sx={{
                 display: { xs: "none", sm: "flex", md: "flex" },
-                ml: 2,
                 background: "#DBD3C7",
                 borderRadius: 1,
                 height: 40,
@@ -38,7 +33,6 @@ export default function Header() {
                   px: 2,
                   display: "block",
                   fontSize: 18,
-                  // background: active ? "#CDC2B1" : "#DBD3C7",
                 }}
               >
                 Token Bridge
@@ -81,15 +75,14 @@ export default function Header() {
                   px: 2,
                   display: "block",
                   fontSize: 18,
-                  // "&.active": {
-                  //   background: "#CDC2B1",
-                  // },
                 }}
               >
                 Faucet
               </Button>
             </Box>
           </div>
+        </Toolbar>
+        <div className={classes.connectButtonContainer}>
           <TopBarNetworkConnect
             walletConnecting={false}
             homeConfig={undefined}
@@ -101,7 +94,7 @@ export default function Header() {
             chainId={explorerContext.chainId}
             account={explorerContext.account}
           />
-        </Toolbar>
+        </div>
       </Container>
     </AppBar>
   );

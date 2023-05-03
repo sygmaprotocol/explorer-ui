@@ -101,6 +101,7 @@ export type Transfer = {
   status: TransferStatus;
   deposit?: Deposit;
   execution?: Execution;
+  fee: any
 }
 
 export type ExplorerState = {
@@ -161,6 +162,7 @@ export type Actions = {
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>;
+  transfer: (id: string) => Promise<Transfer>;
 }
 
 export type ExplorerContext = {
@@ -173,5 +175,5 @@ export type ExplorerContext = {
   getChainId: () => Promise<number>;
   chainId: number | undefined;
   account: string | undefined;
-  routes: () => Routes
+  routes: Routes
 }

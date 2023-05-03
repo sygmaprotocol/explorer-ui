@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
 
 import { ExplorerTable } from "../../components";
-import MyAllSwitch from "./MyAllSwitch";
-import SelectNetwork from "./SelectNetwork";
 
 import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
@@ -55,7 +47,7 @@ const ExplorerPage = () => {
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
   const transferData = async () => {
-    const transfersResponse = await routes().transfers(
+    const transfersResponse = await routes.transfers(
       queryParams.page,
       queryParams.limit,
     );
@@ -99,6 +91,7 @@ const ExplorerPage = () => {
               handleTimelineButtonClick={handleTimelineButtonClick}
               timelineButtonClicked={explorerPageState.timelineButtonClicked}
               state={state}
+              setExplorerState={setExplorerState}
             />
             <div className={classes.paginationPanel}>
               <Button
