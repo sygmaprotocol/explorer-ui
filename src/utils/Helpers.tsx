@@ -186,7 +186,7 @@ export const computeTransferDetails = (
       },
     ];
   } else {
-    const votesMessages = voteEvents.map((vote) => ({
+    const votesMessages = voteEvents.map((vote: { timestamp: number, by: string }) => ({
       message: `Confirmed by`,
       time: formatDateTimeline(vote.timestamp),
       by: vote.by,
@@ -228,7 +228,7 @@ export const computeTransferDetails = (
         }
       }
       default: {
-        timelineMessages = proposalEvents.reduce((acc: any, proposal, idx) => {
+        timelineMessages = proposalEvents.reduce((acc: any, proposal: { timestamp: number, proposalStatus: number }, idx: number) => {
           if (idx === 0) {
             acc = [
               {

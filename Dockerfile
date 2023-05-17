@@ -1,6 +1,9 @@
 
 FROM node:18-alpine AS builder
 RUN apk --no-cache add git
+RUN corepack enable
+RUN corepack prepare yarn@stable --activate
+RUN yarn set version stable
 WORKDIR /app
 COPY . .
 RUN yarn install
