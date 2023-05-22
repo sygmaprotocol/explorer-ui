@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
 
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -60,8 +61,26 @@ const ExplorerPage = () => {
   };
 
   useEffect(() => {
-    transferData();
+    if(explorerState.account === undefined){
+      transferData();
+    }
   }, []);
+
+  const transferDataBySender = async (sender: string) => {
+    const transferResponseBySender = await routes.transferBySender(sender, '1', '10')
+    setState((prevState) => ({
+      ...prevState,
+      transfers: transferResponseBySender,
+      loading: "loading",
+      isReady: true
+    }))
+  }
+
+  useEffect(() => {
+    if(explorerState.account !== undefined) {
+      transferDataBySender(ethers.getAddress(explorerState.account))
+    }
+  }, [explorerState])
 
   useEffect(() => {
     if (state.isReady) {
