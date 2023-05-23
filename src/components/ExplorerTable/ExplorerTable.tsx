@@ -30,6 +30,7 @@ type ExplorerTable = {
     transfers: Transfer[] | never[];
     loading: "none" | "loading" | "done";
     isReady: boolean;
+    error: undefined | string;
   };
   setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>
 };
@@ -135,6 +136,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
             <TableCell>Loading</TableCell>
           </TableRow>
         )}
+
+        {
+          state.error && (
+            <TableRow>
+              <TableCell>{state.error}</TableCell>
+            </TableRow>
+          )
+        }
       </TableBody>
     </Table>
   );

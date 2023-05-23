@@ -36,60 +36,87 @@ const ExplorerPage = () => {
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
+  // NOTE: we are going to use the setter upon filters implementation
   const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
 
-  const [state, setState] = useState<{ transfers: Transfer[] | never[], loading: "none" | "loading" | "done", isReady: boolean }>({
+  const [state, setState] = useState<{
+    transfers: Transfer[] | never[];
+    loading: "none" | "loading" | "done";
+    isReady: boolean;
+    error: undefined | string;
+  }>({
     transfers: [],
     loading: "none",
-    isReady: false
-  })
+    isReady: false,
+    error: undefined,
+  });
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
   const transferData = async () => {
-    const transfersResponse = await routes.transfers(
-      queryParams.page,
-      queryParams.limit,
-    );
-    setState((prevState) => ({
-      ...prevState,
-      transfers: transfersResponse,
-      loading: "loading",
-      isReady: true
-    }))
+    try {
+      const transfersResponse = await routes.transfers(
+        queryParams.page,
+        queryParams.limit,
+      );
+      setState((prevState) => ({
+        ...prevState,
+        transfers: transfersResponse,
+        loading: "loading",
+        isReady: true,
+      }));
+    } catch (e) {
+      setState((prevState) => ({
+        ...prevState,
+        error: "Error fetching all the transfers",
+      }));
+    }
   };
 
   useEffect(() => {
-    if(explorerState.account === undefined){
+    if (explorerState.account === undefined) {
       transferData();
     }
   }, []);
 
   const transferDataBySender = async (sender: string) => {
-    const transferResponseBySender = await routes.transferBySender(sender, '1', '10')
-    setState((prevState) => ({
-      ...prevState,
-      transfers: transferResponseBySender,
-      loading: "loading",
-      isReady: true
-    }))
-  }
-
-  useEffect(() => {
-    if(explorerState.account !== undefined) {
-      transferDataBySender(ethers.getAddress(explorerState.account))
+    try {
+      const transferResponseBySender = await routes.transferBySender(
+        sender,
+        "1",
+        "10",
+      );
+      setState((prevState) => ({
+        ...prevState,
+        transfers: transferResponseBySender,
+        loading: "loading",
+        isReady: true,
+      }));
+    } catch(e){
+      setState((prevState) => ({
+        ...prevState,
+        error: "Error fetching current sender transfers",
+      }));
     }
-  }, [explorerState])
+  };
 
   useEffect(() => {
-    if (state.isReady) {
+    if (explorerState.account !== undefined) {
+      transferDataBySender(ethers.getAddress(explorerState.account));
+    }
+  }, [explorerState]);
+
+  useEffect(() => {
+    if (state.isReady && state.transfers.length) {
       setState((prevState) => ({
         ...prevState,
         loading: "done",
-      }))
+      }));
     }
-  }, [state.isReady]);
+  }, [state.isReady, state.transfers]);
+
+  console.log("state", state);
 
   return (
     <Box
