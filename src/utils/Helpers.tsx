@@ -17,7 +17,7 @@ export const isCelo = (networkId?: number) =>
   [42220, 44787, 62320].includes(networkId ?? 0);
 
 export const shortenAddress = (address: string) => {
-  return `${address.substr(0, 6)}...${address.substr(address.length - 6, 6)}`;
+  return `${address.substring(0, 6)}...${address.substring(address.length - 6, address.length)}`;
 };
 
 export const getNetworkName = (id: any) => {
