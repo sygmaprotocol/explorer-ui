@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
 
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -35,42 +36,81 @@ const ExplorerPage = () => {
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
+  // NOTE: we are going to use the setter upon filters implementation
   const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
 
-  const [state, setState] = useState<{ transfers: Transfer[] | never[], loading: "none" | "loading" | "done", isReady: boolean }>({
+  const [state, setState] = useState<{
+    transfers: Transfer[];
+    loading: "none" | "loading" | "done";
+    error: undefined | string;
+  }>({
     transfers: [],
     loading: "none",
-    isReady: false
-  })
+    error: undefined,
+  });
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
   const transferData = async () => {
-    const transfersResponse = await routes.transfers(
-      queryParams.page,
-      queryParams.limit,
-    );
-    setState((prevState) => ({
-      ...prevState,
-      transfers: transfersResponse,
-      loading: "loading",
-      isReady: true
-    }))
+    try {
+      const transfersResponse = await routes.transfers(
+        queryParams.page,
+        queryParams.limit,
+      );
+      setState((prevState) => ({
+        ...prevState,
+        transfers: transfersResponse,
+        loading: "loading",
+      }));
+    } catch (e) {
+      setState((prevState) => ({
+        ...prevState,
+        error: "Error fetching all the transfers",
+      }));
+    }
   };
 
   useEffect(() => {
-    transferData();
+    if (explorerState.account === undefined) {
+      transferData();
+    }
   }, []);
 
+  const transferDataBySender = async (sender: string) => {
+    try {
+      const transferResponseBySender = await routes.transferBySender(
+        sender,
+        queryParams.page,
+        queryParams.limit,
+      );
+      setState((prevState) => ({
+        ...prevState,
+        transfers: transferResponseBySender,
+        loading: "loading",
+      }));
+    } catch(e){
+      setState((prevState) => ({
+        ...prevState,
+        error: "Error fetching current sender transfers",
+      }));
+    }
+  };
+
   useEffect(() => {
-    if (state.isReady) {
+    if (explorerState.account !== undefined) {
+      transferDataBySender(ethers.getAddress(explorerState.account));
+    }
+  }, [explorerState]);
+
+  useEffect(() => {
+    if (state.loading === 'loading' && state.transfers.length) {
       setState((prevState) => ({
         ...prevState,
         loading: "done",
-      }))
+      }));
     }
-  }, [state.isReady]);
+  }, [state.loading, state.transfers]);
 
   return (
     <Box

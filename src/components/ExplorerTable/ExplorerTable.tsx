@@ -27,9 +27,9 @@ type ExplorerTable = {
   handleTimelineButtonClick: () => void;
   timelineButtonClicked: boolean;
   state: {
-    transfers: Transfer[] | never[];
+    transfers: Transfer[];
     loading: "none" | "loading" | "done";
-    isReady: boolean;
+    error: undefined | string;
   };
   setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>
 };
@@ -135,6 +135,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
             <TableCell>Loading</TableCell>
           </TableRow>
         )}
+
+        {
+          state.error && (
+            <TableRow>
+              <TableCell>{state.error}</TableCell>
+            </TableRow>
+          )
+        }
       </TableBody>
     </Table>
   );

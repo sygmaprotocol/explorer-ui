@@ -19,6 +19,7 @@ export const routes = (): Routes => {
 
   return {
     transfers: async (page: string, limit: string, status?: string ) => await fetchTransfers(`${indexerUrl}/transfers?page=${page}&limit=${limit}${status ? `&status=${status}` : ''}`),
-    transfer: async (id: string) => await fetchTransfer(`${indexerUrl}/transfers/${id}`)
+    transfer: async (id: string) => await fetchTransfer(`${indexerUrl}/transfers/${id}`),
+    transferBySender: async (sender: string, page: string, limit: string) => await fetchTransfers(`${indexerUrl}/sender/${sender}/transfers?limit=${limit}&page=${page}`),
   }
 }

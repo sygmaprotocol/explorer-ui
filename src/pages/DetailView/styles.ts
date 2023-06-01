@@ -35,7 +35,7 @@ export const useStyles = makeStyles()((theme) => {
       padding: '0 !important',
       fontSize: '14px',
       lineHeight: '18px',
-      '& > div:nth-child(1)': {
+      '& > div:nth-of-type(1)': {
         borderTopLeftRadius: '12px',
         borderTopRightRadius: '12px',
       },

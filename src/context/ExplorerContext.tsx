@@ -62,7 +62,7 @@ const ExplorerProvider = ({
       window.ethereum!.removeAllListeners('accountsChanged');
     }
   }, [])
-
+  
   return (
     <ExplorerCtx.Provider
       value={{

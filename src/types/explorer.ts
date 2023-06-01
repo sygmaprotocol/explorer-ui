@@ -163,6 +163,7 @@ export type Actions = {
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>;
   transfer: (id: string) => Promise<Transfer>;
+  transferBySender: (sender: string, page: string, limit: string) => Promise<Transfer[]>;
 }
 
 export type ExplorerContext = {
