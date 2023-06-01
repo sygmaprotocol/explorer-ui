@@ -27,7 +27,7 @@ type ExplorerTable = {
   handleTimelineButtonClick: () => void;
   timelineButtonClicked: boolean;
   state: {
-    transfers: Transfer[] | never[];
+    transfers: Transfer[];
     loading: "none" | "loading" | "done";
     error: undefined | string;
   };
