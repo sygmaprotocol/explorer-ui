@@ -29,7 +29,6 @@ type ExplorerTable = {
   state: {
     transfers: Transfer[] | never[];
     loading: "none" | "loading" | "done";
-    isReady: boolean;
     error: undefined | string;
   };
   setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>

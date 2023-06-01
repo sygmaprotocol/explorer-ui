@@ -40,14 +40,12 @@ const ExplorerPage = () => {
   const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
 
   const [state, setState] = useState<{
-    transfers: Transfer[] | never[];
+    transfers: Transfer[];
     loading: "none" | "loading" | "done";
-    isReady: boolean;
     error: undefined | string;
   }>({
     transfers: [],
     loading: "none",
-    isReady: false,
     error: undefined,
   });
 
@@ -64,7 +62,6 @@ const ExplorerPage = () => {
         ...prevState,
         transfers: transfersResponse,
         loading: "loading",
-        isReady: true,
       }));
     } catch (e) {
       setState((prevState) => ({
@@ -84,14 +81,13 @@ const ExplorerPage = () => {
     try {
       const transferResponseBySender = await routes.transferBySender(
         sender,
-        "1",
-        "10",
+        queryParams.page,
+        queryParams.limit,
       );
       setState((prevState) => ({
         ...prevState,
         transfers: transferResponseBySender,
         loading: "loading",
-        isReady: true,
       }));
     } catch(e){
       setState((prevState) => ({
@@ -108,15 +104,13 @@ const ExplorerPage = () => {
   }, [explorerState]);
 
   useEffect(() => {
-    if (state.isReady && state.transfers.length) {
+    if (state.loading === 'loading' && state.transfers.length) {
       setState((prevState) => ({
         ...prevState,
         loading: "done",
       }));
     }
-  }, [state.isReady, state.transfers]);
-
-  console.log("state", state);
+  }, [state.loading, state.transfers]);
 
   return (
     <Box
