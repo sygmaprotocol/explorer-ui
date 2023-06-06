@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 import { useNavigate } from "react-router-dom";
@@ -37,7 +37,7 @@ const ExplorerPage = () => {
   const classes = useStyles();
   const [active, setActive] = useState(false);
   // NOTE: we are going to use the setter upon filters implementation
-  const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
+  const [queryParams, setQueryParams] = useState({ page: 1, limit: 10 });
 
   const [state, setState] = useState<{
     transfers: Transfer[];
@@ -55,8 +55,8 @@ const ExplorerPage = () => {
   const transferData = async () => {
     try {
       const transfersResponse = await routes.transfers(
-        queryParams.page,
-        queryParams.limit,
+        `${queryParams.page}`,
+        `${queryParams.limit}`,
       );
       setState((prevState) => ({
         ...prevState,
@@ -81,8 +81,8 @@ const ExplorerPage = () => {
     try {
       const transferResponseBySender = await routes.transferBySender(
         sender,
-        queryParams.page,
-        queryParams.limit,
+        `${queryParams.page}`,
+        `${queryParams.limit}`,
       );
       setState((prevState) => ({
         ...prevState,
@@ -112,6 +112,16 @@ const ExplorerPage = () => {
     }
   }, [state.loading, state.transfers]);
 
+  const handleNextPage = () => {
+    transferData();
+  };
+
+  const handlePreviousPage = () => {
+    transferData();
+  };
+
+  console.table(queryParams)
+
   return (
     <Box
       sx={{
@@ -135,26 +145,27 @@ const ExplorerPage = () => {
             />
             <div className={classes.paginationPanel}>
               <Button
-                onClick={() =>
-                  loadMore({
-                    before: pageInfo?.startCursor,
-                    last: "10",
-                  })
-                }
+                onClick={() => {
+                  setQueryParams((prevState) => ({
+                    ...prevState,
+                    page: prevState.page + 1,
+                  }));
+                  handlePreviousPage()
+                }}
                 className={classes.paginationButtons}
-                disabled={!pageInfo?.hasPreviousPage || isLoading}
+                disabled={queryParams.page === 1}
               >
                 ← Previous
               </Button>
               <Button
-                onClick={() =>
-                  loadMore({
-                    after: pageInfo?.endCursor,
-                    first: "10",
-                  })
-                }
+                onClick={() => {
+                  setQueryParams((prevState) => ({
+                    ...prevState,
+                    page: prevState.page + 1,
+                  }));
+                  handleNextPage()
+                }}
                 className={classes.paginationButtons}
-                disabled={!pageInfo?.hasNextPage || isLoading}
               >
                 Next →
               </Button>
