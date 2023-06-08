@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { ethers } from "ethers";
 
 import { useNavigate } from "react-router-dom";
@@ -10,13 +10,18 @@ import { ExplorerTable } from "../../components";
 import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
 import { Transfer } from "../../types";
+import { State, reducer } from "./reducer";
 
-type PreflightDetails = {
-  tokenAmount: number;
-  token: string;
-  tokenSymbol: string;
-  receiver: string;
-};
+const initState: State = {
+  transfers: [],
+  loading: "none",
+  error: undefined,
+  queryParams: {
+    page: 1,
+    limit: 10,
+  },
+  init: true
+}
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
@@ -32,22 +37,12 @@ const ExplorerPage = () => {
 
   const navigate = useNavigate();
 
-  const [isReady, setIsReady] = useState(true);
-
   const classes = useStyles();
   const [active, setActive] = useState(false);
   // NOTE: we are going to use the setter upon filters implementation
-  const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
 
-  const [state, setState] = useState<{
-    transfers: Transfer[];
-    loading: "none" | "loading" | "done";
-    error: undefined | string;
-  }>({
-    transfers: [],
-    loading: "none",
-    error: undefined,
-  });
+
+  const [state, dispatcher] = useReducer(reducer, initState);
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
@@ -55,47 +50,45 @@ const ExplorerPage = () => {
   const transferData = async () => {
     try {
       const transfersResponse = await routes.transfers(
-        queryParams.page,
-        queryParams.limit,
+        `${state.queryParams.page}`,
+        `${state.queryParams.limit}`,
       );
-      setState((prevState) => ({
-        ...prevState,
-        transfers: transfersResponse,
-        loading: "loading",
-      }));
+      dispatcher({
+        type: 'fetch_transfers',
+        payload: transfersResponse
+      })
     } catch (e) {
-      setState((prevState) => ({
-        ...prevState,
-        error: "Error fetching all the transfers",
-      }));
+      dispatcher({
+        type: 'fetch_transfer_error',
+        payload: "Error fetching all the transfers"
+      })
     }
   };
-
-  useEffect(() => {
-    if (explorerState.account === undefined) {
-      transferData();
-    }
-  }, []);
 
   const transferDataBySender = async (sender: string) => {
     try {
       const transferResponseBySender = await routes.transferBySender(
         sender,
-        queryParams.page,
-        queryParams.limit,
+        `${state.queryParams.page}`,
+        `${state.queryParams.limit}`,
       );
-      setState((prevState) => ({
-        ...prevState,
-        transfers: transferResponseBySender,
-        loading: "loading",
-      }));
-    } catch(e){
-      setState((prevState) => ({
-        ...prevState,
-        error: "Error fetching current sender transfers",
-      }));
+      dispatcher({
+        type: 'fetch_transfer_by_sender',
+        payload: transferResponseBySender
+      })
+    } catch (e) {
+      dispatcher({
+        type: 'fetch_transfer_by_sender_error',
+        payload: "Error fetching all the transfers"
+      })
     }
   };
+
+  useEffect(() => {
+    if (explorerState.account === undefined && !state.init) {
+      transferData();
+    }
+  }, []);
 
   useEffect(() => {
     if (explorerState.account !== undefined) {
@@ -104,13 +97,17 @@ const ExplorerPage = () => {
   }, [explorerState]);
 
   useEffect(() => {
-    if (state.loading === 'loading' && state.transfers.length) {
-      setState((prevState) => ({
-        ...prevState,
-        loading: "done",
-      }));
+    if (state.loading === "loading" && state.transfers.length) {
+      dispatcher({
+        type: 'loading_done'
+      })
     }
   }, [state.loading, state.transfers]);
+
+  useEffect(() => {
+    transferData();
+  }, [state.queryParams]);
+
 
   return (
     <Box
@@ -135,26 +132,37 @@ const ExplorerPage = () => {
             />
             <div className={classes.paginationPanel}>
               <Button
-                onClick={() =>
-                  loadMore({
-                    before: pageInfo?.startCursor,
-                    last: "10",
+                onClick={() => {
+                  dispatcher({
+                    type: 'set_query_params',
+                    payload: {
+                      page: state.queryParams.page - 1,
+                      limit: state.queryParams.limit,
+                    }
                   })
-                }
+                }}
                 className={classes.paginationButtons}
-                disabled={!pageInfo?.hasPreviousPage || isLoading}
+                disabled={state.queryParams.page === 1}
               >
                 ← Previous
               </Button>
+              <span style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginLeft: '10px',
+              }}>{state.queryParams.page}</span>
               <Button
-                onClick={() =>
-                  loadMore({
-                    after: pageInfo?.endCursor,
-                    first: "10",
+                onClick={() => {
+                  dispatcher({
+                    type: 'set_query_params',
+                    payload: {
+                      page: state.queryParams.page + 1,
+                      limit: state.queryParams.limit,
+                    }
                   })
-                }
+                }}
                 className={classes.paginationButtons}
-                disabled={!pageInfo?.hasNextPage || isLoading}
               >
                 Next →
               </Button>
