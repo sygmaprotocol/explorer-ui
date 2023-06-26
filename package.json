@@ -59,7 +59,6 @@
     "eject": "react-scripts eject",
     "setup:copy-dev-config": "./scripts/copy-dev-config.sh"
   },
-  "cracoConfig": "./craco.config.cjs",
   "eslintConfig": {
     "extends": [
       "react-app",
