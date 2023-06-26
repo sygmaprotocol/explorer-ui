@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
+import { ethers } from "ethers";
 
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -9,13 +10,18 @@ import { ExplorerTable } from "../../components";
 import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
 import { Transfer } from "../../types";
+import { State, reducer } from "./reducer";
 
-type PreflightDetails = {
-  tokenAmount: number;
-  token: string;
-  tokenSymbol: string;
-  receiver: string;
-};
+const initState: State = {
+  transfers: [],
+  loading: "none",
+  error: undefined,
+  queryParams: {
+    page: 1,
+    limit: 10,
+  },
+  init: true
+}
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
@@ -31,46 +37,77 @@ const ExplorerPage = () => {
 
   const navigate = useNavigate();
 
-  const [isReady, setIsReady] = useState(true);
-
   const classes = useStyles();
   const [active, setActive] = useState(false);
-  const [queryParams, setQueryParams] = useState({ page: "1", limit: "10" });
+  // NOTE: we are going to use the setter upon filters implementation
 
-  const [state, setState] = useState<{ transfers: Transfer[] | never[], loading: "none" | "loading" | "done", isReady: boolean }>({
-    transfers: [],
-    loading: "none",
-    isReady: false
-  })
+
+  const [state, dispatcher] = useReducer(reducer, initState);
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
   const transferData = async () => {
-    const transfersResponse = await routes.transfers(
-      queryParams.page,
-      queryParams.limit,
-    );
-    setState((prevState) => ({
-      ...prevState,
-      transfers: transfersResponse,
-      loading: "loading",
-      isReady: true
-    }))
+    try {
+      const transfersResponse = await routes.transfers(
+        `${state.queryParams.page}`,
+        `${state.queryParams.limit}`,
+      );
+      dispatcher({
+        type: 'fetch_transfers',
+        payload: transfersResponse
+      })
+    } catch (e) {
+      dispatcher({
+        type: 'fetch_transfer_error',
+        payload: "Error fetching all the transfers"
+      })
+    }
+  };
+
+  const transferDataBySender = async (sender: string) => {
+    try {
+      const transferResponseBySender = await routes.transferBySender(
+        sender,
+        `${state.queryParams.page}`,
+        `${state.queryParams.limit}`,
+      );
+      dispatcher({
+        type: 'fetch_transfer_by_sender',
+        payload: transferResponseBySender
+      })
+    } catch (e) {
+      dispatcher({
+        type: 'fetch_transfer_by_sender_error',
+        payload: "Error fetching all the transfers"
+      })
+    }
   };
 
   useEffect(() => {
-    transferData();
+    if (explorerState.account === undefined && !state.init) {
+      transferData();
+    }
   }, []);
 
   useEffect(() => {
-    if (state.isReady) {
-      setState((prevState) => ({
-        ...prevState,
-        loading: "done",
-      }))
+    if (explorerState.account !== undefined) {
+      transferDataBySender(ethers.getAddress(explorerState.account));
     }
-  }, [state.isReady]);
+  }, [explorerState]);
+
+  useEffect(() => {
+    if (state.loading === "loading" && state.transfers.length) {
+      dispatcher({
+        type: 'loading_done'
+      })
+    }
+  }, [state.loading, state.transfers]);
+
+  useEffect(() => {
+    transferData();
+  }, [state.queryParams]);
+
 
   return (
     <Box
@@ -95,26 +132,37 @@ const ExplorerPage = () => {
             />
             <div className={classes.paginationPanel}>
               <Button
-                onClick={() =>
-                  loadMore({
-                    before: pageInfo?.startCursor,
-                    last: "10",
+                onClick={() => {
+                  dispatcher({
+                    type: 'set_query_params',
+                    payload: {
+                      page: state.queryParams.page - 1,
+                      limit: state.queryParams.limit,
+                    }
                   })
-                }
+                }}
                 className={classes.paginationButtons}
-                disabled={!pageInfo?.hasPreviousPage || isLoading}
+                disabled={state.queryParams.page === 1}
               >
                 ← Previous
               </Button>
+              <span style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginLeft: '10px',
+              }}>{state.queryParams.page}</span>
               <Button
-                onClick={() =>
-                  loadMore({
-                    after: pageInfo?.endCursor,
-                    first: "10",
+                onClick={() => {
+                  dispatcher({
+                    type: 'set_query_params',
+                    payload: {
+                      page: state.queryParams.page + 1,
+                      limit: state.queryParams.limit,
+                    }
                   })
-                }
+                }}
                 className={classes.paginationButtons}
-                disabled={!pageInfo?.hasNextPage || isLoading}
               >
                 Next →
               </Button>

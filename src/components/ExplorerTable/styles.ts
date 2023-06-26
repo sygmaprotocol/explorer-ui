@@ -17,7 +17,7 @@ export const useStyles = makeStyles()((theme) => {
       fontWeight: 400,
       fontSize: 14,
       verticalAlign: "middle",
-      "& > td:nth-child(1)": {
+      "& > td:nth-of-type(1)": {
         paddingLeft: 26,
         textAlign: "left",
       },
@@ -25,7 +25,7 @@ export const useStyles = makeStyles()((theme) => {
         textAlign: "left",
         "& > div": {
           display: "flex",
-          "& > span:nth-child(1)": {
+          "& > span:nth-of-type(1)": {
             marginRight: 3,
           },
           "& > span": {
@@ -171,7 +171,7 @@ export const useStyles = makeStyles()((theme) => {
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
-        "& > span:nth-child(2)": {
+        "& > span:nth-of-type(2)": {
           marginLeft: 6,
           fontSize: 16,
         },
@@ -213,7 +213,7 @@ export const useStyles = makeStyles()((theme) => {
       "& > div": {
         display: "flex",
         flexDirection: "column",
-        "& > span:nth-child(2), & > a:nth-child(2)": {
+        "& > span:nth-of-type(2), & > a:nth-of-type(2)": {
           marginTop: 12,
           fontSize: 14,
           display: "flex",
@@ -222,7 +222,7 @@ export const useStyles = makeStyles()((theme) => {
       },
     },
     transferTimeline: {
-      "& > div:first-child": {
+      "& > div:first-type": {
         marginBottom: 22,
       },
     },
@@ -271,7 +271,7 @@ export const useStyles = makeStyles()((theme) => {
       position: "absolute",
       top: 19,
       left: 3,
-      "& div:first-child": {
+      "& div:first-of-type": {
         height: 45,
       },
     },

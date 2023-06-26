@@ -34,6 +34,10 @@ export default function DetailView() {
 
   const fetchTransfer = async () => {
     const transfer = await routes.transfer(transferId);
+    console.log(
+      "🚀 ~ file: DetailView.tsx:37 ~ fetchTransfer ~ transfer:",
+      transfer,
+    );
     setTransferDetails(transfer);
     setTransferStatus("completed");
   };
@@ -75,7 +79,9 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {shortenAddress(transfer?.deposit?.txHash!)}{" "}
+            {(transfer?.deposit &&
+              shortenAddress(transfer?.deposit?.txHash!)) ||
+              "-"}{" "}
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -94,18 +100,23 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {shortenAddress(transfer?.execution?.txHash!)}{" "}
-            <span
-              className={classes.copyIcon}
-              onClick={() => {
-                navigator.clipboard?.writeText(transfer?.execution?.txHash!);
-                setClipboardMessageT2("Copied to clipboard!");
-              }}
-            >
-              <Tooltip title={clipboardMessageT2} placement="top" arrow>
-                <ContentCopyIcon fontSize="small" />
-              </Tooltip>
-            </span>
+            {(transfer?.execution &&
+              shortenAddress(transfer?.execution?.txHash!) && (
+                <span
+                  className={classes.copyIcon}
+                  onClick={() => {
+                    navigator.clipboard?.writeText(
+                      transfer?.execution?.txHash!,
+                    );
+                    setClipboardMessageT2("Copied to clipboard!");
+                  }}
+                >
+                  <Tooltip title={clipboardMessageT2} placement="top" arrow>
+                    <ContentCopyIcon fontSize="small" />
+                  </Tooltip>
+                </span>
+              )) ||
+              "No transacton hash yet"}{" "}
           </span>
         </div>
         <div className={classes.detailsContainer}>
@@ -161,13 +172,16 @@ export default function DetailView() {
         {transferStatus !== "none" ? (
           <section className={classes.sectionContainer}>
             <span className={classes.backIcon}>
-              <Link to="/" style={{
-                color: "black",
-                textDecoration: "none",
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}>
+              <Link
+                to="/"
+                style={{
+                  color: "black",
+                  textDecoration: "none",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
                 <ArrowBackIcon /> Back
               </Link>
             </span>
