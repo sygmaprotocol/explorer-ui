@@ -16,6 +16,7 @@ import {
   shortenAddress,
   renderNetworkIcon,
   renderStatusIcon,
+  getNetworNames,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -57,14 +58,19 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         toDomainId,
         id
       } = transfer;
+
       const { type } = resource;
       let txHash: string | undefined;
 
-      if (status !== "pending") {
+      if (fromDomainId === '1') {
         txHash = shortenAddress(deposit?.txHash!);
+      } else {
+        txHash = deposit?.txHash;
       }
+
       const { name } = fromDomain;
-      const { name: toName } = toDomain;
+      const toDomainName = getNetworNames(toDomainId);
+      
 
       return (
         <TableRow className={classes.row} key={transfer.id} sx={{ borderBottom: "2px solid #CDC2B1"}}>
@@ -88,7 +94,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(toDomainId, classes)} {toName}
+                {renderNetworkIcon(toDomainId, classes)} {toDomainName}
               </span>
             </div>
           </TableCell>

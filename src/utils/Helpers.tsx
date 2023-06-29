@@ -77,7 +77,7 @@ export const renderStatusIcon = (
           className={classes.statusPillIcon}
         />
       );
-    case "completed":
+    case "executed":
       return (
         <img
           src={`/assets/icons/success.svg`}
@@ -112,8 +112,7 @@ export const renderNetworkIcon = (
   classes: Record<"networkIcon", string>,
 ) => {
   switch (id) {
-    case "0":
-    case "3":
+    case "1":
       return (
         <img
           src={`/assets/icons/all.svg`}
@@ -121,18 +120,18 @@ export const renderNetworkIcon = (
           className={classes.networkIcon}
         />
       );
-    case "1":
+    case "2":
       return (
         <img
-          src={`/assets/icons/polygon.svg`}
+          src={`/assets/icons/khala.svg`}
           alt="polygon"
           className={classes.networkIcon}
         />
       );
-    case "2":
+    case "3":
       return (
         <img
-          src={`/assets/icons/moonbeam.svg`}
+          src={`/assets/icons/phala.svg`}
           alt="moonbeam"
           className={classes.networkIcon}
         />
@@ -152,8 +151,8 @@ export const getDisplayedStatuses = (status: string) => {
   switch (status) {
     case "pending":
       return "Pending";
-    case "completed":
-      return "Completed";
+    case "executed":
+      return "Executed";
     case "reverted":
       return "Reverted";
     case 'failed':
@@ -162,3 +161,16 @@ export const getDisplayedStatuses = (status: string) => {
       return "Pending";
   }
 };
+
+export const getNetworNames = (networkId: string) => {
+  switch (networkId) {
+    case "1":
+      return "Ethereum";
+    case "2":
+      return "Khala";
+    case "3":
+      return "Phala";
+    default:
+      return "Ethereum";
+  }
+}
