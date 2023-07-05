@@ -20,8 +20,8 @@ const initState: State = {
     page: 1,
     limit: 10,
   },
-  init: true
-}
+  init: true,
+};
 
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
@@ -41,11 +41,39 @@ const ExplorerPage = () => {
   const [active, setActive] = useState(false);
   // NOTE: we are going to use the setter upon filters implementation
 
-
   const [state, dispatcher] = useReducer(reducer, initState);
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
+
+  // NOTE: this is super temporary
+  const defaultValuesForNull = (transfers: Transfer[]) => {
+    let parsedTransfers = [] as Transfer[];
+    for (let transfer of transfers) {
+      let newTransfer = {} as Transfer;
+      for (let key in transfer) {
+        if (transfer[key as keyof Transfer] === null) {
+          if (key === "toDomainId") {
+            console.warn("todomainid");
+            // @ts-ignore-next-line
+            newTransfer[key as keyof Transfer] = "1";
+          } else if (key === "resource") {
+            // @ts-ignore-next-line
+            newTransfer[key as keyof Transfer] = { type: "fungible" };
+          } else {
+            // @ts-ignore-next-line
+            newTransfer[key as keyof Transfer] = "";
+          }
+        } else {
+          // @ts-ignore-next-line
+          newTransfer[key as keyof Transfer] = transfer[key as keyof Transfer];
+        }
+      }
+      parsedTransfers.push({ ...newTransfer });
+    }
+
+    return parsedTransfers;
+  };
 
   const transferData = async () => {
     try {
@@ -53,15 +81,16 @@ const ExplorerPage = () => {
         `${state.queryParams.page}`,
         `${state.queryParams.limit}`,
       );
+
       dispatcher({
-        type: 'fetch_transfers',
-        payload: transfersResponse
-      })
+        type: "fetch_transfers",
+        payload: defaultValuesForNull(transfersResponse),
+      });
     } catch (e) {
       dispatcher({
-        type: 'fetch_transfer_error',
-        payload: "Error fetching all the transfers"
-      })
+        type: "fetch_transfer_error",
+        payload: "Error fetching all the transfers",
+      });
     }
   };
 
@@ -73,14 +102,14 @@ const ExplorerPage = () => {
         `${state.queryParams.limit}`,
       );
       dispatcher({
-        type: 'fetch_transfer_by_sender',
-        payload: transferResponseBySender
-      })
+        type: "fetch_transfer_by_sender",
+        payload: defaultValuesForNull(transferResponseBySender),
+      });
     } catch (e) {
       dispatcher({
-        type: 'fetch_transfer_by_sender_error',
-        payload: "Error fetching all the transfers"
-      })
+        type: "fetch_transfer_by_sender_error",
+        payload: "Error fetching all the transfers",
+      });
     }
   };
 
@@ -99,15 +128,14 @@ const ExplorerPage = () => {
   useEffect(() => {
     if (state.loading === "loading" && state.transfers.length) {
       dispatcher({
-        type: 'loading_done'
-      })
+        type: "loading_done",
+      });
     }
   }, [state.loading, state.transfers]);
 
   useEffect(() => {
     transferData();
   }, [state.queryParams]);
-
 
   return (
     <Box
@@ -134,33 +162,37 @@ const ExplorerPage = () => {
               <Button
                 onClick={() => {
                   dispatcher({
-                    type: 'set_query_params',
+                    type: "set_query_params",
                     payload: {
                       page: state.queryParams.page - 1,
                       limit: state.queryParams.limit,
-                    }
-                  })
+                    },
+                  });
                 }}
                 className={classes.paginationButtons}
                 disabled={state.queryParams.page === 1}
               >
                 ← Previous
               </Button>
-              <span style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginLeft: '10px',
-              }}>{state.queryParams.page}</span>
+              <span
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: "10px",
+                }}
+              >
+                {state.queryParams.page}
+              </span>
               <Button
                 onClick={() => {
                   dispatcher({
-                    type: 'set_query_params',
+                    type: "set_query_params",
                     payload: {
                       page: state.queryParams.page + 1,
                       limit: state.queryParams.limit,
-                    }
-                  })
+                    },
+                  });
                 }}
                 className={classes.paginationButtons}
               >
