@@ -5,10 +5,8 @@ import {
   TableCell,
   TableBody,
   TableRow,
-  SvgIcon,
-  Button,
-  Avatar,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { Link } from 'react-router-dom'
 import { EvmBridgeConfig, ExplorerState, SharedConfigDomain, Transfer } from "../../types";
 import {
@@ -22,7 +20,6 @@ import {
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
-// TODO: just for mocking purposes
 type ExplorerTable = {
   active: boolean;
   setActive: (state: boolean) => void;
@@ -54,14 +51,13 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const {
         deposit,
         status,
-        fromDomain,
-        toDomain,
         amount,
         resource,
         fromDomainId,
         toDomainId,
         id,
         resourceID,
+        timestamp
       } = transfer;
 
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
@@ -115,6 +111,11 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
+              <span>{dayjs(timestamp).format('DD/MM/YYYY')}</span>
+            </span>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <span className={classes.amountInfo}>
               {/* NOTE: hardcoded in the meantime */}
               <span>{"50.0 PHA"}</span> 
             </span>
@@ -146,6 +147,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell>From</TableCell>
           <TableCell>To</TableCell>
           <TableCell>Type</TableCell>
+          <TableCell>Date</TableCell>
           <TableCell>Fee</TableCell>
           <TableCell sx={{ borderTopRightRadius: '12px !important' }}>Value</TableCell>
         </TableRow>
