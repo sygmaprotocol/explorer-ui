@@ -7,20 +7,15 @@ export const useStyles = makeStyles()((theme) => {
       boxShadow: "none"
     },
     mainAppBar: {
-      display: "grid",
-      gridTemplateColumns: 'repeat(6, 1fr)',
-      [theme.breakpoints.down("lg")]: {
-        gridTemplateColumns: 'repeat(12, 1fr)',
-      }
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 25
     },
     toolBar: {
-      [theme.breakpoints.up("lg")]: {
-        gridColumn: '3/6',
-
-      },
-      [theme.breakpoints.down("lg")]: {
-        gridColumn: '2/span 6',
-      }
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "baseline",
     },
     connectButtonContainer: {
       display: "flex",
@@ -35,18 +30,18 @@ export const useStyles = makeStyles()((theme) => {
         justifyContent: 'flex-end',
       }
     },
-    left: {
+    title: {
       flexGrow: 1,
       display: "flex",
       flexDirection: "row",
-      justifyContent: "flex-start",
-      alignItems: "center",
+      justifyContent: "center",
+      alignItems: "baseline",
     },
     logo: {
       marginRight: 11,
       display: 'flex',
       flexDirection: 'row',
-      alignSelf: 'center',
+      alignSelf: 'baseline',
       height: theme.constants.generalUnit * 5,
       width: theme.constants.generalUnit * 5,
       "& svg, & img": {

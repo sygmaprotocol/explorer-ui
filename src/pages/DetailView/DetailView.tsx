@@ -116,7 +116,7 @@ export default function DetailView() {
                   </Tooltip>
                 </span>
               )) ||
-              "No transacton hash yet"}{" "}
+              "No transaction hash yet"}{" "}
           </span>
         </div>
         <div className={classes.detailsContainer}>

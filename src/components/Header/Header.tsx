@@ -1,6 +1,10 @@
-import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
-import { NavLink } from "react-router-dom";
-import clsx from "clsx";
+import {
+  AppBar,
+  Box,
+  Container,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import TopBarNetworkConnect from "../TopBarNetworkComponent";
 import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
@@ -13,72 +17,18 @@ export default function Header() {
   return (
     <AppBar position="static" color="transparent" className={classes.root}>
       <Container maxWidth="xl" className={classes.mainAppBar}>
-        <a href="/" className={classes.logo}>
-          <img src="/assets/images/logo1.svg" alt="logo" />
-        </a>
         <Toolbar disableGutters className={classes.toolBar}>
-          <div className={classes.left}>
+          <div className={classes.title}>
+            <a href="/" className={classes.logo}>
+              <img src="/assets/images/logo1.svg" alt="logo" />
+            </a>
             <Box
               sx={{
                 display: { xs: "none", sm: "flex", md: "flex" },
-                background: "#DBD3C7",
-                borderRadius: 1,
-                height: 40,
+                height: 70,
               }}
             >
-              <Button
-                component={NavLink}
-                to="/"
-                sx={{
-                  px: 2,
-                  display: "block",
-                  fontSize: 18,
-                }}
-              >
-                Token Bridge
-              </Button>
-
-              {nftTokenPage && (
-                <Button
-                  component={NavLink}
-                  to="/"
-                  sx={{
-                    px: 2,
-                    display: "block",
-                    fontSize: 18,
-                    // "&.active": {
-                    //   background: "#CDC2B1",
-                    // },
-                  }}
-                >
-                  NFT Bridge
-                </Button>
-              )}
-
-              <Button
-                component={NavLink}
-                to="/"
-                sx={{
-                  px: 2,
-                  display: "block",
-                  fontSize: 18,
-                  background: active ? "#CDC2B1" : "#DBD3C7",
-                }}
-              >
-                Explorer
-              </Button>
-
-              <Button
-                component={NavLink}
-                to="/"
-                sx={{
-                  px: 2,
-                  display: "block",
-                  fontSize: 18,
-                }}
-              >
-                Faucet
-              </Button>
+              <Typography variant="h3">Sygma Protocol Explorer</Typography>
             </Box>
           </div>
         </Toolbar>
