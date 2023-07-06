@@ -24,3 +24,12 @@ VITE_INDEXER_URL="http://localhost:8080"
 yarn
 yarn start
 ```
+
+## Env variables needed
+
+You will need to define the following `env` variables on a `.env` file:
+
+```
+VITE_INDEXER_URL="INDEXER_URL"
+VITE_SHARED_CONFIG_URL="SHARED_CONFIG_URL"
+```
