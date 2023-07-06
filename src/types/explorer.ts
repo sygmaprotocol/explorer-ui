@@ -101,7 +101,8 @@ export type Transfer = {
   status: TransferStatus;
   deposit?: Deposit;
   execution?: Execution;
-  fee: any
+  fee: { amount: string, tokenAddress: string, tokenSymbol: string };
+  resourceID: string;
 }
 
 export type ExplorerState = {

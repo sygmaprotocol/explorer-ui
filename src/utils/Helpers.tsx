@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 import { BigNumberish, ethers } from "ethers";
-import { SharedConfigDomain } from "../types";
+import { SharedConfigDomain, Transfer } from "../types";
 
 export const shortenAddress = (address: string) => {
   return `${address.substring(0, 6)}...${address.substring(
@@ -124,9 +124,18 @@ export const renderNetworkIcon = (
         />
       );
     case 5231:
+    case 5233:
       return (
         <img
           src={`/assets/icons/phala-black.svg`}
+          alt="substrate"
+          className={classes.substrateNetworkIcon}
+        />
+      );
+    case 5232:
+      return (
+        <img
+          src={`/assets/icons/khala.svg`}
           alt="substrate"
           className={classes.substrateNetworkIcon}
         />
@@ -165,6 +174,12 @@ export const getNetworkNames = (chainId: number) => {
       return "Sepolia";
     case 5231:
       return "Rhala";
+    case 1:
+      return "Ethereum";
+    case 5232:
+      return "Khala";
+    case 5233:
+      return "Phala";
   }
 };
 
@@ -177,4 +192,41 @@ export const getDomainData = (
   );
 
   return domainData;
+};
+
+export const getResourceInfo = (
+  resourceID: string,
+  domain: SharedConfigDomain,
+) => {
+  const resource = domain.resources.find(
+    (resource) => resource.resourceId === resourceID,
+  );
+  const { symbol: tokenSymbol } = resource!;
+  return tokenSymbol;
+};
+
+export const sanitizeTransferData = (transfers: Transfer[]) => {
+  let sanitizedTransferData = [] as Transfer[];
+
+  for (let transfer of transfers) {
+    let sanitizedTransfer = {} as Transfer;
+    for (let key in transfer) {
+      if (transfer[key as keyof Transfer] !== null) {
+        // @ts-ignore-next-line
+        sanitizedTransfer[key as keyof Transfer] =
+          transfer[key as keyof Transfer];
+      } else {
+        if(key === "resource") {
+          // @ts-ignore-next-line
+          sanitizedTransfer[key as keyof Transfer] = { type: "fungible" }
+        }
+        // @ts-ignore-next-line
+        sanitizedTransfer[key as keyof Transfer] = "";
+      }
+    }
+
+    sanitizedTransferData.push(sanitizedTransfer);
+  }
+
+  return sanitizedTransferData;
 };

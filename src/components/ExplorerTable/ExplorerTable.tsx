@@ -18,6 +18,7 @@ import {
   renderStatusIcon,
   getDomainData,
   getNetworkNames,
+  getResourceInfo,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -59,7 +60,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         resource,
         fromDomainId,
         toDomainId,
-        id
+        id,
+        resourceID,
       } = transfer;
 
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
@@ -113,7 +115,13 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
-              <span>{amount}</span>
+              {/* NOTE: hardcoded in the meantime */}
+              <span>{"50.0 PHA"}</span> 
+            </span>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <span className={classes.amountInfo}>
+              <span>{amount} {resourceID !== '' && getResourceInfo(resourceID, fromDomainInfo!)}</span>
             </span>
           </TableCell>
         </TableRow>
@@ -138,6 +146,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell>From</TableCell>
           <TableCell>To</TableCell>
           <TableCell>Type</TableCell>
+          <TableCell>Fee</TableCell>
           <TableCell sx={{ borderTopRightRadius: '12px !important' }}>Value</TableCell>
         </TableRow>
       </TableHead>
