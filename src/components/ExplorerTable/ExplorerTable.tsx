@@ -10,13 +10,14 @@ import {
   Avatar,
 } from "@mui/material";
 import { Link } from 'react-router-dom'
-import { EvmBridgeConfig, ExplorerState, Transfer } from "../../types";
+import { EvmBridgeConfig, ExplorerState, SharedConfigDomain, Transfer } from "../../types";
 import {
   getDisplayedStatuses,
   shortenAddress,
   renderNetworkIcon,
   renderStatusIcon,
-  getNetworNames,
+  getDomainData,
+  getNetworkNames,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -32,7 +33,8 @@ type ExplorerTable = {
     loading: "none" | "loading" | "done";
     error: undefined | string;
   };
-  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>
+  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
+  sharedConfig: SharedConfigDomain[] | []
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
@@ -42,6 +44,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   timelineButtonClicked,
   state,
   setExplorerState,
+  sharedConfig
 }: ExplorerTable) => {
   const { classes } = useStyles();
 
@@ -59,17 +62,22 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         id
       } = transfer;
 
+      const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
+      const toDomainInfo = getDomainData(toDomainId, sharedConfig);
+
+      const fromDomainType = fromDomainInfo?.type;
+
       const { type } = resource;
       let txHash: string | undefined;
 
-      if (fromDomainId === '1') {
+      if (fromDomainType === 'evm' && deposit) {
         txHash = shortenAddress(deposit?.txHash!);
       } else {
         txHash = deposit?.txHash;
       }
 
-      const { name } = fromDomain;
-      const toDomainName = getNetworNames(toDomainId);
+      const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
+      const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
       
 
       return (
@@ -87,14 +95,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(fromDomainId, classes)} {name}
+                {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(toDomainId, classes)} {toDomainName}
+                {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
               </span>
             </div>
           </TableCell>

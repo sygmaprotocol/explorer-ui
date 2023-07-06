@@ -1,9 +1,13 @@
 import dayjs from "dayjs";
 
 import { BigNumberish, ethers } from "ethers";
+import { SharedConfigDomain } from "../types";
 
 export const shortenAddress = (address: string) => {
-  return `${address.substring(0, 6)}...${address.substring(address.length - 6, address.length)}`;
+  return `${address.substring(0, 6)}...${address.substring(
+    address.length - 6,
+    address.length,
+  )}`;
 };
 
 export const formatTransferDate = (transferDate: number | undefined) =>
@@ -56,7 +60,7 @@ export const getIconNamePerChainId = (chainId: number) => {
       return "polygon.svg";
     }
     case 1287: {
-      return  "moonbeam.svg";
+      return "moonbeam.svg";
     }
     case 11155111: {
       return "all.svg";
@@ -105,14 +109,13 @@ export const renderStatusIcon = (
   }
 };
 
-// NOTE: this is temporary, will be removed once we definition regarding shared config and api
-// question to answer here: should we use chain id to mapp for icons?
 export const renderNetworkIcon = (
-  id: string,
-  classes: Record<"networkIcon", string>,
+  chainId: number,
+  classes: Record<"networkIcon" | "substrateNetworkIcon", string>,
 ) => {
-  switch (id) {
-    case "1":
+  switch (chainId) {
+    case 5:
+    case 11155111:
       return (
         <img
           src={`/assets/icons/all.svg`}
@@ -120,20 +123,12 @@ export const renderNetworkIcon = (
           className={classes.networkIcon}
         />
       );
-    case "2":
+    case 5231:
       return (
         <img
-          src={`/assets/icons/khala.svg`}
-          alt="polygon"
-          className={classes.networkIcon}
-        />
-      );
-    case "3":
-      return (
-        <img
-          src={`/assets/icons/phala.svg`}
-          alt="moonbeam"
-          className={classes.networkIcon}
+          src={`/assets/icons/phala-black.svg`}
+          alt="substrate"
+          className={classes.substrateNetworkIcon}
         />
       );
     default:
@@ -155,22 +150,31 @@ export const getDisplayedStatuses = (status: string) => {
       return "Executed";
     case "reverted":
       return "Reverted";
-    case 'failed':
+    case "failed":
       return "Failed";
     default:
       return "Pending";
   }
 };
 
-export const getNetworNames = (networkId: string) => {
-  switch (networkId) {
-    case "1":
-      return "Ethereum";
-    case "2":
-      return "Khala";
-    case "3":
-      return "Phala";
-    default:
-      return "Ethereum";
+export const getNetworkNames = (chainId: number) => {
+  switch (chainId) {
+    case 5:
+      return "Goerli";
+    case 11155111:
+      return "Sepolia";
+    case 5231:
+      return "Rhala";
   }
-}
+};
+
+export const getDomainData = (
+  domainId: string,
+  domains: SharedConfigDomain[],
+): SharedConfigDomain | undefined => {
+  const domainData = domains.find(
+    (domain: SharedConfigDomain) => domain.id === Number(domainId),
+  );
+
+  return domainData;
+};

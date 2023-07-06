@@ -176,5 +176,53 @@ export type ExplorerContext = {
   getChainId: () => Promise<number>;
   chainId: number | undefined;
   account: string | undefined;
-  routes: Routes
+  routes: Routes,
+  sharedConfig: SharedConfigDomain[] | []
+}
+
+export const enum ResourceTypes {
+  FUNGIBLE = "fungible",
+  NON_FUNGIBLE = "nonFungible",
+  PERMISSIONED_GENERIC = "permissionedGeneric",
+  PERMISSIONLESS_GENERIC = "permissionlessGeneric",
+}
+
+export type SharedConfig = {
+  domains: Array<SharedConfigDomain>
+}
+
+export enum DomainTypes {
+  EVM = "evm",
+  SUBSTRATE = "substrate",
+}
+
+export type SharedConfigDomain = {
+  id: number
+  name: string
+  chainId: number
+  type: DomainTypes
+  bridge: string
+  feeHandlers: Array<FeeHandlerType>
+  handlers: Array<Handler>
+  nativeTokenSymbol: string
+  nativeTokenDecimals: number
+  startBlock: number
+  resources: Array<SharedConfigResource>
+}
+type Handler = {
+  type: ResourceTypes
+  address: string
+}
+
+type FeeHandlerType = {
+  type: string
+  address: string
+}
+
+export type SharedConfigResource = {
+  resourceId: string
+  type: ResourceTypes
+  address: string
+  symbol: string
+  decimals: number
 }

@@ -32,6 +32,7 @@ const ExplorerPage = () => {
     explorerPageState,
     explorerPageDispatcher,
     routes,
+    sharedConfig
   } = explorerContext;
   const { chains, pageInfo, isLoading } = explorerState;
 
@@ -157,6 +158,7 @@ const ExplorerPage = () => {
               timelineButtonClicked={explorerPageState.timelineButtonClicked}
               state={state}
               setExplorerState={setExplorerState}
+              sharedConfig={sharedConfig}
             />
             <div className={classes.paginationPanel}>
               <Button
