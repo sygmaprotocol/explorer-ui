@@ -9,8 +9,8 @@ import { ExplorerTable } from "../../components";
 
 import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
-import { Transfer } from "../../types";
 import { State, reducer } from "./reducer";
+import { sanitizeTransferData } from "../../utils/Helpers";
 
 const initState: State = {
   transfers: [],
@@ -32,6 +32,7 @@ const ExplorerPage = () => {
     explorerPageState,
     explorerPageDispatcher,
     routes,
+    sharedConfig
   } = explorerContext;
   const { chains, pageInfo, isLoading } = explorerState;
 
@@ -46,35 +47,6 @@ const ExplorerPage = () => {
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
-  // NOTE: this is super temporary
-  const defaultValuesForNull = (transfers: Transfer[]) => {
-    let parsedTransfers = [] as Transfer[];
-    for (let transfer of transfers) {
-      let newTransfer = {} as Transfer;
-      for (let key in transfer) {
-        if (transfer[key as keyof Transfer] === null) {
-          if (key === "toDomainId") {
-            console.warn("todomainid");
-            // @ts-ignore-next-line
-            newTransfer[key as keyof Transfer] = "1";
-          } else if (key === "resource") {
-            // @ts-ignore-next-line
-            newTransfer[key as keyof Transfer] = { type: "fungible" };
-          } else {
-            // @ts-ignore-next-line
-            newTransfer[key as keyof Transfer] = "";
-          }
-        } else {
-          // @ts-ignore-next-line
-          newTransfer[key as keyof Transfer] = transfer[key as keyof Transfer];
-        }
-      }
-      parsedTransfers.push({ ...newTransfer });
-    }
-
-    return parsedTransfers;
-  };
-
   const transferData = async () => {
     try {
       const transfersResponse = await routes.transfers(
@@ -84,7 +56,7 @@ const ExplorerPage = () => {
 
       dispatcher({
         type: "fetch_transfers",
-        payload: defaultValuesForNull(transfersResponse),
+        payload: sanitizeTransferData(transfersResponse),
       });
     } catch (e) {
       dispatcher({
@@ -103,7 +75,7 @@ const ExplorerPage = () => {
       );
       dispatcher({
         type: "fetch_transfer_by_sender",
-        payload: defaultValuesForNull(transferResponseBySender),
+        payload: sanitizeTransferData(transferResponseBySender),
       });
     } catch (e) {
       dispatcher({
@@ -157,6 +129,7 @@ const ExplorerPage = () => {
               timelineButtonClicked={explorerPageState.timelineButtonClicked}
               state={state}
               setExplorerState={setExplorerState}
+              sharedConfig={sharedConfig}
             />
             <div className={classes.paginationPanel}>
               <Button

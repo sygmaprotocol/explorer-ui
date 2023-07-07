@@ -5,8 +5,10 @@ import {
   ExplorerPageState,
   ExplorerState,
   PaginationParams,
+  SharedConfig,
+  SharedConfigDomain,
 } from "../types";
-import { getAccount, getChainId } from './connection'
+import { getAccount, getChainId } from "./connection";
 import { routes } from "./data";
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
@@ -47,22 +49,32 @@ const ExplorerProvider = ({
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
   const [account, setAccount] = React.useState<string | undefined>(undefined);
+  const [sharedConfig, setSharedConfig] = React.useState<SharedConfigDomain[] | []>([])
+
+  const getSharedConfig = async (): Promise<void> => {
+    const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL);
+    const domainsData = await reponse.json() as SharedConfig
+
+    setSharedConfig(domainsData.domains);
+  };
 
   useEffect(() => {
-    window.ethereum!.on('chainChanged', (chainId: unknown) => {
+    window.ethereum!.on("chainChanged", (chainId: unknown) => {
       setChainId(Number(chainId as string));
     });
 
-    window.ethereum!.on('accountsChanged', (accounts: unknown) => {
+    window.ethereum!.on("accountsChanged", (accounts: unknown) => {
       setAccount((accounts as Array<string>)[0] as string);
     });
 
+    getSharedConfig()
+
     return () => {
-      window.ethereum!.removeAllListeners('chainChanged');
-      window.ethereum!.removeAllListeners('accountsChanged');
-    }
-  }, [])
-  
+      window.ethereum!.removeAllListeners("chainChanged");
+      window.ethereum!.removeAllListeners("accountsChanged");
+    };
+  }, []);
+
   return (
     <ExplorerCtx.Provider
       value={{
@@ -75,14 +87,14 @@ const ExplorerProvider = ({
         getChainId,
         chainId,
         account,
-        routes: routes()
+        routes: routes(),
+        sharedConfig,
       }}
     >
       {children}
     </ExplorerCtx.Provider>
   );
 };
-
 
 const useExplorer = () => {
   const context = React.useContext(ExplorerCtx);
@@ -92,6 +104,6 @@ const useExplorer = () => {
   }
 
   return context;
-}
+};
 
 export { ExplorerProvider, useExplorer };

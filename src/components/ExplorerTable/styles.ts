@@ -330,6 +330,12 @@ export const useStyles = makeStyles()((theme) => {
       height: 20,
       width: 20,
       marginRight: theme.spacing(1),
+    },
+    substrateNetworkIcon: {
+      display: "block",
+      height: 30,
+      width: 30,
+      marginRight: theme.spacing(1),
     }
   }
 });

@@ -5,22 +5,21 @@ import {
   TableCell,
   TableBody,
   TableRow,
-  SvgIcon,
-  Button,
-  Avatar,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { Link } from 'react-router-dom'
-import { EvmBridgeConfig, ExplorerState, Transfer } from "../../types";
+import { EvmBridgeConfig, ExplorerState, SharedConfigDomain, Transfer } from "../../types";
 import {
   getDisplayedStatuses,
   shortenAddress,
   renderNetworkIcon,
   renderStatusIcon,
-  getNetworNames,
+  getDomainData,
+  getNetworkNames,
+  getResourceInfo,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
-// TODO: just for mocking purposes
 type ExplorerTable = {
   active: boolean;
   setActive: (state: boolean) => void;
@@ -32,7 +31,8 @@ type ExplorerTable = {
     loading: "none" | "loading" | "done";
     error: undefined | string;
   };
-  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>
+  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
+  sharedConfig: SharedConfigDomain[] | []
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
@@ -42,6 +42,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   timelineButtonClicked,
   state,
   setExplorerState,
+  sharedConfig
 }: ExplorerTable) => {
   const { classes } = useStyles();
 
@@ -50,26 +51,31 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const {
         deposit,
         status,
-        fromDomain,
-        toDomain,
         amount,
         resource,
         fromDomainId,
         toDomainId,
-        id
+        id,
+        resourceID,
+        timestamp
       } = transfer;
+
+      const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
+      const toDomainInfo = getDomainData(toDomainId, sharedConfig);
+
+      const fromDomainType = fromDomainInfo?.type;
 
       const { type } = resource;
       let txHash: string | undefined;
 
-      if (fromDomainId === '1') {
+      if (fromDomainType === 'evm' && deposit) {
         txHash = shortenAddress(deposit?.txHash!);
       } else {
         txHash = deposit?.txHash;
       }
 
-      const { name } = fromDomain;
-      const toDomainName = getNetworNames(toDomainId);
+      const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
+      const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
       
 
       return (
@@ -87,14 +93,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(fromDomainId, classes)} {name}
+                {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
               </span>
             </div>
           </TableCell>
           <TableCell className={classes.row}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(toDomainId, classes)} {toDomainName}
+                {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
               </span>
             </div>
           </TableCell>
@@ -105,7 +111,18 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={classes.row}>
             <span className={classes.amountInfo}>
-              <span>{amount}</span>
+              <span>{dayjs(timestamp).format('DD/MM/YYYY')}</span>
+            </span>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <span className={classes.amountInfo}>
+              {/* NOTE: hardcoded in the meantime */}
+              <span>{"50.0 PHA"}</span> 
+            </span>
+          </TableCell>
+          <TableCell className={classes.row}>
+            <span className={classes.amountInfo}>
+              <span>{amount} {resourceID !== '' && getResourceInfo(resourceID, fromDomainInfo!)}</span>
             </span>
           </TableCell>
         </TableRow>
@@ -130,6 +147,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell>From</TableCell>
           <TableCell>To</TableCell>
           <TableCell>Type</TableCell>
+          <TableCell>Date</TableCell>
+          <TableCell>Fee</TableCell>
           <TableCell sx={{ borderTopRightRadius: '12px !important' }}>Value</TableCell>
         </TableRow>
       </TableHead>
