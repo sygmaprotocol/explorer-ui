@@ -19,6 +19,7 @@ jobs:
       - run: yarn build
         env:
           VITE_INDEXER_URL: "https://api.test.buildwithsygma.com"
+          VITE_SHARED_CONFIG_URL: "https://chainbridge-assets-stage.s3.us-east-2.amazonaws.com/shared-config-test.json"
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
