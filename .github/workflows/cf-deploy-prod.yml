@@ -20,6 +20,7 @@ jobs:
       - run: yarn build
         env:
           VITE_INDEXER_URL: "https://api.buildwithsygma.com"
+          VITE_SHARED_CONFIG_URL: "https://sygma-assets-mainnet.s3.us-east-2.amazonaws.com/shared-config-mainnet.json"
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
