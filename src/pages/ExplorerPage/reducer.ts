@@ -1,14 +1,15 @@
 import { Transfer } from "../../types";
 
-type Actions =
+export type TransferActions =
   { type: "fetch_transfers", payload: Transfer[] } |
   { type: "fetch_transfer_error", payload: string } |
   { type: "fetch_transfer_by_sender", payload: Transfer[] } |
   { type: "fetch_transfer_by_sender_error", payload: string } |
   { type: 'loading_done' } |
-  { type: 'set_query_params', payload: { page: number, limit: number } }
+  { type: 'set_query_params', payload: { page: number, limit: number } } |
+  { type: 'refresh_data', payload: { page: number, limit: number } }
 
-export type State = {
+export type ExplorerPageState = {
   transfers: Transfer[],
   error: string | undefined,
   queryParams: {
@@ -17,9 +18,10 @@ export type State = {
   }
   loading: "none" | "loading" | "done"
   init: boolean
+  refreshData: "none" | "refresh" | "done"
 }
 
-export function reducer(state: State, action: Actions): State {
+export function reducer(state: ExplorerPageState, action: TransferActions): ExplorerPageState {
   switch(action.type) {
     case "fetch_transfers":
       return {
@@ -49,11 +51,18 @@ export function reducer(state: State, action: Actions): State {
     case 'loading_done':
       return {
         ...state,
-        loading: 'done'
+        loading: 'done',
+        refreshData: 'done'
       }
     case 'set_query_params':
       return {
         ...state,
+        queryParams: action.payload
+      }
+    case 'refresh_data':
+      return {
+        ...state,
+        refreshData: 'refresh',
         queryParams: action.payload
       }
     default:

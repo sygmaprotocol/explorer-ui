@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@mui/material";
 import dayjs from "dayjs";
+import clsx from "clsx";
 import { Link } from 'react-router-dom'
 import { EvmBridgeConfig, ExplorerState, SharedConfigDomain, Transfer } from "../../types";
 import {
@@ -36,12 +37,7 @@ type ExplorerTable = {
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
-  active,
-  chains,
-  handleTimelineButtonClick,
-  timelineButtonClicked,
   state,
-  setExplorerState,
   sharedConfig
 }: ExplorerTable) => {
   const { classes } = useStyles();
@@ -79,48 +75,48 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       
 
       return (
-        <TableRow className={classes.row} key={transfer.id} sx={{ borderBottom: "2px solid #CDC2B1"}}>
-          <TableCell className={classes.cellRow}>
+        <TableRow className={classes.row} key={transfer.id}>
+          <TableCell className={clsx(classes.row, classes.dataRow, classes.cellRow)}>
             {txHash !== undefined ? (<Link to={`/transfer/${deposit?.txHash}`} style={{ color: 'black'}} state={id}>{txHash}</Link>) : "-"}
           </TableCell>
-          <TableCell>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div className={classes.accountAddress}>
               <span className={classes.statusPill}>
                 {renderStatusIcon(status, classes)} {getDisplayedStatuses(status)}
               </span>
             </div>
           </TableCell>
-          <TableCell className={classes.row}>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
                 {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
               </span>
             </div>
           </TableCell>
-          <TableCell className={classes.row}>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div style={{ width: '100%' }}>
               <span style={{ display: 'flex' }}>
                 {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
               </span>
             </div>
           </TableCell>
-          <TableCell className={classes.row}>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <span>{type !== undefined ? type : "-"}</span>
             </span>
           </TableCell>
-          <TableCell className={classes.row}>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <span>{dayjs(timestamp).format('DD/MM/YYYY')}</span>
             </span>
           </TableCell>
-          <TableCell className={classes.row}>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               {/* NOTE: hardcoded in the meantime */}
               <span>{"50.0 PHA"}</span> 
             </span>
           </TableCell>
-          <TableCell className={classes.row}>
+          <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <span>{amount} {resourceID !== '' && getResourceInfo(resourceID, fromDomainInfo!)}</span>
             </span>
@@ -131,7 +127,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
   };
 
   return (
-    <Table className={classes.root}>
+    <Table className={classes.rootTable}>
       <TableHead
         sx={{
           backgroundColor: "#DBD3C7",

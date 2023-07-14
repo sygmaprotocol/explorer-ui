@@ -18,9 +18,7 @@ import { useStyles } from "./styles";
 export default function DetailView() {
   const explorerContext = useExplorer();
 
-  const {
-    sharedConfig
-  } = explorerContext;
+  const { sharedConfig } = explorerContext;
 
   const { classes } = useStyles();
 
@@ -34,7 +32,10 @@ export default function DetailView() {
     "none",
   );
 
-  const [transferNetworkType, setTransferNetworkType] = useState<string>("");
+  const [transferFromNetworkType, setTransferFromNetworkType] =
+    useState<string>("");
+  const [transferToNetworkType, setTransferToNetworkType] =
+    useState<string>("");
 
   const [clipboardMessageT1, setClipboardMessageT1] =
     useState<string>("Copy to clipboard");
@@ -46,11 +47,20 @@ export default function DetailView() {
     const transfer = await routes.transfer(transferId);
     const sanitizedTransfer = sanitizeTransferData([transfer]);
 
-    const fromDomainInfo = getDomainData(sanitizedTransfer[0].fromDomainId, sharedConfig);
+    const fromDomainInfo = getDomainData(
+      sanitizedTransfer[0].fromDomainId,
+      sharedConfig,
+    );
+    const toDomaindInfo = getDomainData(
+      sanitizedTransfer[0].toDomainId,
+      sharedConfig,
+    );
 
     const fromDomainType = fromDomainInfo?.type;
+    const toDomainType = toDomaindInfo?.type;
 
-    setTransferNetworkType(fromDomainType!);
+    setTransferFromNetworkType(fromDomainType!);
+    setTransferToNetworkType(toDomainType!);
 
     setTransferDetails(sanitizedTransfer[0]);
     setTransferStatus("completed");
@@ -93,9 +103,9 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {(transfer?.deposit && transferNetworkType === 'evm' ?
-              shortenAddress(transfer?.deposit?.txHash!) : (transfer?.deposit?.txHash)) ||
-              "-"}{" "}
+            {(transfer?.deposit && transferFromNetworkType === "evm"
+              ? shortenAddress(transfer?.deposit?.txHash!)
+              : transfer?.deposit?.txHash) || "-"}{" "}
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -114,23 +124,20 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {(transfer?.execution && transferNetworkType === 'evm' ?
-              shortenAddress(transfer?.execution?.txHash!) : transfer?.deposit?.txHash && (
-                <span
-                  className={classes.copyIcon}
-                  onClick={() => {
-                    navigator.clipboard?.writeText(
-                      transfer?.execution?.txHash!,
-                    );
-                    setClipboardMessageT2("Copied to clipboard!");
-                  }}
-                >
-                  <Tooltip title={clipboardMessageT2} placement="top" arrow>
-                    <ContentCopyIcon fontSize="small" />
-                  </Tooltip>
-                </span>
-              )) ||
-              "No transaction hash yet"}{" "}
+            {transfer?.execution && transferToNetworkType === "evm"
+              ? shortenAddress(transfer?.execution?.txHash!)
+              : transfer?.execution?.txHash}
+            <span
+              className={classes.copyIcon}
+              onClick={() => {
+                navigator.clipboard?.writeText(transfer?.execution?.txHash!);
+                setClipboardMessageT2("Copied to clipboard!");
+              }}
+            >
+              <Tooltip title={clipboardMessageT2} placement="top" arrow>
+                <ContentCopyIcon fontSize="small" />
+              </Tooltip>
+            </span>
           </span>
         </div>
         <div className={classes.detailsContainer}>

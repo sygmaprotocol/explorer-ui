@@ -1,18 +1,14 @@
-import { useState, useEffect, useReducer } from "react";
-import { ethers } from "ethers";
-
-import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+import { useState, useReducer } from "react";
+import { Button, Container, Paper } from "@mui/material";
 
 import { ExplorerTable } from "../../components";
 
 import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
-import { State, reducer } from "./reducer";
-import { sanitizeTransferData } from "../../utils/Helpers";
+import { ExplorerPageState, reducer } from "./reducer";
+import { useGetTransferData } from "./hooks/useGetTransferData";
 
-const initState: State = {
+const initState: ExplorerPageState = {
   transfers: [],
   loading: "none",
   error: undefined,
@@ -21,6 +17,7 @@ const initState: State = {
     limit: 10,
   },
   init: true,
+  refreshData: "none",
 };
 
 const ExplorerPage = () => {
@@ -32,7 +29,7 @@ const ExplorerPage = () => {
     explorerPageState,
     explorerPageDispatcher,
     routes,
-    sharedConfig
+    sharedConfig,
   } = explorerContext;
   const { chains, pageInfo, isLoading } = explorerState;
 
@@ -40,142 +37,99 @@ const ExplorerPage = () => {
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
-  // NOTE: we are going to use the setter upon filters implementation
 
   const [state, dispatcher] = useReducer(reducer, initState);
 
   const handleTimelineButtonClick = () =>
     explorerPageDispatcher({ type: "timelineButtonClick" });
 
-  const transferData = async () => {
-    try {
-      const transfersResponse = await routes.transfers(
-        `${state.queryParams.page}`,
-        `${state.queryParams.limit}`,
-      );
+  useGetTransferData(
+    state.queryParams.page,
+    state.queryParams.limit,
+    routes,
+    dispatcher,
+    explorerState,
+    state,
+  );
 
-      dispatcher({
-        type: "fetch_transfers",
-        payload: sanitizeTransferData(transfersResponse),
-      });
-    } catch (e) {
-      dispatcher({
-        type: "fetch_transfer_error",
-        payload: "Error fetching all the transfers",
-      });
-    }
-  };
-
-  const transferDataBySender = async (sender: string) => {
-    try {
-      const transferResponseBySender = await routes.transferBySender(
-        sender,
-        `${state.queryParams.page}`,
-        `${state.queryParams.limit}`,
-      );
-      dispatcher({
-        type: "fetch_transfer_by_sender",
-        payload: sanitizeTransferData(transferResponseBySender),
-      });
-    } catch (e) {
-      dispatcher({
-        type: "fetch_transfer_by_sender_error",
-        payload: "Error fetching all the transfers",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (explorerState.account === undefined && !state.init) {
-      transferData();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (explorerState.account !== undefined) {
-      transferDataBySender(ethers.getAddress(explorerState.account));
-    }
-  }, [explorerState]);
-
-  useEffect(() => {
-    if (state.loading === "loading" && state.transfers.length) {
-      dispatcher({
-        type: "loading_done",
-      });
-    }
-  }, [state.loading, state.transfers]);
-
-  useEffect(() => {
-    transferData();
-  }, [state.queryParams]);
+  const handleRefreshTable = () =>
+    dispatcher({ type: "refresh_data", payload: { page: 1, limit: 10 } });
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        flexWrap: "wrap",
-        marginTop: "20px",
-      }}
-    >
-      <section className={classes.mainContent}>
-        <div className={classes.explorerTableContainer}>
-          <div className={classes.explorerTable}>
-            <ExplorerTable
-              active={active}
-              setActive={setActive}
-              chains={chains}
-              handleTimelineButtonClick={handleTimelineButtonClick}
-              timelineButtonClicked={explorerPageState.timelineButtonClicked}
-              state={state}
-              setExplorerState={setExplorerState}
-              sharedConfig={sharedConfig}
-            />
-            <div className={classes.paginationPanel}>
-              <Button
-                onClick={() => {
-                  dispatcher({
-                    type: "set_query_params",
-                    payload: {
-                      page: state.queryParams.page - 1,
-                      limit: state.queryParams.limit,
-                    },
-                  });
-                }}
-                className={classes.paginationButtons}
-                disabled={state.queryParams.page === 1}
-              >
-                ← Previous
-              </Button>
-              <span
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginLeft: "10px",
-                }}
-              >
-                {state.queryParams.page}
-              </span>
-              <Button
-                onClick={() => {
-                  dispatcher({
-                    type: "set_query_params",
-                    payload: {
-                      page: state.queryParams.page + 1,
-                      limit: state.queryParams.limit,
-                    },
-                  });
-                }}
-                className={classes.paginationButtons}
-              >
-                Next →
-              </Button>
-            </div>
-          </div>
+    <Container sx={{ display: "grid", gridTemplateRows: "1fr 15fr" }}>
+      <div>
+        <Button
+          variant="contained"
+          sx={{ px: 0, fontSize: 18, height: 24, width: 180 }}
+          onClick={handleRefreshTable}
+        >
+          Refresh Table
+        </Button>
+      </div>
+      <Paper
+        elevation={3}
+        sx={{
+          background: "#E9E4DD",
+          borderRadius: "12px",
+          display: "grid",
+          gridTemplateRows: "repeat(1, 1fr)",
+        }}
+      >
+        <div className={classes.explorerTable}>
+          <ExplorerTable
+            active={active}
+            setActive={setActive}
+            chains={chains}
+            handleTimelineButtonClick={handleTimelineButtonClick}
+            timelineButtonClicked={explorerPageState.timelineButtonClicked}
+            state={state}
+            setExplorerState={setExplorerState}
+            sharedConfig={sharedConfig}
+          />
         </div>
-      </section>
-    </Box>
+        <div className={classes.paginationPanel}>
+          <Button
+            onClick={() => {
+              dispatcher({
+                type: "set_query_params",
+                payload: {
+                  page: state.queryParams.page - 1,
+                  limit: state.queryParams.limit,
+                },
+              });
+            }}
+            className={classes.paginationButtons}
+            disabled={state.queryParams.page === 1}
+          >
+            ← Previous
+          </Button>
+          <span
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: "10px",
+            }}
+          >
+            {state.queryParams.page}
+          </span>
+          <Button
+            onClick={() => {
+              dispatcher({
+                type: "set_query_params",
+                payload: {
+                  page: state.queryParams.page + 1,
+                  limit: state.queryParams.limit,
+                },
+              });
+            }}
+            className={classes.paginationButtons}
+          >
+            Next →
+          </Button>
+        </div>
+      </Paper>
+    </Container>
   );
 };
 export default ExplorerPage;
