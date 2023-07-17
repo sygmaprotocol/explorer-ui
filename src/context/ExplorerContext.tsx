@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import {
   Actions,
+  ExplorerContextState,
   ExplorerContext as ExplorerContextType,
-  ExplorerPageState,
   ExplorerState,
   PaginationParams,
   SharedConfig,
@@ -10,6 +10,7 @@ import {
 } from "../types";
 import { getAccount, getChainId } from "./connection";
 import { routes } from "./data";
+import { reducer } from "./reducer";
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
   undefined,
@@ -33,19 +34,14 @@ const ExplorerProvider = ({
   // TO BE DEFINED
   const loadMore = (options: PaginationParams) => null;
 
-  const explorerPageState: ExplorerPageState = {
-    fromDomainId: undefined,
-    toDomainId: undefined,
-    fromAddress: undefined,
-    toAddress: undefined,
-    depositTransactionHash: undefined,
-    transferDetails: {} as any,
-    timelineButtonClicked: false,
-    chains: [],
+  const explorerPageContextState: ExplorerContextState = {
+    queryParams: {
+      page: 1, //by default
+      limit: 10,
+    }
   };
 
-  // TO BE DEFINED
-  const explorerPageDispatcher = (action: Actions) => null;
+  const [explorerContextState, explorerContextDispatcher] = React.useReducer(reducer, explorerPageContextState);
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
   const [account, setAccount] = React.useState<string | undefined>(undefined);
@@ -81,8 +77,8 @@ const ExplorerProvider = ({
         explorerState,
         loadMore,
         setExplorerState,
-        explorerPageState,
-        explorerPageDispatcher,
+        explorerContextState,
+        explorerContextDispatcher,
         getAccount,
         getChainId,
         chainId,

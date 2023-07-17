@@ -57,6 +57,7 @@ export default function DetailView() {
     );
 
     const fromDomainType = fromDomainInfo?.type;
+
     const toDomainType = toDomaindInfo?.type;
 
     setTransferFromNetworkType(fromDomainType!);

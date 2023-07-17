@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ExplorerState, Routes } from "../../../types";
+import { Actions, ExplorerContextState, ExplorerState, Routes } from "../../../types";
 import { sanitizeTransferData } from "../../../utils/Helpers";
 import { ExplorerPageState, TransferActions } from "../reducer";
 import { ethers } from "ethers";
@@ -28,7 +28,7 @@ const transferData = async (
   }
 };
 
-const transferDataBySender = async (sender: string, page: string, limit: string, routes: Routes, dispatcher: React.Dispatch<TransferActions>,) => {
+const transferDataBySender = async (sender: string, page: number, limit: number, routes: Routes, dispatcher: React.Dispatch<TransferActions>,) => {
   try {
     const transferResponseBySender = await routes.transferBySender(
       sender,
@@ -53,11 +53,14 @@ export function useGetTransferData(
   routes: Routes,
   dispatcher: React.Dispatch<TransferActions>,
   explorerState: ExplorerState,
-  state: ExplorerPageState
+  state: ExplorerPageState,
+  explorerContextState: ExplorerContextState,
+  explorerContextDispatcher: React.Dispatch<Actions>,
 ): void {
 
   useEffect(() => {
-    if (explorerState.account === undefined && !state.init) {
+    if (explorerState.account === undefined) {
+      const { queryParams: { page, limit } } = explorerContextState;
       transferData(
         page,
         limit,
@@ -69,6 +72,7 @@ export function useGetTransferData(
 
   useEffect(() => {
     if (explorerState.account !== undefined) {
+      const { queryParams: { page, limit } } = explorerContextState;
       transferDataBySender(ethers.getAddress(explorerState.account), page, limit, routes, dispatcher);
     }
   }, [explorerState]);
@@ -81,18 +85,14 @@ export function useGetTransferData(
     }
   }, [state.loading, state.transfers]);
 
-  useEffect(() => {
-
-  }, [state.refreshData]);
 
   useEffect(() => {
+    const { queryParams: { page, limit } } = explorerContextState;
     transferData(
       page,
       limit,
       routes,
       dispatcher,
     )
-
-  }, [state.queryParams, state.refreshData]);
-
+  }, [explorerContextState.queryParams]);
 }

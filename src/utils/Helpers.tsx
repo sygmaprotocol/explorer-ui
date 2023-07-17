@@ -190,7 +190,6 @@ export const getDomainData = (
   const domainData = domains.find(
     (domain: SharedConfigDomain) => domain.id === Number(domainId),
   );
-
   return domainData;
 };
 
@@ -216,9 +215,9 @@ export const sanitizeTransferData = (transfers: Transfer[]) => {
         sanitizedTransfer[key as keyof Transfer] =
           transfer[key as keyof Transfer];
       } else {
-        if(key === "resource") {
+        if (key === "resource") {
           // @ts-ignore-next-line
-          sanitizedTransfer[key as keyof Transfer] = { type: "fungible" }
+          sanitizedTransfer[key as keyof Transfer] = { type: "fungible" };
         }
         // @ts-ignore-next-line
         sanitizedTransfer[key as keyof Transfer] = "";

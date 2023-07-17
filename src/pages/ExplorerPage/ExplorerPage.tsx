@@ -1,5 +1,6 @@
 import { useState, useReducer } from "react";
 import { Button, Container, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import { ExplorerTable } from "../../components";
 
@@ -12,12 +13,7 @@ const initState: ExplorerPageState = {
   transfers: [],
   loading: "none",
   error: undefined,
-  queryParams: {
-    page: 1,
-    limit: 10,
-  },
   init: true,
-  refreshData: "none",
 };
 
 const ExplorerPage = () => {
@@ -26,13 +22,12 @@ const ExplorerPage = () => {
     explorerState,
     loadMore,
     setExplorerState,
-    explorerPageState,
-    explorerPageDispatcher,
+    explorerContextDispatcher,
+    explorerContextState,
     routes,
     sharedConfig,
   } = explorerContext;
   const { chains, pageInfo, isLoading } = explorerState;
-
   const navigate = useNavigate();
 
   const classes = useStyles();
@@ -40,20 +35,29 @@ const ExplorerPage = () => {
 
   const [state, dispatcher] = useReducer(reducer, initState);
 
-  const handleTimelineButtonClick = () =>
-    explorerPageDispatcher({ type: "timelineButtonClick" });
-
   useGetTransferData(
-    state.queryParams.page,
-    state.queryParams.limit,
+    explorerContextState.queryParams.page,
+    explorerContextState.queryParams.limit,
     routes,
     dispatcher,
     explorerState,
     state,
+    explorerContextState,
+    explorerContextDispatcher,
   );
 
   const handleRefreshTable = () =>
-    dispatcher({ type: "refresh_data", payload: { page: 1, limit: 10 } });
+    explorerContextDispatcher({ type: 'set_query_params', payload: { page: 1, limit: 10 } });
+
+  const handleGoToTransferDetail = (url: string, id: string) => () => {
+    explorerContextDispatcher({
+      type: 'set_query_params',
+      payload: { ...explorerContextState.queryParams }
+    })
+    navigate(url, {
+      state: id,
+    });
+  };
 
   return (
     <Container sx={{ display: "grid", gridTemplateRows: "1fr 15fr" }}>
@@ -80,26 +84,25 @@ const ExplorerPage = () => {
             active={active}
             setActive={setActive}
             chains={chains}
-            handleTimelineButtonClick={handleTimelineButtonClick}
-            timelineButtonClicked={explorerPageState.timelineButtonClicked}
             state={state}
             setExplorerState={setExplorerState}
             sharedConfig={sharedConfig}
+            handleGoToTransferDetail={handleGoToTransferDetail}
           />
         </div>
         <div className={classes.paginationPanel}>
           <Button
             onClick={() => {
-              dispatcher({
+              explorerContextDispatcher({
                 type: "set_query_params",
                 payload: {
-                  page: state.queryParams.page - 1,
-                  limit: state.queryParams.limit,
+                  page: explorerContextState.queryParams.page - 1,
+                  limit: explorerContextState.queryParams.limit,
                 },
               });
             }}
             className={classes.paginationButtons}
-            disabled={state.queryParams.page === 1}
+            disabled={explorerContextState.queryParams.page === 1}
           >
             ← Previous
           </Button>
@@ -111,15 +114,16 @@ const ExplorerPage = () => {
               marginLeft: "10px",
             }}
           >
-            {state.queryParams.page}
+            {explorerContextState.queryParams.page}
           </span>
           <Button
+            disabled={state.transfers.length === 0}
             onClick={() => {
-              dispatcher({
+              explorerContextDispatcher({
                 type: "set_query_params",
                 payload: {
-                  page: state.queryParams.page + 1,
-                  limit: state.queryParams.limit,
+                  page: explorerContextState.queryParams.page + 1,
+                  limit: explorerContextState.queryParams.limit,
                 },
               });
             }}

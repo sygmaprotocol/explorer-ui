@@ -5,11 +5,16 @@ import {
   TableCell,
   TableBody,
   TableRow,
+  Button,
 } from "@mui/material";
 import dayjs from "dayjs";
 import clsx from "clsx";
-import { Link } from 'react-router-dom'
-import { EvmBridgeConfig, ExplorerState, SharedConfigDomain, Transfer } from "../../types";
+import {
+  EvmBridgeConfig,
+  ExplorerState,
+  SharedConfigDomain,
+  Transfer,
+} from "../../types";
 import {
   getDisplayedStatuses,
   shortenAddress,
@@ -25,20 +30,20 @@ type ExplorerTable = {
   active: boolean;
   setActive: (state: boolean) => void;
   chains: Array<EvmBridgeConfig>;
-  handleTimelineButtonClick: () => void;
-  timelineButtonClicked: boolean;
   state: {
     transfers: Transfer[];
     loading: "none" | "loading" | "done";
     error: undefined | string;
   };
   setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
-  sharedConfig: SharedConfigDomain[] | []
+  sharedConfig: SharedConfigDomain[] | [];
+  handleGoToTransferDetail: (url: string, id: string) => () => void;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
   state,
-  sharedConfig
+  sharedConfig,
+  handleGoToTransferDetail,
 }: ExplorerTable) => {
   const { classes } = useStyles();
 
@@ -53,7 +58,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         toDomainId,
         id,
         resourceID,
-        timestamp
+        timestamp,
       } = transfer;
 
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
@@ -64,7 +69,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const { type } = resource;
       let txHash: string | undefined;
 
-      if (fromDomainType === 'evm' && deposit) {
+      if (fromDomainType === "evm" && deposit) {
         txHash = shortenAddress(deposit?.txHash!);
       } else {
         txHash = deposit?.txHash;
@@ -73,30 +78,52 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
       const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
       
-
       return (
         <TableRow className={classes.row} key={transfer.id}>
-          <TableCell className={clsx(classes.row, classes.dataRow, classes.cellRow)}>
-            {txHash !== undefined ? (<Link to={`/transfer/${deposit?.txHash}`} style={{ color: 'black'}} state={id}>{txHash}</Link>) : "-"}
+          <TableCell
+            className={clsx(classes.row, classes.dataRow, classes.cellRow)}
+          >
+            {txHash !== undefined ? (
+              <Button
+                onClick={handleGoToTransferDetail(
+                  `/transfer/${deposit?.txHash}`,
+                  id,
+                )}
+                sx={{
+                  textDecoration: "underline",
+                  "&:hover": {
+                    textDecoration: "underline",
+                    backgroundColor: "unset",
+                  },
+                }}
+              >
+                {txHash}
+              </Button>
+            ) : (
+              "-"
+            )}
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div className={classes.accountAddress}>
               <span className={classes.statusPill}>
-                {renderStatusIcon(status, classes)} {getDisplayedStatuses(status)}
+                {renderStatusIcon(status, classes)}{" "}
+                {getDisplayedStatuses(status)}
               </span>
             </div>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
-            <div style={{ width: '100%' }}>
-              <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
+            <div style={{ width: "100%" }}>
+              <span style={{ display: "flex" }}>
+                {renderNetworkIcon(fromDomainInfo?.chainId!, classes)}{" "}
+                {fromDomainName}
               </span>
             </div>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
-            <div style={{ width: '100%' }}>
-              <span style={{ display: 'flex' }}>
-                {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
+            <div style={{ width: "100%" }}>
+              <span style={{ display: "flex" }}>
+                {renderNetworkIcon(toDomainInfo?.chainId!, classes)}{" "}
+                {toDomainName}
               </span>
             </div>
           </TableCell>
@@ -107,7 +134,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              <span>{dayjs(timestamp).format('DD/MM/YYYY')}</span>
+              <span>{dayjs(timestamp).format("DD/MM/YYYY")}</span>
             </span>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
@@ -118,7 +145,11 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              <span>{amount} {resourceID !== '' && getResourceInfo(resourceID, fromDomainInfo!)}</span>
+              <span>
+                {amount}{" "}
+                {resourceID !== "" &&
+                  getResourceInfo(resourceID, fromDomainInfo!)}
+              </span>
             </span>
           </TableCell>
         </TableRow>
@@ -132,20 +163,24 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         sx={{
           backgroundColor: "#DBD3C7",
           "& > tr > th": {
-            fontSize: '14px',
-            fontWeight: '400'
-          }
+            fontSize: "14px",
+            fontWeight: "400",
+          },
         }}
       >
         <TableRow className={classes.row}>
-          <TableCell sx={{ borderTopLeftRadius: '12px !important' }}>Source Tx/Extr Hash</TableCell>
+          <TableCell sx={{ borderTopLeftRadius: "12px !important" }}>
+            Source Tx/Extr Hash
+          </TableCell>
           <TableCell>Status</TableCell>
           <TableCell>From</TableCell>
           <TableCell>To</TableCell>
           <TableCell>Type</TableCell>
           <TableCell>Date</TableCell>
           <TableCell>Fee</TableCell>
-          <TableCell sx={{ borderTopRightRadius: '12px !important' }}>Value</TableCell>
+          <TableCell sx={{ borderTopRightRadius: "12px !important" }}>
+            Value
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -157,13 +192,11 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableRow>
         )}
 
-        {
-          state.error && (
-            <TableRow>
-              <TableCell>{state.error}</TableCell>
-            </TableRow>
-          )
-        }
+        {state.error && (
+          <TableRow>
+            <TableCell>{state.error}</TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   );
