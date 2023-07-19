@@ -47,13 +47,16 @@ const ExplorerPage = () => {
   );
 
   const handleRefreshTable = () =>
-    explorerContextDispatcher({ type: 'set_query_params', payload: { page: 1, limit: 10 } });
+    explorerContextDispatcher({
+      type: "set_query_params",
+      payload: { page: 1, limit: 10 },
+    });
 
   const handleGoToTransferDetail = (url: string, id: string) => () => {
     explorerContextDispatcher({
-      type: 'set_query_params',
-      payload: { ...explorerContextState.queryParams }
-    })
+      type: "set_query_params",
+      payload: { ...explorerContextState.queryParams },
+    });
     navigate(url, {
       state: id,
     });
@@ -80,15 +83,17 @@ const ExplorerPage = () => {
         }}
       >
         <div className={classes.explorerTable}>
-          <ExplorerTable
-            active={active}
-            setActive={setActive}
-            chains={chains}
-            state={state}
-            setExplorerState={setExplorerState}
-            sharedConfig={sharedConfig}
-            handleGoToTransferDetail={handleGoToTransferDetail}
-          />
+          {state.transfers.length !== 0 && sharedConfig.length !== 0 && (
+            <ExplorerTable
+              active={active}
+              setActive={setActive}
+              chains={chains}
+              state={state}
+              setExplorerState={setExplorerState}
+              sharedConfig={sharedConfig}
+              handleGoToTransferDetail={handleGoToTransferDetail}
+            />
+          )}
         </div>
         <div className={classes.paginationPanel}>
           <Button
