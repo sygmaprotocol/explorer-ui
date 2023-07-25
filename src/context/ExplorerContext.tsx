@@ -38,36 +38,46 @@ const ExplorerProvider = ({
     queryParams: {
       page: 1, //by default
       limit: 10,
-    }
+    },
   };
 
-  const [explorerContextState, explorerContextDispatcher] = React.useReducer(reducer, explorerPageContextState);
+  const [explorerContextState, explorerContextDispatcher] = React.useReducer(
+    reducer,
+    explorerPageContextState,
+  );
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
   const [account, setAccount] = React.useState<string | undefined>(undefined);
-  const [sharedConfig, setSharedConfig] = React.useState<SharedConfigDomain[] | []>([])
+  
+  const [sharedConfig, setSharedConfig] = React.useState<
+    SharedConfigDomain[] | []
+  >([]);
 
   const getSharedConfig = async (): Promise<void> => {
     const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL);
-    const domainsData = await reponse.json() as SharedConfig
+    const domainsData = (await reponse.json()) as SharedConfig;
 
     setSharedConfig(domainsData.domains);
   };
 
   useEffect(() => {
-    window.ethereum!.on("chainChanged", (chainId: unknown) => {
-      setChainId(Number(chainId as string));
-    });
+    if (window.ethereum !== undefined) {
+      window.ethereum!.on("chainChanged", (chainId: unknown) => {
+        setChainId(Number(chainId as string));
+      });
 
-    window.ethereum!.on("accountsChanged", (accounts: unknown) => {
-      setAccount((accounts as Array<string>)[0] as string);
-    });
+      window.ethereum!.on("accountsChanged", (accounts: unknown) => {
+        setAccount((accounts as Array<string>)[0] as string);
+      });
+    }
 
-    getSharedConfig()
+    getSharedConfig();
 
     return () => {
-      window.ethereum!.removeAllListeners("chainChanged");
-      window.ethereum!.removeAllListeners("accountsChanged");
+      if (window.ethereum !== undefined) {
+        window.ethereum!.removeAllListeners("chainChanged");
+        window.ethereum!.removeAllListeners("accountsChanged");
+      }
     };
   }, []);
 
