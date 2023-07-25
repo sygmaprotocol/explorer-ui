@@ -62,7 +62,7 @@ export default function TopBarNetworkConnect({
   return (
     <>
       <section className={classes.state}>
-        {!isReady ? (
+        {!isReady && window.ethereum !== undefined ? (
           <Button
             fullWidth
             variant="contained"
