@@ -50,10 +50,11 @@ export const computeAndFormatAmount = (amount: string) => {
   return formatAmount(toBigInt);
 };
 
-// NOTE: this is provisional until we fetch shared config and we match what we are getting from the ethereum provider with the networkId property in the shared config
+// This is for only EVM networks
 export const getIconNamePerChainId = (chainId: number) => {
   switch (chainId) {
-    case 5: {
+    case 5:
+    case 11155111: {
       return "all.svg";
     }
     case 80001: {
@@ -62,7 +63,7 @@ export const getIconNamePerChainId = (chainId: number) => {
     case 1287: {
       return "moonbeam.svg";
     }
-    case 11155111: {
+    default: {
       return "all.svg";
     }
   }
