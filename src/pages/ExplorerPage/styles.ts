@@ -63,5 +63,11 @@ export const useStyles = makeStyles(() =>
     paginationButtons: {
       marginLeft: "10px",
     },
+    refreshTableButton: {
+      px: 0,
+      fontSize: 15,
+      height: 24,
+      width: 180
+    }
   })
 );

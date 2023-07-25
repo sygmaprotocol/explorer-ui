@@ -13,8 +13,8 @@ type TopBarNetworkConnectProps = {
   setExplorerState: ExplorerContext["setExplorerState"];
   explorerState: ExplorerState;
   getChainId: ExplorerContext["getChainId"];
-  chainId: ExplorerContext["chainId"]
-  account: ExplorerContext["account"]
+  chainId: ExplorerContext["chainId"];
+  account: ExplorerContext["account"];
 };
 
 export default function TopBarNetworkConnect({
@@ -25,7 +25,7 @@ export default function TopBarNetworkConnect({
   explorerState,
   getChainId,
   chainId,
-  account
+  account,
 }: TopBarNetworkConnectProps) {
   const { classes } = useStyles();
   const [localAddress, setLocalAddress] = React.useState<string | undefined>(
@@ -50,11 +50,11 @@ export default function TopBarNetworkConnect({
   };
 
   useEffect(() => {
-    if(chainId !== undefined && chainId !== currentChainId) {
+    if (chainId !== undefined && chainId !== currentChainId) {
       setCurrentChainId(chainId);
     }
 
-    if(account !== undefined && account !== localAddress) {
+    if (account !== undefined && account !== localAddress) {
       setLocalAddress(account);
     }
   }, [chainId, account]);
@@ -62,43 +62,46 @@ export default function TopBarNetworkConnect({
   return (
     <>
       <section className={classes.state}>
-        {!isReady && window.ethereum !== undefined ? (
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleClickOpen}
-            sx={{ px: 3, fontSize: 18 }}
-          >
-            Connect Wallet
-          </Button>
-        ) : (
-          <>
-            <div
-              className={classes.mainInfo}
-              style={{
-                paddingTop: 3,
-                paddingBottom: 3,
-                background: "#CDC2B1",
-                borderRadius: 10,
-              }}
+        {window.ethereum !== undefined &&
+          (!isReady ? (
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleClickOpen}
+              sx={{ px: 3, fontSize: 18 }}
             >
-              <Typography variant="h6" className={classes.address}>
-                {currentChainId !== undefined && (
-                   <img
-                   src={`/assets/icons/${getIconNamePerChainId(currentChainId)}`}
-                   alt={"native token icon"}
-                   className={classes.indicator}
-                 />
-                )}
-              </Typography>
-              <div className={classes.accountInfo}>
+              Connect Wallet
+            </Button>
+          ) : (
+            <>
+              <div
+                className={classes.mainInfo}
+                style={{
+                  paddingTop: 3,
+                  paddingBottom: 3,
+                  background: "#CDC2B1",
+                  borderRadius: 10,
+                }}
+              >
                 <Typography variant="h6" className={classes.address}>
-                  {shortenAddress(localAddress!)}
+                  {currentChainId !== undefined && (
+                    <img
+                      src={`/assets/icons/${getIconNamePerChainId(
+                        currentChainId,
+                      )}`}
+                      alt={"native token icon"}
+                      className={classes.indicator}
+                    />
+                  )}
                 </Typography>
+                <div className={classes.accountInfo}>
+                  <Typography variant="h6" className={classes.address}>
+                    {shortenAddress(localAddress!)}
+                  </Typography>
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          ))}
       </section>
     </>
   );
