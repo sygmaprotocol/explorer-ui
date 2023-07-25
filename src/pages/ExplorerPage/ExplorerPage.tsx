@@ -67,7 +67,7 @@ const ExplorerPage = () => {
       <div>
         <Button
           variant="contained"
-          sx={{ px: 0, fontSize: 18, height: 24, width: 180 }}
+          className={classes.refreshTableButton}
           onClick={handleRefreshTable}
         >
           Refresh Table

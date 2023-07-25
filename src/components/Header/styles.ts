@@ -37,6 +37,14 @@ export const useStyles = makeStyles()((theme) => {
       justifyContent: "center",
       alignItems: "baseline",
     },
+    titleContent: {
+      [theme.breakpoints.down("md")]: {
+        fontSize: 30
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: 25
+      }
+    },
     logo: {
       marginRight: 11,
       display: 'flex',
@@ -48,6 +56,14 @@ export const useStyles = makeStyles()((theme) => {
         maxHeight: "100%",
         maxWidth: "100%",
       },
+      [theme.breakpoints.up("sm")]: {
+        width: 30,
+        height: 30,
+      },
+      [theme.breakpoints.down("sm")]: {
+        width: 20,
+        height: 20,
+      }
     },
     state: {},
     indicator: {
