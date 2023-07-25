@@ -56,7 +56,7 @@ export const useStyles = makeStyles()((theme) => {
         maxHeight: "100%",
         maxWidth: "100%",
       },
-      [theme.breakpoints.up("sm")]: {
+      [theme.breakpoints.down("md")]: {
         width: 30,
         height: 30,
       },
