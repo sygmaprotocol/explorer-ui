@@ -5,9 +5,7 @@ import {
   TableCell,
   TableBody,
   TableRow,
-  Button,
 } from "@mui/material";
-import dayjs from "dayjs";
 import clsx from "clsx";
 import {
   EvmBridgeConfig,
@@ -15,6 +13,7 @@ import {
   SharedConfigDomain,
   Transfer,
 } from "../../types";
+import { Link } from "react-router-dom";
 import {
   getDisplayedStatuses,
   shortenAddress,
@@ -23,9 +22,9 @@ import {
   getDomainData,
   getNetworkNames,
   getResourceInfo,
+  formatDistanceDate,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
-import { Link } from "react-router-dom";
 
 type ExplorerTable = {
   active: boolean;
@@ -79,6 +78,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
       const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
 
+      const dateFormated = formatDistanceDate(timestamp!)
       return (
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell
@@ -127,7 +127,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              <span>{dayjs(timestamp).format("DD/MM/YYYY")}</span>
+              <span>{dateFormated}</span>
             </span>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>

@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useExplorer } from "../../context";
 import { SharedConfigDomain, Transfer } from "../../types";
 import {
+  formatDistanceDate,
   getDisplayedStatuses,
   getDomainData,
   renderStatusIcon,
@@ -14,6 +17,8 @@ import {
   shortenAddress,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
+
+dayjs.extend(localizedFormat);
 
 export default function DetailView() {
   const explorerContext = useExplorer();
@@ -123,6 +128,7 @@ export default function DetailView() {
       getTransfersFromLocalStorage();
     }
   }, []);
+
   const renderTransferDetails = (transfer: Transfer | null) => {
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -188,7 +194,7 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Created:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.timestamp}
+            {formatDistanceDate(transfer?.timestamp!)} ({dayjs(transfer?.timestamp!).format("llll")})
           </span>
         </div>
         <div className={classes.detailsContainer}>

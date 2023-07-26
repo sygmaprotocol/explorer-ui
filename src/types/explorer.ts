@@ -97,7 +97,7 @@ export type Transfer = {
   sender: string;
   destination: string;
   amount: string;
-  timestamp?: number;
+  timestamp?: string;
   status: TransferStatus;
   deposit?: Deposit;
   execution?: Execution;
