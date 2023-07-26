@@ -338,6 +338,10 @@ export const useStyles = makeStyles()((theme) => {
       height: 30,
       width: 30,
       marginRight: theme.spacing(1),
+    },
+    hashAnchorLink: {
+      textDecoration: "underline",
+      color: '#000000',
     }
   }
 });

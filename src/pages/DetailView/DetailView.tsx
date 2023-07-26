@@ -1,11 +1,11 @@
 import { CircularProgress, Tooltip, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useExplorer } from "../../context";
-import { Transfer } from "../../types";
+import { SharedConfigDomain, Transfer } from "../../types";
 import {
   getDisplayedStatuses,
   getDomainData,
@@ -43,25 +43,32 @@ export default function DetailView() {
   const [clipboardMessageT2, setClipboardMessageT2] =
     useState<string>("Copy to clipboard");
 
+  const setTransferNetworkTypes = (
+    fromDomainInfo: SharedConfigDomain | undefined,
+    toDomainInfo: SharedConfigDomain | undefined,
+  ) => {
+    const fromDomainType = fromDomainInfo?.type;
+
+    const toDomainType = toDomainInfo?.type;
+
+    setTransferFromNetworkType(fromDomainType!);
+    setTransferToNetworkType(toDomainType!);
+  };
+
   const fetchTransfer = async () => {
-    const transfer = await routes.transfer(transferId);
+    const transfer = await routes.transfer(transferId.id);
     const sanitizedTransfer = sanitizeTransferData([transfer]);
 
     const fromDomainInfo = getDomainData(
       sanitizedTransfer[0].fromDomainId,
       sharedConfig,
     );
-    const toDomaindInfo = getDomainData(
+    const toDomainInfo = getDomainData(
       sanitizedTransfer[0].toDomainId,
       sharedConfig,
     );
 
-    const fromDomainType = fromDomainInfo?.type;
-
-    const toDomainType = toDomaindInfo?.type;
-
-    setTransferFromNetworkType(fromDomainType!);
-    setTransferToNetworkType(toDomainType!);
+    setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
 
     setTransferDetails(sanitizedTransfer[0]);
     setTransferStatus("completed");
@@ -87,6 +94,35 @@ export default function DetailView() {
     };
   }, [clipboardMessageT1, clipboardMessageT2]);
 
+  // fallback when you are opening the detail view on new tab
+  const params = useParams();
+  
+  const getTransfersFromLocalStorage = () => {
+    const transfers = localStorage.getItem("transfers");
+    const { txHash } = params;
+    const parsedTransfers: Transfer[] = JSON.parse(transfers!);
+    const transfer = parsedTransfers.find(
+      (transfer) => transfer.deposit?.txHash === txHash,
+    );
+
+    if (transfer) {
+      const fromDomainInfo = getDomainData(transfer.fromDomainId, sharedConfig);
+      const toDomainInfo = getDomainData(transfer.toDomainId, sharedConfig);
+
+      setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
+
+      setTransferDetails(transfer);
+      setTransferStatus("completed");
+    }
+  };
+
+  useEffect(() => {
+    if (transferId !== null) {
+      fetchTransfer();
+    } else {
+      getTransfersFromLocalStorage();
+    }
+  }, []);
   const renderTransferDetails = (transfer: Transfer | null) => {
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -183,10 +219,6 @@ export default function DetailView() {
       </Container>
     );
   };
-
-  useEffect(() => {
-    fetchTransfer();
-  }, []);
 
   return (
     <Container maxWidth="xl">

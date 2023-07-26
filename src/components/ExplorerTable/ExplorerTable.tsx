@@ -25,6 +25,7 @@ import {
   getResourceInfo,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
+import { Link } from "react-router-dom";
 
 type ExplorerTable = {
   active: boolean;
@@ -77,28 +78,20 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
       const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
       const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
-      
+
       return (
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell
             className={clsx(classes.row, classes.dataRow, classes.cellRow)}
           >
             {txHash !== undefined ? (
-              <Button
-                onClick={handleGoToTransferDetail(
-                  `/transfer/${deposit?.txHash}`,
-                  id,
-                )}
-                sx={{
-                  textDecoration: "underline",
-                  "&:hover": {
-                    textDecoration: "underline",
-                    backgroundColor: "unset",
-                  },
-                }}
+              <Link
+                className={classes.hashAnchorLink}
+                to={`/transfer/${deposit?.txHash}`}
+                state={{ id: id }}
               >
                 {txHash}
-              </Button>
+              </Link>
             ) : (
               "-"
             )}

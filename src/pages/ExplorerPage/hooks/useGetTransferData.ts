@@ -15,10 +15,13 @@ const transferData = async (
       `${page}`,
       `${limit}`,
     );
+    const sanitizedTransfers = sanitizeTransferData(transfersResponse);
+
+    localStorage.setItem("transfers", JSON.stringify(sanitizedTransfers));
 
     dispatcher({
       type: "fetch_transfers",
-      payload: sanitizeTransferData(transfersResponse),
+      payload: sanitizedTransfers,
     });
   } catch (e) {
     dispatcher({
@@ -35,9 +38,13 @@ const transferDataBySender = async (sender: string, page: number, limit: number,
       `${page}`,
       `${limit}`,
     );
+
+    const sanitizedTransfers = sanitizeTransferData(transferResponseBySender);
+
+    localStorage.setItem("transfers", JSON.stringify(sanitizedTransfers));
     dispatcher({
       type: "fetch_transfer_by_sender",
-      payload: sanitizeTransferData(transferResponseBySender),
+      payload: sanitizedTransfers,
     });
   } catch (e) {
     dispatcher({
