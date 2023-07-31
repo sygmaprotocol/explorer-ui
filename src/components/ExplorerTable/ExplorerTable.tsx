@@ -6,6 +6,7 @@ import {
   TableBody,
   TableRow,
 } from "@mui/material";
+import { ethers} from 'ethers'
 import clsx from "clsx";
 import {
   EvmBridgeConfig,
@@ -67,6 +68,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       if(typeof fee !== 'string'){
         formatedFee = `${ethers.formatEther(fee.amount).toString()} ETH`
       }
+
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
       const toDomainInfo = getDomainData(toDomainId, sharedConfig);
 
