@@ -146,9 +146,7 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {(transfer?.deposit && transferFromNetworkType === "evm"
-              ? shortenAddress(transfer?.deposit?.txHash!)
-              : transfer?.deposit?.txHash) || "-"}{" "}
+            {transfer?.deposit && transfer?.deposit?.txHash}
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -227,7 +225,7 @@ export default function DetailView() {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container>
       <Box className={classes.boxContainer}>
         {transferStatus !== "none" ? (
           <section className={classes.sectionContainer}>

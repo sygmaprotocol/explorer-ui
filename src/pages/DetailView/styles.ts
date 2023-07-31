@@ -21,7 +21,7 @@ export const useStyles = makeStyles()((theme) => {
     sectionContainer: {
       display: 'flex',
       flexDirection: 'column',
-      gridColumn: '4 / span 4',
+      gridColumn: '4 / span 6',
       [theme.breakpoints.down('lg')]: {
         gridColumn: '2 / span 6',
       },
@@ -47,7 +47,7 @@ export const useStyles = makeStyles()((theme) => {
     },
     detailsContainer: {
       background: '#F3F3F3',
-      width: '728px',
+      width: '100%',
       height: '48px',
       display: 'flex',
       flexDirection: 'row',
