@@ -59,8 +59,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         id,
         resourceID,
         timestamp,
+        fee
       } = transfer;
 
+      let formatedFee = '50.0 PHA'
+
+      if(typeof fee !== 'string'){
+        formatedFee = `${ethers.formatEther(fee.amount).toString()} ETH`
+      }
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
       const toDomainInfo = getDomainData(toDomainId, sharedConfig);
 
@@ -133,7 +139,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               {/* NOTE: hardcoded in the meantime */}
-              <span>{"50.0 PHA"}</span> 
+              <span>{formatedFee}</span>
             </span>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
