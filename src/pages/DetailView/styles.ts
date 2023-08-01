@@ -24,6 +24,9 @@ export const useStyles = makeStyles()((theme) => {
       [theme.breakpoints.down('lg')]: {
         gridColumn: '2 / span 8',
       },
+      [theme.breakpoints.down('md')]: {
+        gridColumn: '1 / span 12',
+      }
     },
     transferDetailsContainer: {
       padding: '0 !important',
@@ -42,6 +45,11 @@ export const useStyles = makeStyles()((theme) => {
         borderBottomLeftRadius: '12px',
         borderBottomRightRadius: '12px',
         marginBottom: 'unset'
+      },
+      [theme.breakpoints.down('md')]: {
+        '& > div:nth-child(n + 3)': {
+          height: '80px',
+        }
       }
     },
     detailsContainer: {
@@ -50,7 +58,12 @@ export const useStyles = makeStyles()((theme) => {
       height: '48px',
       display: 'flex',
       flexDirection: 'row',
-      marginBottom: '4px'
+      marginBottom: '4px',
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column',
+        fontSize: '12px',
+      }
     },
     detailsInnerContentTitle: {
       display: 'flex',
@@ -71,7 +84,12 @@ export const useStyles = makeStyles()((theme) => {
     statusPill: {
       borderRadius: 32,
       background: "#E2D9CC",
-      padding: '4px 8px 4px 4px'
+    },
+    statusPillMobile: {
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'row',
+      }
     },
     copyIcon: {
       marginLeft: "5px",
@@ -79,6 +97,11 @@ export const useStyles = makeStyles()((theme) => {
       alignItems: "center",
       ':hover': {
         cursor: 'pointer'
+      }
+    },
+    txHashText: {
+      [theme.breakpoints.down('md')]: {
+        wordBreak: 'break-all'
       }
     },
     backIcon: {

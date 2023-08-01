@@ -176,6 +176,7 @@ export type ExplorerContext = {
   account: string | undefined;
   routes: Routes,
   sharedConfig: SharedConfigDomain[] | []
+  setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>
 }
 
 export const enum ResourceTypes {

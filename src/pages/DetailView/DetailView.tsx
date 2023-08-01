@@ -8,7 +8,12 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { useExplorer } from "../../context";
-import { SharedConfigDomain, SharedConfigResource, Transfer } from "../../types";
+import {
+  SharedConfig,
+  SharedConfigDomain,
+  SharedConfigResource,
+  Transfer,
+} from "../../types";
 import {
   formatDistanceDate,
   getDisplayedStatuses,
@@ -21,13 +26,14 @@ import {
   shortenAddress,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
+import clsx from "clsx";
 
 dayjs.extend(localizedFormat);
 
 export default function DetailView() {
   const explorerContext = useExplorer();
 
-  const { sharedConfig } = explorerContext;
+  const { sharedConfig, setSharedConfig } = explorerContext;
 
   const { classes } = useStyles();
 
@@ -125,11 +131,25 @@ export default function DetailView() {
     }
   };
 
+  const getSharedConfigFromLocalStorage = () => {
+    const sharedConfig = localStorage.getItem("sharedConfig");
+    const parsedSharedConfig: SharedConfig = JSON.parse(sharedConfig!);
+    console.log("🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:", parsedSharedConfig)
+
+    setSharedConfig(parsedSharedConfig.domains);
+  }
+
   useEffect(() => {
     if (transferId !== null) {
       fetchTransfer();
     } else {
       getTransfersFromLocalStorage();
+    }
+
+    // fallback because ExplorerState is new coming to a new tab
+    if(sharedConfig.length === 0) {
+      console.log("getting shared config")
+      getSharedConfigFromLocalStorage();
     }
   }, []);
 
@@ -144,7 +164,9 @@ export default function DetailView() {
     const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
     const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
 
-    const fromDomainTokenName = fromDomainInfo?.resources.find((resource) => resource.resourceId === id)
+    const fromDomainTokenName = fromDomainInfo?.resources.find(
+      (resource) => resource.resourceId === id,
+    );
 
     const { symbol } = fromDomainTokenName as SharedConfigResource
 
@@ -163,7 +185,9 @@ export default function DetailView() {
             </span>
           </div>
         </div>
-        <div className={classes.detailsContainer}>
+        <div
+          className={clsx(classes.detailsContainer, classes.statusPillMobile)}
+        >
           <span className={classes.detailsInnerContentTitle}>Status:</span>
           <span className={classes.detailsInnerContent}>
             <span className={classes.statusPill}>
@@ -177,7 +201,7 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.deposit && transfer?.deposit?.txHash}
+            <span className={classes.txHashText}>{transfer?.deposit && transfer?.deposit?.txHash}</span>
             <span
               className={classes.copyIcon}
               onClick={() => {

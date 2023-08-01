@@ -58,6 +58,7 @@ const ExplorerProvider = ({
     const domainsData = (await reponse.json()) as SharedConfig;
 
     setSharedConfig(domainsData.domains);
+    localStorage.setItem("sharedConfig", JSON.stringify(domainsData));
   };
 
   useEffect(() => {
@@ -95,6 +96,7 @@ const ExplorerProvider = ({
         account,
         routes: routes(),
         sharedConfig,
+        setSharedConfig
       }}
     >
       {children}
