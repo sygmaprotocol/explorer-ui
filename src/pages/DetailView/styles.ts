@@ -7,7 +7,6 @@ export const useStyles = makeStyles()((theme) => {
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'center',
-      
     },
     boxContainer: {
       width: '100%',
@@ -21,10 +20,13 @@ export const useStyles = makeStyles()((theme) => {
     sectionContainer: {
       display: 'flex',
       flexDirection: 'column',
-      gridColumn: '4 / span 4',
+      gridColumn: '3 / span 9',
       [theme.breakpoints.down('lg')]: {
-        gridColumn: '2 / span 6',
+        gridColumn: '2 / span 8',
       },
+      [theme.breakpoints.down('md')]: {
+        gridColumn: '1 / span 12',
+      }
     },
     transferDetailsContainer: {
       padding: '0 !important',
@@ -43,15 +45,25 @@ export const useStyles = makeStyles()((theme) => {
         borderBottomLeftRadius: '12px',
         borderBottomRightRadius: '12px',
         marginBottom: 'unset'
+      },
+      [theme.breakpoints.down('md')]: {
+        '& > div:nth-child(n + 3)': {
+          height: '80px',
+        }
       }
     },
     detailsContainer: {
       background: '#F3F3F3',
-      width: '728px',
+      width: '100%',
       height: '48px',
       display: 'flex',
       flexDirection: 'row',
-      marginBottom: '4px'
+      marginBottom: '4px',
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column',
+        fontSize: '12px',
+      }
     },
     detailsInnerContentTitle: {
       display: 'flex',
@@ -72,7 +84,12 @@ export const useStyles = makeStyles()((theme) => {
     statusPill: {
       borderRadius: 32,
       background: "#E2D9CC",
-      padding: '4px 8px 4px 4px'
+    },
+    statusPillMobile: {
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'row',
+      }
     },
     copyIcon: {
       marginLeft: "5px",
@@ -80,6 +97,11 @@ export const useStyles = makeStyles()((theme) => {
       alignItems: "center",
       ':hover': {
         cursor: 'pointer'
+      }
+    },
+    txHashText: {
+      [theme.breakpoints.down('md')]: {
+        wordBreak: 'break-all'
       }
     },
     backIcon: {
@@ -94,6 +116,30 @@ export const useStyles = makeStyles()((theme) => {
         borderRadius: '8px',
         background: '#E2D9CC'
       }
+    },
+    networkIcon: {
+      display: "block",
+      height: 20,
+      width: 20,
+      marginRight: theme.spacing(1),
+    },
+    substrateNetworkIcon: {
+      display: "block",
+      height: 30,
+      width: 30,
+      marginRight: theme.spacing(1),
+    },
+    networkContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      width: "100%",
+      alignItems: "center",
+    },
+    networkIconsContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
     }
   }
 });

@@ -2,9 +2,7 @@ import { makeStyles } from "tss-react/mui";
 
 export const useStyles = makeStyles()((theme) => {
   return {
-    root: {
-      display: "table",
-      width: "100%",
+    rootTable: {
       background: "#E9E4DD",
       borderTopRightRadius: '12px',
       borderTopLeftRadius: '12px',
@@ -45,6 +43,10 @@ export const useStyles = makeStyles()((theme) => {
           width: "14.44px",
         },
       },
+    },
+    dataRow: {
+      background: "#F3F3F3",
+      borderBottom: "1px solid #CDC2B1"
     },
     elipsisIcon: {
       borderRadius: "50%",
@@ -336,6 +338,10 @@ export const useStyles = makeStyles()((theme) => {
       height: 30,
       width: 30,
       marginRight: theme.spacing(1),
+    },
+    hashAnchorLink: {
+      textDecoration: "underline",
+      color: '#000000',
     }
   }
 });

@@ -50,10 +50,11 @@ export const computeAndFormatAmount = (amount: string) => {
   return formatAmount(toBigInt);
 };
 
-// NOTE: this is provisional until we fetch shared config and we match what we are getting from the ethereum provider with the networkId property in the shared config
+// This is for only EVM networks
 export const getIconNamePerChainId = (chainId: number) => {
   switch (chainId) {
-    case 5: {
+    case 5:
+    case 11155111: {
       return "all.svg";
     }
     case 80001: {
@@ -62,7 +63,7 @@ export const getIconNamePerChainId = (chainId: number) => {
     case 1287: {
       return "moonbeam.svg";
     }
-    case 11155111: {
+    default: {
       return "all.svg";
     }
   }
@@ -190,7 +191,6 @@ export const getDomainData = (
   const domainData = domains.find(
     (domain: SharedConfigDomain) => domain.id === Number(domainId),
   );
-
   return domainData;
 };
 
@@ -216,9 +216,9 @@ export const sanitizeTransferData = (transfers: Transfer[]) => {
         sanitizedTransfer[key as keyof Transfer] =
           transfer[key as keyof Transfer];
       } else {
-        if(key === "resource") {
+        if (key === "resource") {
           // @ts-ignore-next-line
-          sanitizedTransfer[key as keyof Transfer] = { type: "fungible" }
+          sanitizedTransfer[key as keyof Transfer] = { type: "fungible" };
         }
         // @ts-ignore-next-line
         sanitizedTransfer[key as keyof Transfer] = "";
@@ -229,4 +229,32 @@ export const sanitizeTransferData = (transfers: Transfer[]) => {
   }
 
   return sanitizedTransferData;
+};
+
+export const formatDistanceDate = (timestamp: string) => {
+  const diffTime = new Date().getTime() - new Date(timestamp!).getTime();
+  const dayDiffs = Math.floor(diffTime / (1000 * 3600 * 24));
+  const hoursDiffs = Math.floor(diffTime / (1000 * 3600));
+  const hoursRemainder = Math.floor(hoursDiffs % 24);
+
+  const dateFormated =
+    dayDiffs !== 0
+      ? `${dayDiffs} days ${
+          hoursDiffs > 23 && hoursRemainder !== 0
+            ? `${hoursRemainder} hours`
+            : `${hoursDiffs} hours`
+        }`
+      : `${hoursDiffs} hours`;
+
+  return dateFormated;
+};
+
+export const getFormatedFee = (fee: Transfer["fee"] | string) => {
+  let formatedFee = "50.0 PHA";
+
+  if (typeof fee !== "string") {
+    formatedFee = `${ethers.formatEther(fee.amount).toString()} ETH`;
+  }
+
+  return formatedFee;
 };

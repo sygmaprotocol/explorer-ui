@@ -6,13 +6,6 @@ export const useStyles = makeStyles(() =>
       padding: "10px",
       position: "relative"
     },
-    mainContent: {
-      display: "grid",
-      gridTemplateRows: "repeat(1, 1fr)",
-      width: "70%",
-      boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 1px 12px rgba(0, 0, 0, 0.04)",
-      borderRadius: 12,
-    },
     networkInfoContainer: {
       display: "flex",
       justifyContent: "space-between",
@@ -66,11 +59,15 @@ export const useStyles = makeStyles(() =>
     paginationPanel: {
       display: "flex",
       justifyContent: "flex-end",
-      padding: "25px 16px 0",
-      background: "#E9E4DD",
     },
     paginationButtons: {
       marginLeft: "10px",
     },
+    refreshTableButton: {
+      px: 0,
+      fontSize: 15,
+      height: 24,
+      width: 180
+    }
   })
 );

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import {
   Actions,
+  ExplorerContextState,
   ExplorerContext as ExplorerContextType,
-  ExplorerPageState,
   ExplorerState,
   PaginationParams,
   SharedConfig,
@@ -10,6 +10,7 @@ import {
 } from "../types";
 import { getAccount, getChainId } from "./connection";
 import { routes } from "./data";
+import { reducer } from "./reducer";
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
   undefined,
@@ -33,45 +34,51 @@ const ExplorerProvider = ({
   // TO BE DEFINED
   const loadMore = (options: PaginationParams) => null;
 
-  const explorerPageState: ExplorerPageState = {
-    fromDomainId: undefined,
-    toDomainId: undefined,
-    fromAddress: undefined,
-    toAddress: undefined,
-    depositTransactionHash: undefined,
-    transferDetails: {} as any,
-    timelineButtonClicked: false,
-    chains: [],
+  const explorerPageContextState: ExplorerContextState = {
+    queryParams: {
+      page: 1, //by default
+      limit: 10,
+    },
   };
 
-  // TO BE DEFINED
-  const explorerPageDispatcher = (action: Actions) => null;
+  const [explorerContextState, explorerContextDispatcher] = React.useReducer(
+    reducer,
+    explorerPageContextState,
+  );
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
   const [account, setAccount] = React.useState<string | undefined>(undefined);
-  const [sharedConfig, setSharedConfig] = React.useState<SharedConfigDomain[] | []>([])
+  
+  const [sharedConfig, setSharedConfig] = React.useState<
+    SharedConfigDomain[] | []
+  >([]);
 
   const getSharedConfig = async (): Promise<void> => {
     const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL);
-    const domainsData = await reponse.json() as SharedConfig
+    const domainsData = (await reponse.json()) as SharedConfig;
 
     setSharedConfig(domainsData.domains);
+    localStorage.setItem("sharedConfig", JSON.stringify(domainsData));
   };
 
   useEffect(() => {
-    window.ethereum!.on("chainChanged", (chainId: unknown) => {
-      setChainId(Number(chainId as string));
-    });
+    if (window.ethereum !== undefined) {
+      window.ethereum!.on("chainChanged", (chainId: unknown) => {
+        setChainId(Number(chainId as string));
+      });
 
-    window.ethereum!.on("accountsChanged", (accounts: unknown) => {
-      setAccount((accounts as Array<string>)[0] as string);
-    });
+      window.ethereum!.on("accountsChanged", (accounts: unknown) => {
+        setAccount((accounts as Array<string>)[0] as string);
+      });
+    }
 
-    getSharedConfig()
+    getSharedConfig();
 
     return () => {
-      window.ethereum!.removeAllListeners("chainChanged");
-      window.ethereum!.removeAllListeners("accountsChanged");
+      if (window.ethereum !== undefined) {
+        window.ethereum!.removeAllListeners("chainChanged");
+        window.ethereum!.removeAllListeners("accountsChanged");
+      }
     };
   }, []);
 
@@ -81,14 +88,15 @@ const ExplorerProvider = ({
         explorerState,
         loadMore,
         setExplorerState,
-        explorerPageState,
-        explorerPageDispatcher,
+        explorerContextState,
+        explorerContextDispatcher,
         getAccount,
         getChainId,
         chainId,
         account,
         routes: routes(),
         sharedConfig,
+        setSharedConfig
       }}
     >
       {children}

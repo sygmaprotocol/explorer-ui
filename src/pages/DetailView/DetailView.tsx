@@ -1,26 +1,39 @@
 import { CircularProgress, Tooltip, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { useExplorer } from "../../context";
-import { Transfer } from "../../types";
 import {
+  SharedConfig,
+  SharedConfigDomain,
+  SharedConfigResource,
+  Transfer,
+} from "../../types";
+import {
+  formatDistanceDate,
   getDisplayedStatuses,
   getDomainData,
+  getFormatedFee,
+  getNetworkNames,
+  renderNetworkIcon,
   renderStatusIcon,
   sanitizeTransferData,
   shortenAddress,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
+import clsx from "clsx";
+
+dayjs.extend(localizedFormat);
 
 export default function DetailView() {
   const explorerContext = useExplorer();
 
-  const {
-    sharedConfig
-  } = explorerContext;
+  const { sharedConfig, setSharedConfig } = explorerContext;
 
   const { classes } = useStyles();
 
@@ -34,7 +47,10 @@ export default function DetailView() {
     "none",
   );
 
-  const [transferNetworkType, setTransferNetworkType] = useState<string>("");
+  const [transferFromNetworkType, setTransferFromNetworkType] =
+    useState<string>("");
+  const [transferToNetworkType, setTransferToNetworkType] =
+    useState<string>("");
 
   const [clipboardMessageT1, setClipboardMessageT1] =
     useState<string>("Copy to clipboard");
@@ -42,15 +58,32 @@ export default function DetailView() {
   const [clipboardMessageT2, setClipboardMessageT2] =
     useState<string>("Copy to clipboard");
 
-  const fetchTransfer = async () => {
-    const transfer = await routes.transfer(transferId);
-    const sanitizedTransfer = sanitizeTransferData([transfer]);
-
-    const fromDomainInfo = getDomainData(sanitizedTransfer[0].fromDomainId, sharedConfig);
-
+  const setTransferNetworkTypes = (
+    fromDomainInfo: SharedConfigDomain | undefined,
+    toDomainInfo: SharedConfigDomain | undefined,
+  ) => {
     const fromDomainType = fromDomainInfo?.type;
 
-    setTransferNetworkType(fromDomainType!);
+    const toDomainType = toDomainInfo?.type;
+
+    setTransferFromNetworkType(fromDomainType!);
+    setTransferToNetworkType(toDomainType!);
+  };
+
+  const fetchTransfer = async () => {
+    const transfer = await routes.transfer(transferId.id);
+    const sanitizedTransfer = sanitizeTransferData([transfer]);
+
+    const fromDomainInfo = getDomainData(
+      sanitizedTransfer[0].fromDomainId,
+      sharedConfig,
+    );
+    const toDomainInfo = getDomainData(
+      sanitizedTransfer[0].toDomainId,
+      sharedConfig,
+    );
+
+    setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
 
     setTransferDetails(sanitizedTransfer[0]);
     setTransferStatus("completed");
@@ -76,10 +109,85 @@ export default function DetailView() {
     };
   }, [clipboardMessageT1, clipboardMessageT2]);
 
+  // fallback when you are opening the detail view on new tab
+  const params = useParams();
+
+  const getTransfersFromLocalStorage = () => {
+    const transfers = localStorage.getItem("transfers");
+    const { txHash } = params;
+    const parsedTransfers: Transfer[] = JSON.parse(transfers!);
+    const transfer = parsedTransfers.find(
+      (transfer) => transfer.deposit?.txHash === txHash,
+    );
+
+    if (transfer) {
+      const fromDomainInfo = getDomainData(transfer.fromDomainId, sharedConfig);
+      const toDomainInfo = getDomainData(transfer.toDomainId, sharedConfig);
+
+      setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
+
+      setTransferDetails(transfer);
+      setTransferStatus("completed");
+    }
+  };
+
+  const getSharedConfigFromLocalStorage = () => {
+    const sharedConfig = localStorage.getItem("sharedConfig");
+    const parsedSharedConfig: SharedConfig = JSON.parse(sharedConfig!);
+    console.log("🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:", parsedSharedConfig)
+
+    setSharedConfig(parsedSharedConfig.domains);
+  }
+
+  useEffect(() => {
+    if (transferId !== null) {
+      fetchTransfer();
+    } else {
+      getTransfersFromLocalStorage();
+    }
+
+    // fallback because ExplorerState is new coming to a new tab
+    if(sharedConfig.length === 0) {
+      console.log("getting shared config")
+      getSharedConfigFromLocalStorage();
+    }
+  }, []);
+
   const renderTransferDetails = (transfer: Transfer | null) => {
+    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
+    const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
+
+    const { resource } = transfer as Transfer
+
+    const { id } = resource
+
+    const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
+    const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
+
+    const fromDomainTokenName = fromDomainInfo?.resources.find(
+      (resource) => resource.resourceId === id,
+    );
+
+    const { symbol } = fromDomainTokenName as SharedConfigResource
+
     return (
       <Container className={classes.innerTransferDetailContainer}>
         <div className={classes.detailsContainer}>
+          <div className={classes.networkContainer}>
+            <span className={classes.networkIconsContainer}>
+              {renderNetworkIcon(fromDomainInfo?.chainId!, classes)}{" "}
+              {fromDomainName}
+            </span>
+            <KeyboardDoubleArrowRightIcon />
+            <span className={classes.networkIconsContainer}>
+              {renderNetworkIcon(toDomainInfo?.chainId!, classes)}{" "}
+              {toDomainName}
+            </span>
+          </div>
+        </div>
+        <div
+          className={clsx(classes.detailsContainer, classes.statusPillMobile)}
+        >
           <span className={classes.detailsInnerContentTitle}>Status:</span>
           <span className={classes.detailsInnerContent}>
             <span className={classes.statusPill}>
@@ -93,9 +201,7 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {(transfer?.deposit && transferNetworkType === 'evm' ?
-              shortenAddress(transfer?.deposit?.txHash!) : (transfer?.deposit?.txHash)) ||
-              "-"}{" "}
+            <span className={classes.txHashText}>{transfer?.deposit && transfer?.deposit?.txHash}</span>
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -114,23 +220,18 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {(transfer?.execution && transferNetworkType === 'evm' ?
-              shortenAddress(transfer?.execution?.txHash!) : transfer?.deposit?.txHash && (
-                <span
-                  className={classes.copyIcon}
-                  onClick={() => {
-                    navigator.clipboard?.writeText(
-                      transfer?.execution?.txHash!,
-                    );
-                    setClipboardMessageT2("Copied to clipboard!");
-                  }}
-                >
-                  <Tooltip title={clipboardMessageT2} placement="top" arrow>
-                    <ContentCopyIcon fontSize="small" />
-                  </Tooltip>
-                </span>
-              )) ||
-              "No transaction hash yet"}{" "}
+            {transfer?.execution && transfer?.execution?.txHash}
+            <span
+              className={classes.copyIcon}
+              onClick={() => {
+                navigator.clipboard?.writeText(transfer?.execution?.txHash!);
+                setClipboardMessageT2("Copied to clipboard!");
+              }}
+            >
+              <Tooltip title={clipboardMessageT2} placement="top" arrow>
+                <ContentCopyIcon fontSize="small" />
+              </Tooltip>
+            </span>
           </span>
         </div>
         <div className={classes.detailsContainer}>
@@ -144,7 +245,7 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Created:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.timestamp}
+            {formatDistanceDate(transfer?.timestamp!)} ({dayjs(transfer?.timestamp!).format("llll")})
           </span>
         </div>
         <div className={classes.detailsContainer}>
@@ -163,25 +264,21 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Value:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.amount}
+            {transfer?.amount} {symbol}
           </span>
         </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Fees:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.fee.amount}
+            {getFormatedFee(transfer?.fee!)}
           </span>
         </div>
       </Container>
     );
   };
 
-  useEffect(() => {
-    fetchTransfer();
-  }, []);
-
   return (
-    <Container maxWidth="xl">
+    <Container>
       <Box className={classes.boxContainer}>
         {transferStatus !== "none" ? (
           <section className={classes.sectionContainer}>

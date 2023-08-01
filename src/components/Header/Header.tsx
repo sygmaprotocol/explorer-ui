@@ -24,11 +24,11 @@ export default function Header() {
             </a>
             <Box
               sx={{
-                display: { xs: "none", sm: "flex", md: "flex" },
+                display: { xs: "flex", sm: "flex", md: "flex" },
                 height: 70,
               }}
             >
-              <Typography variant="h3">Sygma Protocol Explorer</Typography>
+              <Typography variant="h3" className={classes.titleContent}>Sygma Protocol Explorer</Typography>
             </Box>
           </div>
         </Toolbar>

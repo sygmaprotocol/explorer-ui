@@ -54,7 +54,7 @@ export enum TransferStatus {
 }
 
 export type Resource = {
-  resourceId: string;
+  id: string;
   type: string;
 }
 
@@ -97,7 +97,7 @@ export type Transfer = {
   sender: string;
   destination: string;
   amount: string;
-  timestamp?: number;
+  timestamp?: string;
   status: TransferStatus;
   deposit?: Deposit;
   execution?: Execution;
@@ -126,40 +126,37 @@ export type PaginationParams = {
   after?: string;
 }
 
-export type ExplorerPageState = {
-  fromDomainId?: number;
-  toDomainId?: number;
-  depositTransactionHash?: string;
-  fromAddress?: string;
-  toAddress?: string;
-  transferDetails: any;
-  timelineButtonClicked: boolean;
-  chains: Array<EvmBridgeConfig>;
+export type ExplorerContextState = {
+  queryParams: {
+    page: number,
+    limit: number
+  }
 }
 
 export type Actions = {
-  type: "setMyAddress";
+  type: "set_my_address";
   payload: string;
 } | {
-  type: "setDepositTransactionHash";
+  type: "set_deposit_transaction";
   payload: string;
 } | {
-  type: "selectFromDomainId";
+  type: "select_from_domain_id";
   payload: number;
 } | {
-  type: "selectToDomainId";
+  type: "select_to_domain_id";
   payload: number;
 } | {
-  type: "setTransferDetails";
+  type: "set_transfer_details";
   payload: any;
 } | {
-  type: "cleanTransferDetails";
+  type: "clean_transfer_details";
 } | {
-  type: "setTokenIconsForDetailView";
+  type: "set_token_icons_for_detail_view";
   payload: unknown;
 } | {
-  type: "timelineButtonClick";
-};
+  type: 'set_query_params',
+  payload: { page: number, limit: number }
+}
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>;
@@ -171,14 +168,15 @@ export type ExplorerContext = {
   explorerState: ExplorerState;
   loadMore: (options: PaginationParams) => void;
   setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
-  explorerPageState: ExplorerPageState;
-  explorerPageDispatcher: React.Dispatch<Actions>;
+  explorerContextState: ExplorerContextState;
+  explorerContextDispatcher: React.Dispatch<Actions>;
   getAccount: () => Promise<string>;
   getChainId: () => Promise<number>;
   chainId: number | undefined;
   account: string | undefined;
   routes: Routes,
   sharedConfig: SharedConfigDomain[] | []
+  setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>
 }
 
 export const enum ResourceTypes {
