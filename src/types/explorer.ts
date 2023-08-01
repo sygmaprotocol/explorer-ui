@@ -54,7 +54,7 @@ export enum TransferStatus {
 }
 
 export type Resource = {
-  resourceId: string;
+  id: string;
   type: string;
 }
 
