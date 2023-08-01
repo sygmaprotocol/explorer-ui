@@ -7,7 +7,6 @@ export const useStyles = makeStyles()((theme) => {
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'center',
-      
     },
     boxContainer: {
       width: '100%',
@@ -21,9 +20,9 @@ export const useStyles = makeStyles()((theme) => {
     sectionContainer: {
       display: 'flex',
       flexDirection: 'column',
-      gridColumn: '4 / span 6',
+      gridColumn: '3 / span 9',
       [theme.breakpoints.down('lg')]: {
-        gridColumn: '2 / span 6',
+        gridColumn: '2 / span 8',
       },
     },
     transferDetailsContainer: {
@@ -94,6 +93,30 @@ export const useStyles = makeStyles()((theme) => {
         borderRadius: '8px',
         background: '#E2D9CC'
       }
+    },
+    networkIcon: {
+      display: "block",
+      height: 20,
+      width: 20,
+      marginRight: theme.spacing(1),
+    },
+    substrateNetworkIcon: {
+      display: "block",
+      height: 30,
+      width: 30,
+      marginRight: theme.spacing(1),
+    },
+    networkContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      width: "100%",
+      alignItems: "center",
+    },
+    networkIconsContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
     }
   }
 });

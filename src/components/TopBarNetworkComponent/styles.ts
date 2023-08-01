@@ -35,5 +35,15 @@ export const useStyles = makeStyles()((theme) => {
       justifyContent: "center",
       color: "black",
     },
+    logoutContainer: {
+      display: "flex",
+      borderLeft: "1px solid black",
+      marginLeft: '10px'
+    },
+    logoutIconContainer: {
+      display: "flex",
+      marginLeft: '10px',
+      cursor: 'pointer'
+    }
   };
 });

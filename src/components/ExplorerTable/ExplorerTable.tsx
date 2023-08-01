@@ -24,6 +24,7 @@ import {
   getNetworkNames,
   getResourceInfo,
   formatDistanceDate,
+  getFormatedFee,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -63,11 +64,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         fee
       } = transfer;
 
-      let formatedFee = '50.0 PHA'
-
-      if(typeof fee !== 'string'){
-        formatedFee = `${ethers.formatEther(fee.amount).toString()} ETH`
-      }
+      let formatedFee = getFormatedFee(fee);
 
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig);
       const toDomainInfo = getDomainData(toDomainId, sharedConfig);

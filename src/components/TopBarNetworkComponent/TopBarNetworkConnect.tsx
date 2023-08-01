@@ -1,5 +1,9 @@
-import { Button, Typography } from "@mui/material";
+import {
+  Button,
+  Typography,
+} from "@mui/material";
 import React, { useEffect } from "react";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { BridgeConfig, ExplorerContext, ExplorerState } from "../../types";
 import { getIconNamePerChainId, shortenAddress } from "../../utils/Helpers";
 
@@ -48,6 +52,16 @@ export default function TopBarNetworkConnect({
     });
     setIsReady(true);
   };
+
+  const handleDisconnect = () => {
+    setCurrentChainId(undefined);
+    setLocalAddress('');
+    setExplorerState({
+      ...explorerState,
+      account: undefined,
+    });
+    setIsReady(false);
+  }
 
   useEffect(() => {
     if (chainId !== undefined && chainId !== currentChainId) {
@@ -98,6 +112,11 @@ export default function TopBarNetworkConnect({
                   <Typography variant="h6" className={classes.address}>
                     {shortenAddress(localAddress!)}
                   </Typography>
+                  <div className={classes.logoutContainer}>
+                    <div className={classes.logoutIconContainer} onClick={handleDisconnect}>
+                      <LogoutIcon />
+                    </div>
+                  </div>
                 </div>
               </div>
             </>

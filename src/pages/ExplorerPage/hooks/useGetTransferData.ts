@@ -102,4 +102,17 @@ export function useGetTransferData(
       dispatcher,
     )
   }, [explorerContextState.queryParams]);
+
+  useEffect(() => {
+    if (!explorerState.account) {
+      const { queryParams: { page, limit } } = explorerContextState;
+      transferData(
+        page,
+        limit,
+        routes,
+        dispatcher,
+      );
+    }
+  }, [explorerState.account]);
+
 }

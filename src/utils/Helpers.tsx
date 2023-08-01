@@ -234,10 +234,27 @@ export const sanitizeTransferData = (transfers: Transfer[]) => {
 export const formatDistanceDate = (timestamp: string) => {
   const diffTime = new Date().getTime() - new Date(timestamp!).getTime();
   const dayDiffs = Math.floor(diffTime / (1000 * 3600 * 24));
-  const hoursDiffs = Math.floor(diffTime / (1000 * 3600))
-  const hoursRemainder = Math.floor(hoursDiffs%24)
+  const hoursDiffs = Math.floor(diffTime / (1000 * 3600));
+  const hoursRemainder = Math.floor(hoursDiffs % 24);
 
-  const dateFormated = dayDiffs !== 0 ? `${dayDiffs} days ${hoursDiffs > 23 && hoursRemainder !== 0 ? `${hoursRemainder} hours` : `${hoursDiffs} hours`}` : `${hoursDiffs} hours`
+  const dateFormated =
+    dayDiffs !== 0
+      ? `${dayDiffs} days ${
+          hoursDiffs > 23 && hoursRemainder !== 0
+            ? `${hoursRemainder} hours`
+            : `${hoursDiffs} hours`
+        }`
+      : `${hoursDiffs} hours`;
 
-  return dateFormated
-}
+  return dateFormated;
+};
+
+export const getFormatedFee = (fee: Transfer["fee"] | string) => {
+  let formatedFee = "50.0 PHA";
+
+  if (typeof fee !== "string") {
+    formatedFee = `${ethers.formatEther(fee.amount).toString()} ETH`;
+  }
+
+  return formatedFee;
+};

@@ -6,12 +6,16 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { useExplorer } from "../../context";
 import { SharedConfigDomain, Transfer } from "../../types";
 import {
   formatDistanceDate,
   getDisplayedStatuses,
   getDomainData,
+  getFormatedFee,
+  getNetworkNames,
+  renderNetworkIcon,
   renderStatusIcon,
   sanitizeTransferData,
   shortenAddress,
@@ -101,7 +105,7 @@ export default function DetailView() {
 
   // fallback when you are opening the detail view on new tab
   const params = useParams();
-  
+
   const getTransfersFromLocalStorage = () => {
     const transfers = localStorage.getItem("transfers");
     const { txHash } = params;
@@ -130,8 +134,27 @@ export default function DetailView() {
   }, []);
 
   const renderTransferDetails = (transfer: Transfer | null) => {
+    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
+    const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
+
+    const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
+    const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
+
     return (
       <Container className={classes.innerTransferDetailContainer}>
+        <div className={classes.detailsContainer}>
+          <div className={classes.networkContainer}>
+            <span className={classes.networkIconsContainer}>
+              {renderNetworkIcon(fromDomainInfo?.chainId!, classes)}{" "}
+              {fromDomainName}
+            </span>
+            <KeyboardDoubleArrowRightIcon />
+            <span className={classes.networkIconsContainer}>
+              {renderNetworkIcon(toDomainInfo?.chainId!, classes)}{" "}
+              {toDomainName}
+            </span>
+          </div>
+        </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Status:</span>
           <span className={classes.detailsInnerContent}>
@@ -165,9 +188,7 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.execution && transferToNetworkType === "evm"
-              ? shortenAddress(transfer?.execution?.txHash!)
-              : transfer?.execution?.txHash}
+            {transfer?.execution && transfer?.execution?.txHash}
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -217,7 +238,7 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Fees:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.fee.amount}
+            {getFormatedFee(transfer?.fee!)}
           </span>
         </div>
       </Container>
