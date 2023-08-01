@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { useExplorer } from "../../context";
-import { SharedConfigDomain, Transfer } from "../../types";
+import { SharedConfigDomain, SharedConfigResource, Transfer } from "../../types";
 import {
   formatDistanceDate,
   getDisplayedStatuses,
@@ -137,8 +137,16 @@ export default function DetailView() {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
     const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
 
+    const { resource } = transfer as Transfer
+
+    const { id } = resource
+
     const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
     const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
+
+    const fromDomainTokenName = fromDomainInfo?.resources.find((resource) => resource.resourceId === id)
+
+    const { symbol } = fromDomainTokenName as SharedConfigResource
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -232,7 +240,7 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Value:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.amount}
+            {transfer?.amount} {symbol}
           </span>
         </div>
         <div className={classes.detailsContainer}>
