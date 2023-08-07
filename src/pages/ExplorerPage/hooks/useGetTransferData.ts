@@ -42,10 +42,12 @@ const transferDataBySender = async (sender: string, page: number, limit: number,
     const sanitizedTransfers = sanitizeTransferData(transferResponseBySender);
 
     localStorage.setItem("transfers", JSON.stringify(sanitizedTransfers));
+
     dispatcher({
       type: "fetch_transfer_by_sender",
       payload: sanitizedTransfers,
     });
+
   } catch (e) {
     dispatcher({
       type: "fetch_transfer_by_sender_error",
@@ -59,14 +61,13 @@ export function useGetTransferData(
   limit: number,
   routes: Routes,
   dispatcher: React.Dispatch<TransferActions>,
-  explorerState: ExplorerState,
   state: ExplorerPageState,
   explorerContextState: ExplorerContextState,
   explorerContextDispatcher: React.Dispatch<Actions>,
 ): void {
 
   useEffect(() => {
-    if (explorerState.account === undefined) {
+    if (explorerContextState.account === undefined) {
       const { queryParams: { page, limit } } = explorerContextState;
       transferData(
         page,
@@ -78,11 +79,18 @@ export function useGetTransferData(
   }, []);
 
   useEffect(() => {
-    if (explorerState.account !== undefined) {
-      const { queryParams: { page, limit } } = explorerContextState;
-      transferDataBySender(ethers.getAddress(explorerState.account), page, limit, routes, dispatcher);
+    if (explorerContextState.queryParams.sender) {
+      const { queryParams: { page, limit, sender } } = explorerContextState;
+      transferDataBySender(ethers.getAddress(sender!), page, limit, routes, dispatcher);
+    } else {
+      transferData(
+        page,
+        limit,
+        routes,
+        dispatcher,
+      )
     }
-  }, [explorerState]);
+  }, [explorerContextState.queryParams]);
 
   useEffect(() => {
     if (state.loading === "loading" && state.transfers.length) {
@@ -92,19 +100,8 @@ export function useGetTransferData(
     }
   }, [state.loading, state.transfers]);
 
-
   useEffect(() => {
-    const { queryParams: { page, limit } } = explorerContextState;
-    transferData(
-      page,
-      limit,
-      routes,
-      dispatcher,
-    )
-  }, [explorerContextState.queryParams]);
-
-  useEffect(() => {
-    if (!explorerState.account) {
+    if (!explorerContextState.account) {
       const { queryParams: { page, limit } } = explorerContextState;
       transferData(
         page,
@@ -112,7 +109,10 @@ export function useGetTransferData(
         routes,
         dispatcher,
       );
+    } else { 
+      const { account } = explorerContextState;
+      transferDataBySender(ethers.getAddress(account), page, limit, routes, dispatcher);
     }
-  }, [explorerState.account]);
+  }, [explorerContextState.account]);
 
 }

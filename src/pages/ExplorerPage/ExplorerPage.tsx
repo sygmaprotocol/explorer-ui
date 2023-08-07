@@ -1,6 +1,5 @@
 import { useState, useReducer } from "react";
-import { Button, Container, Paper } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Alert, Button, Container, Paper } from "@mui/material";
 
 import { ExplorerTable } from "../../components";
 
@@ -8,6 +7,7 @@ import { useStyles } from "./styles";
 import { useExplorer } from "../../context";
 import { ExplorerPageState, reducer } from "./reducer";
 import { useGetTransferData } from "./hooks/useGetTransferData";
+import { ethers } from "ethers";
 
 const initState: ExplorerPageState = {
   transfers: [],
@@ -19,16 +19,13 @@ const initState: ExplorerPageState = {
 const ExplorerPage = () => {
   const explorerContext = useExplorer();
   const {
-    explorerState,
-    loadMore,
-    setExplorerState,
     explorerContextDispatcher,
     explorerContextState,
     routes,
     sharedConfig,
   } = explorerContext;
-  const { chains, pageInfo, isLoading } = explorerState;
-  const navigate = useNavigate();
+
+  const { chains } = explorerContextState;
 
   const classes = useStyles();
   const [active, setActive] = useState(false);
@@ -40,26 +37,25 @@ const ExplorerPage = () => {
     explorerContextState.queryParams.limit,
     routes,
     dispatcher,
-    explorerState,
     state,
     explorerContextState,
     explorerContextDispatcher,
   );
 
-  const handleRefreshTable = () =>
-    explorerContextDispatcher({
-      type: "set_query_params",
-      payload: { page: 1, limit: 10 },
-    });
+  const handleRefreshTable = () => {
+    const { account } = explorerContextState;
 
-  const handleGoToTransferDetail = (url: string, id: string) => () => {
-    explorerContextDispatcher({
-      type: "set_query_params",
-      payload: { ...explorerContextState.queryParams },
-    });
-    navigate(url, {
-      state: id,
-    });
+    if (account) {
+      explorerContextDispatcher({
+        type: "set_query_params",
+        payload: { page: 1, limit: 10, sender: ethers.getAddress(account) },
+      });
+    } else {
+      explorerContextDispatcher({
+        type: "set_query_params",
+        payload: { page: 1, limit: 10 },
+      });
+    }
   };
 
   return (
@@ -80,63 +76,74 @@ const ExplorerPage = () => {
           borderRadius: "12px",
           display: "grid",
           gridTemplateRows: "repeat(1, 1fr)",
+          marginTop: state.transfers.length !== 0 ? "0px" : "10px",
         }}
       >
-        <div className={classes.explorerTable}>
-          {state.transfers.length !== 0 && sharedConfig.length !== 0 && (
+        <div
+          className={
+            state.transfers.length !== 0
+              ? classes.explorerTable
+              : classes.errorMessage
+          }
+        >
+          {state.transfers.length !== 0 && sharedConfig.length !== 0 ? (
             <ExplorerTable
               active={active}
               setActive={setActive}
               chains={chains}
               state={state}
-              setExplorerState={setExplorerState}
               sharedConfig={sharedConfig}
-              handleGoToTransferDetail={handleGoToTransferDetail}
             />
+          ) : (
+            <Alert severity="error">
+              No transactions for the selected account!
+            </Alert>
           )}
         </div>
-        <div className={classes.paginationPanel}>
-          <Button
-            onClick={() => {
-              explorerContextDispatcher({
-                type: "set_query_params",
-                payload: {
-                  page: explorerContextState.queryParams.page - 1,
-                  limit: explorerContextState.queryParams.limit,
-                },
-              });
-            }}
-            className={classes.paginationButtons}
-            disabled={explorerContextState.queryParams.page === 1}
-          >
-            ← Previous
-          </Button>
-          <span
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: "10px",
-            }}
-          >
-            {explorerContextState.queryParams.page}
-          </span>
-          <Button
-            disabled={state.transfers.length === 0}
-            onClick={() => {
-              explorerContextDispatcher({
-                type: "set_query_params",
-                payload: {
-                  page: explorerContextState.queryParams.page + 1,
-                  limit: explorerContextState.queryParams.limit,
-                },
-              });
-            }}
-            className={classes.paginationButtons}
-          >
-            Next →
-          </Button>
-        </div>
+        {state.transfers.length !== 0 && (
+          <div className={classes.paginationPanel}>
+            <Button
+              onClick={() => {
+                explorerContextDispatcher({
+                  type: "set_query_params",
+                  payload: {
+                    page: explorerContextState.queryParams.page - 1,
+                    limit: explorerContextState.queryParams.limit,
+                  },
+                });
+              }}
+              className={classes.paginationButtons}
+              disabled={explorerContextState.queryParams.page === 1}
+            >
+              ← Previous
+            </Button>
+            <span
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: "10px",
+              }}
+            >
+              {explorerContextState.queryParams.page}
+            </span>
+            <Button
+              disabled={state.transfers.length === 0}
+              onClick={() => {
+                explorerContextDispatcher({
+                  type: "set_query_params",
+                  payload: {
+                    page: explorerContextState.queryParams.page + 1,
+                    limit: explorerContextState.queryParams.limit,
+                  },
+                });
+              }}
+              className={classes.paginationButtons}
+            >
+              Next →
+            </Button>
+          </div>
+        )}
       </Paper>
     </Container>
   );

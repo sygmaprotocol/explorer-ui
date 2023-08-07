@@ -56,6 +56,12 @@ export const useStyles = makeStyles(() =>
       height: "100%",
       border: "none",
     },
+    errorMessage: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
     paginationPanel: {
       display: "flex",
       justifyContent: "flex-end",
@@ -64,10 +70,9 @@ export const useStyles = makeStyles(() =>
       marginLeft: "10px",
     },
     refreshTableButton: {
-      px: 0,
       fontSize: 15,
-      height: 24,
-      width: 180
+      height: 36,
+      width: 132,
     }
   })
 );
