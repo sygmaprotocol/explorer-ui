@@ -94,9 +94,13 @@ const ExplorerPage = () => {
               state={state}
               sharedConfig={sharedConfig}
             />
-          ) : (
+          ) : explorerContextState.account !== undefined ? (
             <Alert severity="error">
               No transactions for the selected account!
+            </Alert>
+          ) : (
+            <Alert severity="info">
+              Loading transfers!
             </Alert>
           )}
         </div>
