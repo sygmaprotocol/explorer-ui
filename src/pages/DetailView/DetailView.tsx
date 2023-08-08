@@ -6,7 +6,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useExplorer } from "../../context";
 import {
   SharedConfig,
@@ -27,6 +27,7 @@ import {
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 import clsx from "clsx";
+import useClipboard from "./hooks/useClipboard";
 
 dayjs.extend(localizedFormat);
 
@@ -39,7 +40,7 @@ export default function DetailView() {
 
   const { state: transferId } = useLocation();
 
-  const { routes } = useExplorer();
+  const { routes } = explorerContext
 
   const [transferDetails, setTransferDetails] = useState<Transfer | null>(null);
 
@@ -51,12 +52,6 @@ export default function DetailView() {
     useState<string>("");
   const [transferToNetworkType, setTransferToNetworkType] =
     useState<string>("");
-
-  const [clipboardMessageT1, setClipboardMessageT1] =
-    useState<string>("Copy to clipboard");
-
-  const [clipboardMessageT2, setClipboardMessageT2] =
-    useState<string>("Copy to clipboard");
 
   const setTransferNetworkTypes = (
     fromDomainInfo: SharedConfigDomain | undefined,
@@ -89,26 +84,6 @@ export default function DetailView() {
     setTransferStatus("completed");
   };
 
-  useEffect(() => {
-    let timerT1: ReturnType<typeof setTimeout>;
-    let timerT2: ReturnType<typeof setTimeout>;
-
-    if (clipboardMessageT1 === "Copied to clipboard!") {
-      timerT1 = setTimeout(() => {
-        setClipboardMessageT1("Copy to clipboard");
-      }, 1000);
-    } else if (clipboardMessageT2 === "Copied to clipboard!") {
-      timerT2 = setTimeout(() => {
-        setClipboardMessageT2("Copy to clipboard");
-      }, 1000);
-    }
-
-    return () => {
-      clearTimeout(timerT1);
-      clearTimeout(timerT2);
-    };
-  }, [clipboardMessageT1, clipboardMessageT2]);
-
   // fallback when you are opening the detail view on new tab
   const params = useParams();
 
@@ -134,10 +109,13 @@ export default function DetailView() {
   const getSharedConfigFromLocalStorage = () => {
     const sharedConfig = localStorage.getItem("sharedConfig");
     const parsedSharedConfig: SharedConfig = JSON.parse(sharedConfig!);
-    console.log("🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:", parsedSharedConfig)
+    console.log(
+      "🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:",
+      parsedSharedConfig,
+    );
 
     setSharedConfig(parsedSharedConfig.domains);
-  }
+  };
 
   useEffect(() => {
     if (transferId !== null) {
@@ -147,19 +125,26 @@ export default function DetailView() {
     }
 
     // fallback because ExplorerState is new coming to a new tab
-    if(sharedConfig.length === 0) {
-      console.log("getting shared config")
+    if (sharedConfig.length === 0) {
+      console.log("getting shared config");
       getSharedConfigFromLocalStorage();
     }
   }, []);
+
+  const {
+    clipboardMessageT1,
+    clipboardMessageT2,
+    setClipboardMessageT1,
+    setClipboardMessageT2,
+  } = useClipboard();
 
   const renderTransferDetails = (transfer: Transfer | null) => {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
     const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
 
-    const { resource } = transfer as Transfer
+    const { resource } = transfer as Transfer;
 
-    const { id } = resource
+    const { id } = resource;
 
     const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
     const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
@@ -168,7 +153,7 @@ export default function DetailView() {
       (resource) => resource.resourceId === id,
     );
 
-    const { symbol } = fromDomainTokenName as SharedConfigResource
+    const { symbol } = fromDomainTokenName as SharedConfigResource;
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -201,7 +186,9 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            <span className={classes.txHashText}>{transfer?.deposit && transfer?.deposit?.txHash}</span>
+            <span className={classes.txHashText}>
+              {transfer?.deposit && transfer?.deposit?.txHash}
+            </span>
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -245,7 +232,8 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Created:</span>
           <span className={classes.detailsInnerContent}>
-            {formatDistanceDate(transfer?.timestamp!)} ({dayjs(transfer?.timestamp!).format("llll")})
+            {formatDistanceDate(transfer?.timestamp!)} (
+            {dayjs(transfer?.timestamp!).format("llll")})
           </span>
         </div>
         <div className={classes.detailsContainer}>
