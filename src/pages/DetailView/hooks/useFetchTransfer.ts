@@ -1,32 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getDomainData } from "../../../utils/Helpers";
-import { SharedConfig, Transfer } from "../../../types";
+import { getDomainData, sanitizeTransferData } from "../../../utils/Helpers";
+import { Routes, SharedConfig, SharedConfigDomain, Transfer } from "../../../types";
+import { DetailViewActions, DetailViewState } from "../reducer";
 
 export default function useFetchTransfer(
-  routes, sharedConfig, setTransferFromNetworkType, setTransferToNetworkType, setSharedConfig
+  routes: Routes, sharedConfig: SharedConfigDomain[] | [], setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>, transferId: { id: string } | null, state: DetailViewState, dispatcher: React.Dispatch<DetailViewActions>
 ) {
 
-  const [transferDetails, setTransferDetails] = useState<Transfer | null>(null);
-
-  const [transferStatus, setTransferStatus] = useState<"none" | "completed">(
-    "none",
-  );
-
-  const setTransferNetworkTypes = (
-    fromDomainInfo: SharedConfigDomain | undefined,
-    toDomainInfo: SharedConfigDomain | undefined,
-  ) => {
-    const fromDomainType = fromDomainInfo?.type;
-
-    const toDomainType = toDomainInfo?.type;
-
-    setTransferFromNetworkType(fromDomainType!);
-    setTransferToNetworkType(toDomainType!);
-  };
-
   const fetchTransfer = async () => {
-    const transfer = await routes.transfer(transferId.id);
+    const transfer = await routes.transfer(transferId!.id);
     const sanitizedTransfer = sanitizeTransferData([transfer]);
 
     const fromDomainInfo = getDomainData(
@@ -38,10 +21,15 @@ export default function useFetchTransfer(
       sharedConfig,
     );
 
-    setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
+    dispatcher({
+      type: 'set_transfer_details',
+      payload: sanitizedTransfer[0]
+    })
 
-    setTransferDetails(sanitizedTransfer[0]);
-    setTransferStatus("completed");
+    dispatcher({
+      type: 'set_transfer_status',
+      payload: 'completed'
+    })
   };
 
   // fallback when you are opening the detail view on new tab
@@ -56,23 +44,21 @@ export default function useFetchTransfer(
     );
 
     if (transfer) {
-      const fromDomainInfo = getDomainData(transfer.fromDomainId, sharedConfig);
-      const toDomainInfo = getDomainData(transfer.toDomainId, sharedConfig);
+      dispatcher({
+        type: 'set_transfer_details',
+        payload: transfer
+      })
 
-      setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
-
-      setTransferDetails(transfer);
-      setTransferStatus("completed");
+      dispatcher({
+        type: 'set_transfer_status',
+        payload: 'completed'
+      })
     }
   };
 
   const getSharedConfigFromLocalStorage = () => {
     const sharedConfig = localStorage.getItem("sharedConfig");
     const parsedSharedConfig: SharedConfig = JSON.parse(sharedConfig!);
-    console.log(
-      "🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:",
-      parsedSharedConfig,
-    );
 
     setSharedConfig(parsedSharedConfig.domains);
   };
@@ -90,5 +76,4 @@ export default function useFetchTransfer(
       getSharedConfigFromLocalStorage();
     }
   }, []);
-
 }

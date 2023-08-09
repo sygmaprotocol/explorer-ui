@@ -1,6 +1,6 @@
 import { CircularProgress, Tooltip, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useReducer } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -9,8 +9,6 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useExplorer } from "../../context";
 import {
-  SharedConfig,
-  SharedConfigDomain,
   SharedConfigResource,
   Transfer,
 } from "../../types";
@@ -22,121 +20,36 @@ import {
   getNetworkNames,
   renderNetworkIcon,
   renderStatusIcon,
-  sanitizeTransferData,
-  shortenAddress,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 import clsx from "clsx";
 import useClipboard from "./hooks/useClipboard";
+import useFetchTransfer from "./hooks/useFetchTransfer";
+import { DetailViewState, reducer } from "./reducer";
 
 dayjs.extend(localizedFormat);
 
 export default function DetailView() {
   const explorerContext = useExplorer();
 
-  const { sharedConfig, setSharedConfig } = explorerContext;
+  const { sharedConfig, setSharedConfig, routes } = explorerContext;
 
   const { classes } = useStyles();
 
   const { state: transferId } = useLocation();
 
-  const { routes } = explorerContext
-
-  const [transferDetails, setTransferDetails] = useState<Transfer | null>(null);
-
-  const [transferStatus, setTransferStatus] = useState<"none" | "completed">(
-    "none",
-  );
-
-  const [transferFromNetworkType, setTransferFromNetworkType] =
-    useState<string>("");
-  const [transferToNetworkType, setTransferToNetworkType] =
-    useState<string>("");
-
-  const setTransferNetworkTypes = (
-    fromDomainInfo: SharedConfigDomain | undefined,
-    toDomainInfo: SharedConfigDomain | undefined,
-  ) => {
-    const fromDomainType = fromDomainInfo?.type;
-
-    const toDomainType = toDomainInfo?.type;
-
-    setTransferFromNetworkType(fromDomainType!);
-    setTransferToNetworkType(toDomainType!);
+  const initState: DetailViewState = {
+    transferDetails: null,
+    transferStatus: "none",
+    clipboardMessageT1: "Copy to clipboard",
+    clipboardMessageT2: "Copy to clipboard",
   };
 
-  const fetchTransfer = async () => {
-    const transfer = await routes.transfer(transferId.id);
-    const sanitizedTransfer = sanitizeTransferData([transfer]);
+  const [state, dispatcher] = useReducer(reducer, initState);
 
-    const fromDomainInfo = getDomainData(
-      sanitizedTransfer[0].fromDomainId,
-      sharedConfig,
-    );
-    const toDomainInfo = getDomainData(
-      sanitizedTransfer[0].toDomainId,
-      sharedConfig,
-    );
+  useClipboard(state, dispatcher);
 
-    setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
-
-    setTransferDetails(sanitizedTransfer[0]);
-    setTransferStatus("completed");
-  };
-
-  // fallback when you are opening the detail view on new tab
-  const params = useParams();
-
-  const getTransfersFromLocalStorage = () => {
-    const transfers = localStorage.getItem("transfers");
-    const { txHash } = params;
-    const parsedTransfers: Transfer[] = JSON.parse(transfers!);
-    const transfer = parsedTransfers.find(
-      (transfer) => transfer.deposit?.txHash === txHash,
-    );
-
-    if (transfer) {
-      const fromDomainInfo = getDomainData(transfer.fromDomainId, sharedConfig);
-      const toDomainInfo = getDomainData(transfer.toDomainId, sharedConfig);
-
-      setTransferNetworkTypes(fromDomainInfo!, toDomainInfo!);
-
-      setTransferDetails(transfer);
-      setTransferStatus("completed");
-    }
-  };
-
-  const getSharedConfigFromLocalStorage = () => {
-    const sharedConfig = localStorage.getItem("sharedConfig");
-    const parsedSharedConfig: SharedConfig = JSON.parse(sharedConfig!);
-    console.log(
-      "🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:",
-      parsedSharedConfig,
-    );
-
-    setSharedConfig(parsedSharedConfig.domains);
-  };
-
-  useEffect(() => {
-    if (transferId !== null) {
-      fetchTransfer();
-    } else {
-      getTransfersFromLocalStorage();
-    }
-
-    // fallback because ExplorerState is new coming to a new tab
-    if (sharedConfig.length === 0) {
-      console.log("getting shared config");
-      getSharedConfigFromLocalStorage();
-    }
-  }, []);
-
-  const {
-    clipboardMessageT1,
-    clipboardMessageT2,
-    setClipboardMessageT1,
-    setClipboardMessageT2,
-  } = useClipboard();
+  useFetchTransfer(routes, sharedConfig, setSharedConfig, transferId, state, dispatcher);
 
   const renderTransferDetails = (transfer: Transfer | null) => {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
@@ -193,10 +106,13 @@ export default function DetailView() {
               className={classes.copyIcon}
               onClick={() => {
                 navigator.clipboard?.writeText(transfer?.deposit?.txHash!);
-                setClipboardMessageT1("Copied to clipboard!");
+                dispatcher({
+                  type: "set_clipboard_message_t1",
+                  payload: "Copied to clipboard!",
+                });
               }}
             >
-              <Tooltip title={clipboardMessageT1} placement="top" arrow>
+              <Tooltip title={state.clipboardMessageT1} placement="top" arrow>
                 <ContentCopyIcon fontSize="small" />
               </Tooltip>
             </span>
@@ -212,10 +128,13 @@ export default function DetailView() {
               className={classes.copyIcon}
               onClick={() => {
                 navigator.clipboard?.writeText(transfer?.execution?.txHash!);
-                setClipboardMessageT2("Copied to clipboard!");
+                dispatcher({
+                  type: "set_clipboard_message_t2",
+                  payload: "Copied to clipboard!",
+                });
               }}
             >
-              <Tooltip title={clipboardMessageT2} placement="top" arrow>
+              <Tooltip title={state.clipboardMessageT2} placement="top" arrow>
                 <ContentCopyIcon fontSize="small" />
               </Tooltip>
             </span>
@@ -268,7 +187,7 @@ export default function DetailView() {
   return (
     <Container>
       <Box className={classes.boxContainer}>
-        {transferStatus !== "none" ? (
+        {state.transferStatus !== "none" ? (
           <section className={classes.sectionContainer}>
             <span className={classes.backIcon}>
               <Link
@@ -288,7 +207,7 @@ export default function DetailView() {
               Transaction Detail
             </Typography>
             <Container className={classes.transferDetailsContainer}>
-              {renderTransferDetails(transferDetails)}
+              {renderTransferDetails(state.transferDetails)}
             </Container>
           </section>
         ) : (

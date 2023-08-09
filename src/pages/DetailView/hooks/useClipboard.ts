@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { DetailViewActions, DetailViewState } from "../reducer";
 
-export default function useClipboard(){
-  const [clipboardMessageT1, setClipboardMessageT1] =
-  useState<string>("Copy to clipboard");
-
-const [clipboardMessageT2, setClipboardMessageT2] =
-  useState<string>("Copy to clipboard");
-
+export default function useClipboard(state: DetailViewState, dispatcher: React.Dispatch<DetailViewActions>){
   useEffect(() => {
     let timerT1: ReturnType<typeof setTimeout>;
     let timerT2: ReturnType<typeof setTimeout>;
 
-    if (clipboardMessageT1 === "Copied to clipboard!") {
+    if (state.clipboardMessageT1 === "Copied to clipboard!") {
       timerT1 = setTimeout(() => {
-        setClipboardMessageT1("Copy to clipboard");
+        dispatcher({
+          type: "set_clipboard_message_t1",
+          payload: "Copy to clipboard",
+        })
       }, 1000);
-    } else if (clipboardMessageT2 === "Copied to clipboard!") {
+    } else if (state.clipboardMessageT2 === "Copied to clipboard!") {
       timerT2 = setTimeout(() => {
-        setClipboardMessageT2("Copy to clipboard");
+        dispatcher({
+          type: "set_clipboard_message_t2",
+          payload: "Copy to clipboard",
+        })
       }, 1000);
     }
 
@@ -25,8 +26,5 @@ const [clipboardMessageT2, setClipboardMessageT2] =
       clearTimeout(timerT1);
       clearTimeout(timerT2);
     };
-  }, [clipboardMessageT1, clipboardMessageT2]);
-
-  return { clipboardMessageT1, setClipboardMessageT1, clipboardMessageT2, setClipboardMessageT2 }
-
+  }, [state.clipboardMessageT1, state.clipboardMessageT2]);
 }
