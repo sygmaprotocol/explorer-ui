@@ -8,10 +8,7 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useExplorer } from "../../context";
-import {
-  SharedConfigResource,
-  Transfer,
-} from "../../types";
+import { SharedConfigResource, Transfer } from "../../types";
 import {
   formatDistanceDate,
   getDisplayedStatuses,
@@ -26,6 +23,7 @@ import clsx from "clsx";
 import useClipboard from "./hooks/useClipboard";
 import useFetchTransfer from "./hooks/useFetchTransfer";
 import { DetailViewState, reducer } from "./reducer";
+import useUpdateInterval from "./hooks/useUpdateInterval";
 
 dayjs.extend(localizedFormat);
 
@@ -43,13 +41,23 @@ export default function DetailView() {
     transferStatus: "none",
     clipboardMessageT1: "Copy to clipboard",
     clipboardMessageT2: "Copy to clipboard",
+    delay: 5000,
+    fetchingStatus: "idle",
   };
 
   const [state, dispatcher] = useReducer(reducer, initState);
 
   useClipboard(state, dispatcher);
 
-  useFetchTransfer(routes, sharedConfig, setSharedConfig, transferId, state, dispatcher);
+  useFetchTransfer(
+    routes,
+    sharedConfig,
+    setSharedConfig,
+    transferId,
+    dispatcher,
+  );
+
+  useUpdateInterval(state, dispatcher, transferId, routes);
 
   const renderTransferDetails = (transfer: Transfer | null) => {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);

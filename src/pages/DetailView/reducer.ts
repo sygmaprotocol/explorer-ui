@@ -5,15 +5,18 @@ export type DetailViewState = {
   transferStatus: "none" | "completed",
   clipboardMessageT1: string,
   clipboardMessageT2: string,
+  delay: number,
+  fetchingStatus: "fetching" | "idle",
 }
 
 export type DetailViewActions =
   { type: "set_transfer_details", payload: Transfer } |
   { type: "set_transfer_status", payload: "none" | "completed" } |
   { type: "set_clipboard_message_t1", payload: string } |
-  { type: "set_clipboard_message_t2", payload: string }
+  { type: "set_clipboard_message_t2", payload: string } |
+  { type: "update_fetching_status", payload: "fetching" | "idle" }
 
-export function reducer(state: DetailViewState, action: DetailViewActions) {
+export function reducer(state: DetailViewState, action: DetailViewActions): DetailViewState {
   switch (action.type) {
     case 'set_transfer_details': {
       return {
@@ -39,5 +42,13 @@ export function reducer(state: DetailViewState, action: DetailViewActions) {
         clipboardMessageT2: action.payload,
       }
     }
+    case 'update_fetching_status': {
+      return {
+        ...state,
+        fetchingStatus: action.payload,
+      }
+    }
+    default:
+      return state
   }
 }

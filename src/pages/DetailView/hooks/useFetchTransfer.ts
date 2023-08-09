@@ -1,25 +1,16 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getDomainData, sanitizeTransferData } from "../../../utils/Helpers";
+import { sanitizeTransferData } from "../../../utils/Helpers";
 import { Routes, SharedConfig, SharedConfigDomain, Transfer } from "../../../types";
-import { DetailViewActions, DetailViewState } from "../reducer";
+import { DetailViewActions } from "../reducer";
 
 export default function useFetchTransfer(
-  routes: Routes, sharedConfig: SharedConfigDomain[] | [], setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>, transferId: { id: string } | null, state: DetailViewState, dispatcher: React.Dispatch<DetailViewActions>
+  routes: Routes, sharedConfig: SharedConfigDomain[] | [], setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>, transferId: { id: string } | null, dispatcher: React.Dispatch<DetailViewActions>
 ) {
 
   const fetchTransfer = async () => {
     const transfer = await routes.transfer(transferId!.id);
     const sanitizedTransfer = sanitizeTransferData([transfer]);
-
-    const fromDomainInfo = getDomainData(
-      sanitizedTransfer[0].fromDomainId,
-      sharedConfig,
-    );
-    const toDomainInfo = getDomainData(
-      sanitizedTransfer[0].toDomainId,
-      sharedConfig,
-    );
 
     dispatcher({
       type: 'set_transfer_details',
@@ -29,6 +20,11 @@ export default function useFetchTransfer(
     dispatcher({
       type: 'set_transfer_status',
       payload: 'completed'
+    })
+
+    dispatcher({
+      type: 'update_fetching_status',
+      payload: 'fetching'
     })
   };
 
@@ -52,6 +48,11 @@ export default function useFetchTransfer(
       dispatcher({
         type: 'set_transfer_status',
         payload: 'completed'
+      })
+
+      dispatcher({
+        type: 'update_fetching_status',
+        payload: 'fetching'
       })
     }
   };
