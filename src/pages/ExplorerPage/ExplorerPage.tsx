@@ -93,61 +93,16 @@ const ExplorerPage = () => {
               chains={chains}
               state={state}
               sharedConfig={sharedConfig}
+              explorerContext={explorerContext}
             />
           ) : explorerContextState.account !== undefined ? (
             <Alert severity="error">
               No transactions for the selected account!
             </Alert>
           ) : (
-            <Alert severity="info">
-              Loading transfers!
-            </Alert>
+            <Alert severity="info">Loading transfers!</Alert>
           )}
         </div>
-        {state.transfers.length !== 0 && (
-          <div className={classes.paginationPanel}>
-            <Button
-              onClick={() => {
-                explorerContextDispatcher({
-                  type: "set_query_params",
-                  payload: {
-                    page: explorerContextState.queryParams.page - 1,
-                    limit: explorerContextState.queryParams.limit,
-                  },
-                });
-              }}
-              className={classes.paginationButtons}
-              disabled={explorerContextState.queryParams.page === 1}
-            >
-              ← Previous
-            </Button>
-            <span
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: "10px",
-              }}
-            >
-              {explorerContextState.queryParams.page}
-            </span>
-            <Button
-              disabled={state.transfers.length === 0}
-              onClick={() => {
-                explorerContextDispatcher({
-                  type: "set_query_params",
-                  payload: {
-                    page: explorerContextState.queryParams.page + 1,
-                    limit: explorerContextState.queryParams.limit,
-                  },
-                });
-              }}
-              className={classes.paginationButtons}
-            >
-              Next →
-            </Button>
-          </div>
-        )}
       </Paper>
     </Container>
   );

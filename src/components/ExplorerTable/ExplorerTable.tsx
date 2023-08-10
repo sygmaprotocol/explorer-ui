@@ -5,12 +5,13 @@ import {
   TableCell,
   TableBody,
   TableRow,
+  TableFooter,
+  TablePagination,
 } from "@mui/material";
-import { ethers} from 'ethers'
 import clsx from "clsx";
 import {
   EvmBridgeConfig,
-  ExplorerState,
+  ExplorerContext,
   SharedConfigDomain,
   Transfer,
 } from "../../types";
@@ -38,13 +39,16 @@ type ExplorerTable = {
     error: undefined | string;
   };
   sharedConfig: SharedConfigDomain[] | [];
+  explorerContext: ExplorerContext;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
   state,
   sharedConfig,
+  explorerContext,
 }: ExplorerTable) => {
   const { classes } = useStyles();
+  const { explorerContextDispatcher, explorerContextState } = explorerContext;
 
   const renderTransferList = (transferData: Transfer[]) => {
     return transferData.map((transfer: Transfer) => {
@@ -58,7 +62,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         id,
         resourceID,
         timestamp,
-        fee
+        fee,
       } = transfer;
 
       let formatedFee = getFormatedFee(fee);
@@ -80,7 +84,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
       const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
 
-      const dateFormated = formatDistanceDate(timestamp!)
+      const dateFormated = formatDistanceDate(timestamp!);
       return (
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell
@@ -193,6 +197,37 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableRow>
         )}
       </TableBody>
+      <TableFooter>
+        <TablePagination
+          rowsPerPageOptions={[10]}
+          labelDisplayedRows={({ from, to, count }) => {
+            return `${from} - ${to}`
+          }}
+          count={explorerContextState.queryParams.page * 10 + 10}
+          page={explorerContextState.queryParams.page - 1}
+          rowsPerPage={explorerContextState.queryParams.limit}
+          onPageChange={(_, page) => {
+            console.log("Page", page, explorerContextState.queryParams);
+            if (page < explorerContextState.queryParams.page) {
+              explorerContextDispatcher({
+                type: "set_query_params",
+                payload: {
+                  page: explorerContextState.queryParams.page - 1,
+                  limit: explorerContextState.queryParams.limit,
+                },
+              });
+            } else {
+              explorerContextDispatcher({
+                type: "set_query_params",
+                payload: {
+                  page: explorerContextState.queryParams.page + 1,
+                  limit: explorerContextState.queryParams.limit,
+                },
+              });
+            }
+          }}
+        />
+      </TableFooter>
     </Table>
   );
 };

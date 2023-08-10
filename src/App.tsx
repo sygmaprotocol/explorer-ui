@@ -12,7 +12,6 @@ export const ROUTE_LINKS = {
 };
 
 function App() {
-  // ADD HERE SHARED CONFIG SUPPORT
   return (
     <ThemeProvider theme={SygmaTheme}>
       <CssBaseline />
