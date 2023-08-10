@@ -5,7 +5,11 @@ import { Routes, SharedConfig, SharedConfigDomain, Transfer } from "../../../typ
 import { DetailViewActions } from "../reducer";
 
 export default function useFetchTransfer(
-  routes: Routes, sharedConfig: SharedConfigDomain[] | [], setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>, transferId: { id: string } | null, dispatcher: React.Dispatch<DetailViewActions>
+  routes: Routes,
+  sharedConfig: SharedConfigDomain[] | [],
+  setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>,
+  transferId: { id: string } | null,
+  dispatcher: React.Dispatch<DetailViewActions>
 ) {
 
   const fetchTransfer = async () => {

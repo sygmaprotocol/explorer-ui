@@ -1,11 +1,16 @@
 import { useInterval } from 'usehooks-ts'
 import { DetailViewActions, DetailViewState } from '../reducer'
 import { sanitizeTransferData } from '../../../utils/Helpers';
+import { Routes } from '../../../types';
 
-export default function useUpdateInterval(state: DetailViewState, dispatcher: React.Dispatch<DetailViewActions>, transferId: { id: string } | null, routes: any) {
+export default function useUpdateInterval(
+  state: DetailViewState,
+  dispatcher: React.Dispatch<DetailViewActions>,
+  transferId: { id: string } | null,
+  routes: Routes
+) {
 
   const fetchUpdatedTransfer = async () => {
-    console.log("fetching")
     const transfer = await routes.transfer(transferId!.id);
     const sanitizedTransfer = sanitizeTransferData([transfer]);
 
