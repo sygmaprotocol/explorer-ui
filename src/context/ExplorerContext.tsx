@@ -77,7 +77,7 @@ const ExplorerProvider = ({
     }
 
     getSharedConfig();
-
+    
     setExplorerUrls(JSON.parse(import.meta.env.VITE_EXPLORER_URLS));
 
     return () => {
