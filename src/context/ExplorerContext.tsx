@@ -29,6 +29,7 @@ const ExplorerProvider = ({
     transferDetails: undefined,
     pillColorStatus: undefined,
     account: undefined,
+    explorerUrls: [],
   });
 
   // TO BE DEFINED
@@ -48,7 +49,10 @@ const ExplorerProvider = ({
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
   const [account, setAccount] = React.useState<string | undefined>(undefined);
-  
+  const [explorerUrls, setExplorerUrls] = React.useState<
+    [] | ExplorerState["explorerUrls"]
+  >([]);
+
   const [sharedConfig, setSharedConfig] = React.useState<
     SharedConfigDomain[] | []
   >([]);
@@ -74,6 +78,8 @@ const ExplorerProvider = ({
 
     getSharedConfig();
 
+    setExplorerUrls(JSON.parse(import.meta.env.VITE_EXPLORER_URLS));
+
     return () => {
       if (window.ethereum !== undefined) {
         window.ethereum!.removeAllListeners("chainChanged");
@@ -96,7 +102,8 @@ const ExplorerProvider = ({
         account,
         routes: routes(),
         sharedConfig,
-        setSharedConfig
+        setSharedConfig,
+        explorerUrls,
       }}
     >
       {children}

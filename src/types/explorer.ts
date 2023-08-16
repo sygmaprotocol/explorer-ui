@@ -117,6 +117,7 @@ export type ExplorerState = {
     background: string;
   };
   account: string | undefined
+  explorerUrls: [] | [{ id: number, url: string }]
 }
 
 export type PaginationParams = {
@@ -177,6 +178,7 @@ export type ExplorerContext = {
   routes: Routes,
   sharedConfig: SharedConfigDomain[] | []
   setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>
+  explorerUrls: [] | ExplorerState['explorerUrls']
 }
 
 export const enum ResourceTypes {
