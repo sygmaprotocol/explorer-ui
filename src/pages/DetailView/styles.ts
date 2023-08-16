@@ -63,6 +63,14 @@ export const useStyles = makeStyles()((theme) => {
         display: 'flex',
         flexDirection: 'column',
         fontSize: '12px',
+        justifyContent: 'center',
+        alignItems: 'baseline',
+      }
+    },
+    detailsInnerContentEVM: {
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column',
       }
     },
     detailsInnerContentTitle: {
@@ -93,15 +101,18 @@ export const useStyles = makeStyles()((theme) => {
     },
     copyIcon: {
       marginLeft: "5px",
-      display: "flex",
-      alignItems: "center",
       ':hover': {
         cursor: 'pointer'
       }
     },
     txHashText: {
       [theme.breakpoints.down('md')]: {
-        wordBreak: 'break-all'
+        wordBreak: 'break-all',
+      }
+    },
+    txHashTextEvm: {
+      [theme.breakpoints.down('md')]: {
+        marginRight: '15px',
       }
     },
     backIcon: {

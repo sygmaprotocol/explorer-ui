@@ -6,7 +6,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useExplorer } from "../../context";
 import {
   SharedConfig,
@@ -134,10 +134,9 @@ export default function DetailView() {
   const getSharedConfigFromLocalStorage = () => {
     const sharedConfig = localStorage.getItem("sharedConfig");
     const parsedSharedConfig: SharedConfig = JSON.parse(sharedConfig!);
-    console.log("🚀 ~ file: DetailView.tsx:142 ~ getSharedConfigFromLocalStorage ~ parsedSharedConfig:", parsedSharedConfig)
 
     setSharedConfig(parsedSharedConfig.domains);
-  }
+  };
 
   useEffect(() => {
     if (transferId !== null) {
@@ -147,8 +146,7 @@ export default function DetailView() {
     }
 
     // fallback because ExplorerState is new coming to a new tab
-    if(sharedConfig.length === 0) {
-      console.log("getting shared config")
+    if (sharedConfig.length === 0) {
       getSharedConfigFromLocalStorage();
     }
   }, []);
@@ -157,9 +155,9 @@ export default function DetailView() {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
     const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
 
-    const { resource } = transfer as Transfer
+    const { resource } = transfer as Transfer;
 
-    const { id } = resource
+    const { id } = resource;
 
     const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
     const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
@@ -168,7 +166,7 @@ export default function DetailView() {
       (resource) => resource.resourceId === id,
     );
 
-    const { symbol } = fromDomainTokenName as SharedConfigResource
+    const { symbol } = fromDomainTokenName as SharedConfigResource;
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -201,17 +199,19 @@ export default function DetailView() {
             Source transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            <span className={classes.txHashText}>{transfer?.deposit && transfer?.deposit?.txHash}</span>
-            <span
-              className={classes.copyIcon}
-              onClick={() => {
-                navigator.clipboard?.writeText(transfer?.deposit?.txHash!);
-                setClipboardMessageT1("Copied to clipboard!");
-              }}
-            >
-              <Tooltip title={clipboardMessageT1} placement="top" arrow>
-                <ContentCopyIcon fontSize="small" />
-              </Tooltip>
+            <span className={classes.txHashText}>
+              {transfer?.deposit && transfer?.deposit?.txHash}
+              <span
+                className={classes.copyIcon}
+                onClick={() => {
+                  navigator.clipboard?.writeText(transfer?.deposit?.txHash!);
+                  setClipboardMessageT1("Copied to clipboard!");
+                }}
+              >
+                <Tooltip title={clipboardMessageT1} placement="top" arrow>
+                  <ContentCopyIcon fontSize="inherit" />
+                </Tooltip>
+              </span>
             </span>
           </span>
         </div>
@@ -220,17 +220,25 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.execution && transfer?.execution?.txHash}
             <span
-              className={classes.copyIcon}
-              onClick={() => {
-                navigator.clipboard?.writeText(transfer?.execution?.txHash!);
-                setClipboardMessageT2("Copied to clipboard!");
-              }}
+              className={
+                toDomainInfo?.type !== "evm"
+                  ? classes.txHashText
+                  : clsx(classes.txHashText, classes.txHashTextEvm)
+              }
             >
-              <Tooltip title={clipboardMessageT2} placement="top" arrow>
-                <ContentCopyIcon fontSize="small" />
-              </Tooltip>
+              {transfer?.execution && transfer?.execution?.txHash}
+              <span
+                className={classes.copyIcon}
+                onClick={() => {
+                  navigator.clipboard?.writeText(transfer?.execution?.txHash!);
+                  setClipboardMessageT2("Copied to clipboard!");
+                }}
+              >
+                <Tooltip title={clipboardMessageT2} placement="top" arrow>
+                  <ContentCopyIcon fontSize="inherit" />
+                </Tooltip>
+              </span>
             </span>
           </span>
         </div>
