@@ -8,6 +8,12 @@ export function reducer(state: ExplorerContextState, action: Actions) {
         ...state,
         queryParams: action.payload
       }
+    case 'set_my_address': {
+      return {
+        ...state,
+        account: action.payload
+      }
+    }
     default:
       return state
   }

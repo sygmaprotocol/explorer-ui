@@ -84,6 +84,10 @@ export const useStyles = makeStyles()((theme) => {
     statusPill: {
       borderRadius: 32,
       background: "#E2D9CC",
+      padding: '4px 8px 4px 4px',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     statusPillMobile: {
       [theme.breakpoints.down('md')]: {
