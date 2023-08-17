@@ -235,7 +235,9 @@ export const formatDistanceDate = (timestamp: string) => {
   const diffTime = new Date().getTime() - new Date(timestamp!).getTime();
   const dayDiffs = Math.floor(diffTime / (1000 * 3600 * 24));
   const hoursDiffs = Math.floor(diffTime / (1000 * 3600));
+  const minDiff = Math.floor(diffTime / (1000 * 60));
   const hoursRemainder = Math.floor(hoursDiffs % 24);
+  const minutesRemainder = Math.floor(minDiff % 60);
 
   const dateFormated =
     dayDiffs !== 0
@@ -244,7 +246,7 @@ export const formatDistanceDate = (timestamp: string) => {
             ? `${hoursRemainder} hours`
             : `${hoursDiffs} hours`
         }`
-      : `${hoursDiffs} hours`;
+      : hoursDiffs !== 0 ? `${hoursDiffs} hours` : `${minutesRemainder} minutes`;
 
   return dateFormated;
 };

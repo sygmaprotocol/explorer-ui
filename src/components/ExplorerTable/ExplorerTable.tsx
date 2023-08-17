@@ -37,15 +37,12 @@ type ExplorerTable = {
     loading: "none" | "loading" | "done";
     error: undefined | string;
   };
-  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
   sharedConfig: SharedConfigDomain[] | [];
-  handleGoToTransferDetail: (url: string, id: string) => () => void;
 };
 
 const ExplorerTable: React.FC<ExplorerTable> = ({
   state,
   sharedConfig,
-  handleGoToTransferDetail,
 }: ExplorerTable) => {
   const { classes } = useStyles();
 
