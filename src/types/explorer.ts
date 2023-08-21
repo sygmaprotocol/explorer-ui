@@ -103,6 +103,7 @@ export type Transfer = {
   execution?: Execution;
   fee: { amount: string, tokenAddress: string, tokenSymbol: string };
   resourceID: string;
+  convertedAmount: number
 }
 
 export type ExplorerState = {

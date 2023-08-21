@@ -144,6 +144,10 @@ export const useStyles = makeStyles()((theme) => {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
+    },
+    convertedValueContainer: {
+      display: "flex",
+      flexDirection: "column",
     }
   }
 });

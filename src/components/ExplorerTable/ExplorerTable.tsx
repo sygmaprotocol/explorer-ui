@@ -6,11 +6,9 @@ import {
   TableBody,
   TableRow,
 } from "@mui/material";
-import { ethers} from 'ethers'
 import clsx from "clsx";
 import {
   EvmBridgeConfig,
-  ExplorerState,
   SharedConfigDomain,
   Transfer,
 } from "../../types";
@@ -25,6 +23,7 @@ import {
   getResourceInfo,
   formatDistanceDate,
   getFormatedFee,
+  formatConvertedAmount,
 } from "../../utils/Helpers";
 import { useStyles } from "./styles";
 
@@ -58,7 +57,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         id,
         resourceID,
         timestamp,
-        fee
+        fee,
+        convertedAmount,
       } = transfer;
 
       let formatedFee = getFormatedFee(fee);
@@ -80,7 +80,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
       const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
       const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
 
-      const dateFormated = formatDistanceDate(timestamp!)
+      const dateFormated = formatDistanceDate(timestamp!);
+
+      let formatedConvertedAmount;
+
+      if (convertedAmount) {
+        formatedConvertedAmount = formatConvertedAmount(convertedAmount);
+      }
+
       return (
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell
@@ -140,11 +147,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              <span>
-                {amount}{" "}
-                {resourceID !== "" &&
-                  getResourceInfo(resourceID, fromDomainInfo!)}
-              </span>
+              <div className={classes.amountContainer}>
+                <span>
+                  {amount}{" "}
+                  {resourceID !== "" &&
+                    getResourceInfo(resourceID, fromDomainInfo!)}
+                </span>
+                {convertedAmount && <span>${formatedConvertedAmount}</span>}
+              </div>
             </span>
           </TableCell>
         </TableRow>

@@ -260,3 +260,13 @@ export const getFormatedFee = (fee: Transfer["fee"] | string) => {
 
   return formatedFee;
 };
+
+export const formatConvertedAmount = (amount: number) => {
+  const splitedConvertedAmount = amount.toString().split(".");
+
+  const formatedConvertedAmount = `${
+    splitedConvertedAmount[0]
+  }.${splitedConvertedAmount[1].slice(0, 3)}`;
+
+  return formatedConvertedAmount;
+};
