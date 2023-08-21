@@ -1,10 +1,11 @@
-import {
-  Button,
-  Typography,
-} from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { BridgeConfig, ExplorerContext, ExplorerState } from "../../types";
+import {
+  Actions,
+  BridgeConfig,
+  ExplorerContext,
+} from "../../types";
 import { getIconNamePerChainId, shortenAddress } from "../../utils/Helpers";
 
 import { useStyles } from "./styles";
@@ -14,22 +15,18 @@ type TopBarNetworkConnectProps = {
   homeConfig: BridgeConfig | undefined;
   address: string | undefined;
   getAccount: ExplorerContext["getAccount"];
-  setExplorerState: ExplorerContext["setExplorerState"];
-  explorerState: ExplorerState;
   getChainId: ExplorerContext["getChainId"];
   chainId: ExplorerContext["chainId"];
   account: ExplorerContext["account"];
+  explorerContextDispatcher: React.Dispatch<Actions>;
 };
 
 export default function TopBarNetworkConnect({
-  homeConfig,
-  address,
   getAccount,
-  setExplorerState,
-  explorerState,
   getChainId,
   chainId,
   account,
+  explorerContextDispatcher,
 }: TopBarNetworkConnectProps) {
   const { classes } = useStyles();
   const [localAddress, setLocalAddress] = React.useState<string | undefined>(
@@ -45,23 +42,29 @@ export default function TopBarNetworkConnect({
     const chainId = Number(await getChainId());
 
     setCurrentChainId(chainId);
+
     setLocalAddress(account);
-    setExplorerState({
-      ...explorerState,
-      account,
+
+    explorerContextDispatcher({
+      type: "set_my_address",
+      payload: account,
     });
+
     setIsReady(true);
   };
 
   const handleDisconnect = () => {
     setCurrentChainId(undefined);
-    setLocalAddress('');
-    setExplorerState({
-      ...explorerState,
-      account: undefined,
+
+    setLocalAddress("");
+
+    explorerContextDispatcher({
+      type: "set_my_address",
+      payload: undefined,
     });
+
     setIsReady(false);
-  }
+  };
 
   useEffect(() => {
     if (chainId !== undefined && chainId !== currentChainId) {
@@ -113,7 +116,10 @@ export default function TopBarNetworkConnect({
                     {shortenAddress(localAddress!)}
                   </Typography>
                   <div className={classes.logoutContainer}>
-                    <div className={classes.logoutIconContainer} onClick={handleDisconnect}>
+                    <div
+                      className={classes.logoutIconContainer}
+                      onClick={handleDisconnect}
+                    >
                       <LogoutIcon />
                     </div>
                   </div>

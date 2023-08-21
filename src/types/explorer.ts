@@ -130,13 +130,25 @@ export type PaginationParams = {
 export type ExplorerContextState = {
   queryParams: {
     page: number,
-    limit: number
-  }
+    limit: number,
+    sender?: string
+  },
+  isLoading: boolean;
+  transfers: Array<Transfer>;
+  pageInfo?: PageInfo;
+  error: boolean;
+  chains: Array<EvmBridgeConfig>;
+  transferDetails?: any;
+  pillColorStatus?: {
+    borderColor: string;
+    background: string;
+  };
+  account: string | undefined
 }
 
 export type Actions = {
   type: "set_my_address";
-  payload: string;
+  payload: string | undefined;
 } | {
   type: "set_deposit_transaction";
   payload: string;
@@ -156,7 +168,7 @@ export type Actions = {
   payload: unknown;
 } | {
   type: 'set_query_params',
-  payload: { page: number, limit: number }
+  payload: { page: number, limit: number, sender?: string }
 }
 
 export type Routes = {
@@ -166,9 +178,7 @@ export type Routes = {
 }
 
 export type ExplorerContext = {
-  explorerState: ExplorerState;
   loadMore: (options: PaginationParams) => void;
-  setExplorerState: React.Dispatch<React.SetStateAction<ExplorerState>>;
   explorerContextState: ExplorerContextState;
   explorerContextDispatcher: React.Dispatch<Actions>;
   getAccount: () => Promise<string>;

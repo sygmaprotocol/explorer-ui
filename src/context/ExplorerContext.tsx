@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  Actions,
   ExplorerContextState,
   ExplorerContext as ExplorerContextType,
   ExplorerState,
@@ -21,16 +20,6 @@ const ExplorerProvider = ({
 }: {
   children: React.ReactNode | React.ReactNode[];
 }) => {
-  const [explorerState, setExplorerState] = React.useState<ExplorerState>({
-    isLoading: false,
-    transfers: [],
-    error: false,
-    chains: [],
-    transferDetails: undefined,
-    pillColorStatus: undefined,
-    account: undefined,
-    explorerUrls: [],
-  });
 
   // TO BE DEFINED
   const loadMore = (options: PaginationParams) => null;
@@ -40,6 +29,13 @@ const ExplorerProvider = ({
       page: 1, //by default
       limit: 10,
     },
+    isLoading: false,
+    transfers: [],
+    error: false,
+    chains: [],
+    transferDetails: undefined,
+    pillColorStatus: undefined,
+    account: undefined,
   };
 
   const [explorerContextState, explorerContextDispatcher] = React.useReducer(
@@ -91,9 +87,7 @@ const ExplorerProvider = ({
   return (
     <ExplorerCtx.Provider
       value={{
-        explorerState,
         loadMore,
-        setExplorerState,
         explorerContextState,
         explorerContextDispatcher,
         getAccount,
