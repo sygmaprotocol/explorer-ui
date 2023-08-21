@@ -64,7 +64,7 @@ export default function DetailView() {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
     const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
 
-    const { resource, convertedAmount } = transfer as Transfer;
+    const { resource, usdValue } = transfer as Transfer;
 
     const { id } = resource;
 
@@ -79,8 +79,8 @@ export default function DetailView() {
 
     let formatedConvertedAmount;
 
-    if (convertedAmount) {
-      formatedConvertedAmount = formatConvertedAmount(convertedAmount);
+    if (usdValue) {
+      formatedConvertedAmount = formatConvertedAmount(usdValue);
     }
 
     return (
@@ -190,7 +190,7 @@ export default function DetailView() {
               <span>
                 {transfer?.amount} {symbol}
               </span>
-              {convertedAmount && <span>${formatedConvertedAmount}</span>}
+              {usdValue && <span>${formatedConvertedAmount}</span>}
             </div>
           </span>
         </div>

@@ -58,7 +58,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
         resourceID,
         timestamp,
         fee,
-        convertedAmount,
+        usdValue,
       } = transfer;
 
       let formatedFee = getFormatedFee(fee);
@@ -84,8 +84,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
 
       let formatedConvertedAmount;
 
-      if (convertedAmount) {
-        formatedConvertedAmount = formatConvertedAmount(convertedAmount);
+      if (usdValue) {
+        formatedConvertedAmount = formatConvertedAmount(usdValue);
       }
 
       return (
@@ -153,7 +153,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({
                   {resourceID !== "" &&
                     getResourceInfo(resourceID, fromDomainInfo!)}
                 </span>
-                {convertedAmount && <span>${formatedConvertedAmount}</span>}
+                {usdValue && <span>${formatedConvertedAmount}</span>}
               </div>
             </span>
           </TableCell>
