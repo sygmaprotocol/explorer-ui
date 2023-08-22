@@ -30,7 +30,8 @@ dayjs.extend(localizedFormat);
 export default function DetailView() {
   const explorerContext = useExplorer();
 
-  const { sharedConfig, setSharedConfig, routes } = explorerContext;
+  const { sharedConfig, setSharedConfig, explorerUrls, routes } =
+    explorerContext;
 
   const { classes } = useStyles();
 
@@ -75,6 +76,16 @@ export default function DetailView() {
     );
 
     const { symbol } = fromDomainTokenName as SharedConfigResource;
+
+    const { id: idFromDomain } = fromDomainInfo!;
+    const { id: idToDomain } = toDomainInfo!;
+
+    const fromDomainExplorerUrl = explorerUrls.find(
+      (exp) => exp.id === idFromDomain,
+    );
+    const toDomainExplorerUrl = explorerUrls.find(
+      (exp) => exp.id === idToDomain,
+    );
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -131,7 +142,15 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.execution && transfer?.execution?.txHash}
+            <span
+              className={
+                toDomainInfo?.type !== "evm"
+                  ? classes.txHashText
+                  : clsx(classes.txHashText, classes.txHashTextEvm)
+              }
+            >
+              {transfer?.execution && transfer?.execution?.txHash}
+            </span>
             <span
               className={classes.copyIcon}
               onClick={() => {
@@ -166,14 +185,43 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>From:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.sender}
+            {fromDomainExplorerUrl ? (
+              <Link
+                style={{
+                  color: "black",
+                }}
+                to={
+                  fromDomainInfo!.type !== "evm"
+                    ? `${fromDomainExplorerUrl?.url}/account/${transfer?.sender}`
+                    : `${fromDomainExplorerUrl?.url}/address/${transfer?.sender}`
+                }
+              >
+                {transfer?.sender}
+              </Link>
+            ) : (
+              <>{transfer?.sender}</>
+            )}
           </span>
         </div>
         <div className={classes.detailsContainer}>
-          {/* NOTE: Sender in the meantime */}
           <span className={classes.detailsInnerContentTitle}>To:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.destination}
+            {toDomainExplorerUrl ? (
+              <Link
+                style={{
+                  color: "black",
+                }}
+                to={
+                  toDomainInfo!.type !== "evm"
+                    ? `${toDomainExplorerUrl?.url}/account/${transfer?.destination}`
+                    : `${toDomainExplorerUrl?.url}/address/${transfer?.destination}`
+                }
+              >
+                {transfer?.destination}
+              </Link>
+            ) : (
+              <>{transfer?.destination}</>
+            )}
           </span>
         </div>
         <div className={classes.detailsContainer}>
