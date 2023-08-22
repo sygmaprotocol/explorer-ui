@@ -77,7 +77,6 @@ export default function useFetchTransfer(
 
     // fallback because ExplorerState is new coming to a new tab
     if (sharedConfig.length === 0) {
-      console.log("getting shared config");
       getSharedConfigFromLocalStorage();
     }
   }, []);

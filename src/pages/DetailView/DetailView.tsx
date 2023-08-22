@@ -30,7 +30,8 @@ dayjs.extend(localizedFormat);
 export default function DetailView() {
   const explorerContext = useExplorer();
 
-  const { sharedConfig, setSharedConfig, routes } = explorerContext;
+  const { sharedConfig, setSharedConfig, explorerUrls, routes } =
+    explorerContext;
 
   const { classes } = useStyles();
 
@@ -75,6 +76,16 @@ export default function DetailView() {
     );
 
     const { symbol } = fromDomainTokenName as SharedConfigResource;
+
+    const { id: idFromDomain } = fromDomainInfo!;
+    const { id: idToDomain } = toDomainInfo!;
+
+    const fromDomainExplorerUrl = explorerUrls.find(
+      (exp) => exp.id === idFromDomain,
+    );
+    const toDomainExplorerUrl = explorerUrls.find(
+      (exp) => exp.id === idToDomain,
+    );
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
@@ -131,6 +142,15 @@ export default function DetailView() {
             Destination transaction hash:
           </span>
           <span className={classes.detailsInnerContent}>
+            <span
+              className={
+                toDomainInfo?.type !== "evm"
+                  ? classes.txHashText
+                  : clsx(classes.txHashText, classes.txHashTextEvm)
+              }
+            >
+              {transfer?.execution && transfer?.execution?.txHash}
+            </span>
             <span
               className={classes.copyIcon}
               onClick={() => {
