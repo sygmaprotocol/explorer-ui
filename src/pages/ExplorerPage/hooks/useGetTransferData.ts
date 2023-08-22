@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Actions, ExplorerContextState, ExplorerState, Routes } from "../../../types";
+import { Actions, ExplorerContextState, Routes } from "../../../types";
 import { sanitizeTransferData } from "../../../utils/Helpers";
 import { ExplorerPageState, TransferActions } from "../reducer";
 import { ethers } from "ethers";
@@ -67,32 +67,6 @@ export function useGetTransferData(
 ): void {
 
   useEffect(() => {
-    if (explorerContextState.account === undefined) {
-      const { queryParams: { page, limit } } = explorerContextState;
-      transferData(
-        page,
-        limit,
-        routes,
-        dispatcher,
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    if (explorerContextState.queryParams.sender) {
-      const { queryParams: { page, limit, sender } } = explorerContextState;
-      transferDataBySender(ethers.getAddress(sender!), page, limit, routes, dispatcher);
-    } else {
-      transferData(
-        page,
-        limit,
-        routes,
-        dispatcher,
-      )
-    }
-  }, [explorerContextState.queryParams]);
-
-  useEffect(() => {
     if (state.loading === "loading" && state.transfers.length) {
       dispatcher({
         type: "loading_done",
@@ -113,6 +87,6 @@ export function useGetTransferData(
       const { account } = explorerContextState;
       transferDataBySender(ethers.getAddress(account), page, limit, routes, dispatcher);
     }
-  }, [explorerContextState.account]);
+  }, [explorerContextState.account, explorerContextState.queryParams]);
 
 }
