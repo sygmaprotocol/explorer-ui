@@ -1,17 +1,16 @@
-import { Actions, ExplorerContextState } from "../types/explorer";
+import { Actions, ExplorerContextState } from "../types/explorer"
 
-
-export function reducer(state: ExplorerContextState, action: Actions) {
+export function reducer(state: ExplorerContextState, action: Actions): ExplorerContextState {
   switch (action.type) {
-    case 'set_query_params':
+    case "set_query_params":
       return {
         ...state,
-        queryParams: action.payload
+        queryParams: action.payload,
       }
-    case 'set_my_address': {
+    case "set_my_address": {
       return {
         ...state,
-        account: action.payload
+        account: action.payload,
       }
     }
     default:

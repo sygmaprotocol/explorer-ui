@@ -1,11 +1,11 @@
-import { makeStyles } from "tss-react/mui";
+import { makeStyles } from "tss-react/mui"
 
-export const useStyles = makeStyles()((theme) => {
+export const useStyles = makeStyles()(theme => {
   return {
     rootTable: {
       background: "#E9E4DD",
-      borderTopRightRadius: '12px',
-      borderTopLeftRadius: '12px',
+      borderTopRightRadius: "12px",
+      borderTopLeftRadius: "12px",
       "& > thead > tr": {
         fontSize: 16,
         fontWeight: 700,
@@ -46,7 +46,7 @@ export const useStyles = makeStyles()((theme) => {
     },
     dataRow: {
       background: "#F3F3F3",
-      borderBottom: "1px solid #CDC2B1"
+      borderBottom: "1px solid #CDC2B1",
     },
     elipsisIcon: {
       borderRadius: "50%",
@@ -96,8 +96,7 @@ export const useStyles = makeStyles()((theme) => {
       height: 960,
       transition: "height 0.5s ease-out",
     },
-    transferDetailNotExpanded: {
-    },
+    transferDetailNotExpanded: {},
     timelineSection: {
       paddingBottom: 15,
     },
@@ -292,10 +291,8 @@ export const useStyles = makeStyles()((theme) => {
     timelineButtonClicked: {
       display: "none",
     },
-    messageCollapsed: {
-    },
-    messageNotCollapsed: {
-    },
+    messageCollapsed: {},
+    messageNotCollapsed: {},
     buttonTimelineContainer: {
       display: "none",
     },
@@ -308,8 +305,7 @@ export const useStyles = makeStyles()((theme) => {
       top: 29,
       height: 39,
     },
-    time: {
-    },
+    time: {},
     secondElementGreybar: {
       height: 77,
     },
@@ -325,7 +321,7 @@ export const useStyles = makeStyles()((theme) => {
     statusPill: {
       borderRadius: 32,
       background: "#E2D9CC",
-      padding: '4px 8px 4px 4px'
+      padding: "4px 8px 4px 4px",
     },
     networkIcon: {
       display: "block",
@@ -341,7 +337,7 @@ export const useStyles = makeStyles()((theme) => {
     },
     hashAnchorLink: {
       textDecoration: "underline",
-      color: '#000000',
-    }
+      color: "#000000",
+    },
   }
-});
+})

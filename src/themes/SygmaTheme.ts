@@ -1,37 +1,37 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles"
 
 interface IConstants {
-  generalUnit: number;
-  modal: Record<string, any>;
-  icon: Record<string, any>;
+  generalUnit: number
+  modal: Record<string, any>
+  icon: Record<string, any>
 
-  [key: string]: number | string | Record<string, any> | undefined;
+  [key: string]: number | string | Record<string, any> | undefined
 }
 
 declare module "@mui/material/styles" {
   interface Theme {
-    constants: IConstants;
+    constants: IConstants
   }
 
   // allow configuration using `createTheme`
   interface ThemeOptions {
-    constants?: IConstants;
+    constants?: IConstants
   }
 
   interface Palette {
     additional: {
       [key: string]: {
-        [key: number]: string;
-      };
-    };
+        [key: number]: string
+      }
+    }
   }
 
   interface PaletteOptions {
     additional?: {
       [key: string]: {
-        [key: number]: string;
-      };
-    };
+        [key: number]: string
+      }
+    }
   }
 }
 
@@ -48,7 +48,7 @@ const theme = createTheme({
   typography: {
     fontFamily: '"NeueMontreal", "Roboto", "Helvetica", "Arial", sans-serif',
   },
-});
+})
 
 export const SygmaTheme = createTheme(theme, {
   constants: {
@@ -66,7 +66,7 @@ export const SygmaTheme = createTheme(theme, {
       backgroundFade: 0.4,
     },
   },
-  
+
   palette: {
     primary: {
       light: "#FF7A45",
@@ -128,7 +128,7 @@ export const SygmaTheme = createTheme(theme, {
     },
     MuiButton: {
       styleOverrides: {
-        root: ({ ownerState }: any) => ({
+        root: ({ ownerState }: { ownerState: { variant: string; color: string } }) => ({
           textTransform: "none",
           color: theme.palette.common.black,
           lineHeight: 1.6,
@@ -153,4 +153,4 @@ export const SygmaTheme = createTheme(theme, {
       },
     },
   },
-});
+})
