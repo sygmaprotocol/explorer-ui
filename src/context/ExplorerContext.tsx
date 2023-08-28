@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import {
   ExplorerContextState,
   ExplorerContext as ExplorerContextType,
+  ExplorerState,
   PaginationParams,
   SharedConfig,
   SharedConfigDomain,
@@ -44,7 +45,10 @@ const ExplorerProvider = ({
 
   const [chainId, setChainId] = React.useState<number | undefined>(undefined);
   const [account, setAccount] = React.useState<string | undefined>(undefined);
-  
+  const [explorerUrls, setExplorerUrls] = React.useState<
+    [] | ExplorerState["explorerUrls"]
+  >([]);
+
   const [sharedConfig, setSharedConfig] = React.useState<
     SharedConfigDomain[] | []
   >([]);
@@ -69,6 +73,8 @@ const ExplorerProvider = ({
     }
 
     getSharedConfig();
+    
+    setExplorerUrls(JSON.parse(import.meta.env.VITE_EXPLORER_URLS));
 
     return () => {
       if (window.ethereum !== undefined) {
@@ -90,7 +96,8 @@ const ExplorerProvider = ({
         account,
         routes: routes(),
         sharedConfig,
-        setSharedConfig
+        setSharedConfig,
+        explorerUrls,
       }}
     >
       {children}
