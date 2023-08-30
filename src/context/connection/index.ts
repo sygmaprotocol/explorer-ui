@@ -1,1 +1,1 @@
-export { getAccount, getChainId } from './connection'
+export { getAccount, getChainId } from "./connection"

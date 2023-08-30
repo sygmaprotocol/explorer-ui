@@ -1,10 +1,10 @@
-import { makeStyles, createStyles, DefaultTheme } from "@mui/styles";
+import { makeStyles, createStyles } from "@mui/styles"
 
 export const useStyles = makeStyles(() =>
   createStyles({
     root: {
       padding: "10px",
-      position: "relative"
+      position: "relative",
     },
     networkInfoContainer: {
       display: "flex",
@@ -14,7 +14,7 @@ export const useStyles = makeStyles(() =>
       display: "grid",
       gridColumn: "1/5",
       gridRow: "1",
-      paddingRight: 15
+      paddingRight: 15,
     },
     networkSelection: {
       display: "flex",
@@ -27,7 +27,7 @@ export const useStyles = makeStyles(() =>
     searchInput: {
       display: "grid",
       gridRow: "1",
-      width: "50ch"
+      width: "50ch",
     },
     networkSelector: {
       marginLeft: 21,
@@ -46,7 +46,7 @@ export const useStyles = makeStyles(() =>
       justifyContent: "center",
       marginBottom: "35px",
       background: "#E9E4DD",
-      borderRadius: "12px"
+      borderRadius: "12px",
     },
     explorerTable: {
       borderRadius: 12,
@@ -73,6 +73,6 @@ export const useStyles = makeStyles(() =>
       fontSize: 15,
       height: 36,
       width: 132,
-    }
-  })
-);
+    },
+  }),
+)
