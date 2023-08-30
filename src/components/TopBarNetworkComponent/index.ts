@@ -1,1 +1,1 @@
-export {default} from './TopBarNetworkConnect'
+export { default } from "./TopBarNetworkConnect"

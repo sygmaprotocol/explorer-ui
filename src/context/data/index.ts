@@ -1,1 +1,1 @@
-export { routes } from './data'
+export { routes } from "./data"

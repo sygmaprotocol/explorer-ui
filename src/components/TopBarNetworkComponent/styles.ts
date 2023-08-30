@@ -1,6 +1,6 @@
-import { makeStyles } from "tss-react/mui";
+import { makeStyles } from "tss-react/mui"
 
-export const useStyles = makeStyles()((theme) => {
+export const useStyles = makeStyles()(theme => {
   return {
     state: {
       display: "flex",
@@ -15,7 +15,7 @@ export const useStyles = makeStyles()((theme) => {
       paddingTop: 3,
       paddingBottom: 3,
       background: "#CDC2B1",
-      borderRadius: 10
+      borderRadius: 10,
     },
     address: {
       display: "flex",
@@ -38,12 +38,12 @@ export const useStyles = makeStyles()((theme) => {
     logoutContainer: {
       display: "flex",
       borderLeft: "1px solid black",
-      marginLeft: '10px'
+      marginLeft: "10px",
     },
     logoutIconContainer: {
       display: "flex",
-      marginLeft: '10px',
-      cursor: 'pointer'
-    }
-  };
-});
+      marginLeft: "10px",
+      cursor: "pointer",
+    },
+  }
+})

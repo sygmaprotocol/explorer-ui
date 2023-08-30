@@ -1,16 +1,16 @@
-import { makeStyles } from "tss-react/mui";
+import { makeStyles } from "tss-react/mui"
 
-export const useStyles = makeStyles()((theme) => {
+export const useStyles = makeStyles()(theme => {
   return {
     root: {
       border: "none",
-      boxShadow: "none"
+      boxShadow: "none",
     },
     mainAppBar: {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
-      marginTop: 25
+      marginTop: 25,
     },
     toolBar: {
       display: "flex",
@@ -21,14 +21,14 @@ export const useStyles = makeStyles()((theme) => {
       display: "flex",
       justifyContent: "flex-end",
       [theme.breakpoints.up("lg")]: {
-        gridColumn: '6/6',
+        gridColumn: "6/6",
       },
       [theme.breakpoints.down("lg")]: {
-        gridColumn: '11/ span 2',
+        gridColumn: "11/ span 2",
         display: "flex",
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-      }
+        flexDirection: "row",
+        justifyContent: "flex-end",
+      },
     },
     title: {
       flexGrow: 1,
@@ -39,17 +39,17 @@ export const useStyles = makeStyles()((theme) => {
     },
     titleContent: {
       [theme.breakpoints.down("md")]: {
-        fontSize: 30
+        fontSize: 30,
       },
       [theme.breakpoints.down("sm")]: {
-        fontSize: 25
-      }
+        fontSize: 25,
+      },
     },
     logo: {
       marginRight: 11,
-      display: 'flex',
-      flexDirection: 'row',
-      alignSelf: 'baseline',
+      display: "flex",
+      flexDirection: "row",
+      alignSelf: "baseline",
       height: theme.constants.generalUnit * 5,
       width: theme.constants.generalUnit * 5,
       "& svg, & img": {
@@ -63,7 +63,7 @@ export const useStyles = makeStyles()((theme) => {
       [theme.breakpoints.down("sm")]: {
         width: 20,
         height: 20,
-      }
+      },
     },
     state: {},
     indicator: {
@@ -116,5 +116,5 @@ export const useStyles = makeStyles()((theme) => {
     linkTitle: {
       fontSize: 16,
     },
-  };
-});
+  }
+})
