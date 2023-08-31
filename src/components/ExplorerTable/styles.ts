@@ -69,6 +69,10 @@ export const useStyles = makeStyles()(theme => {
       display: "flex",
       alignItems: "center",
     },
+    amountContainer: {
+      display: "flex",
+      flexDirection: "column",
+    },
     viewDetailsInfo: {
       "& > button": {
         background: "none",

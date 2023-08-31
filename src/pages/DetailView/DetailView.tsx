@@ -10,6 +10,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { useExplorer } from "../../context";
 import { SharedConfigResource, Transfer } from "../../types";
 import {
+  formatConvertedAmount,
   formatDistanceDate,
   getDisplayedStatuses,
   getDomainData,
@@ -64,7 +65,7 @@ export default function DetailView() {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
     const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
 
-    const { resource } = transfer as Transfer;
+    const { resource, usdValue } = transfer as Transfer;
 
     const { id } = resource;
 
@@ -77,6 +78,11 @@ export default function DetailView() {
 
     const { symbol } = fromDomainTokenName as SharedConfigResource;
 
+    let formatedConvertedAmount;
+
+    if (usdValue) {
+      formatedConvertedAmount = formatConvertedAmount(usdValue);
+    }
     const { id: idFromDomain } = fromDomainInfo!;
     const { id: idToDomain } = toDomainInfo!;
 
@@ -227,7 +233,12 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Value:</span>
           <span className={classes.detailsInnerContent}>
-            {transfer?.amount} {symbol}
+            <div className={classes.convertedValueContainer}>
+              <span>
+                {transfer?.amount} {symbol}
+              </span>
+              {usdValue && <span>${formatedConvertedAmount}</span>}
+            </div>
           </span>
         </div>
         <div className={classes.detailsContainer}>

@@ -25,6 +25,30 @@ function App(): JSX.Element {
           </Routes>
         </Router>
       </ExplorerProvider>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "30px",
+          width: "100%",
+        }}
+      >
+        Powered by{" "}
+        <a href="https://buildwithsygma.com/" target="_blank">
+          <img
+            src="/assets/images/full-logo.png"
+            alt=""
+            style={{
+              width: "60px",
+              marginLeft: "10px",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          />
+        </a>
+      </div>
     </ThemeProvider>
   )
 }
