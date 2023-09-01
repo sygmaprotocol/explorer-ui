@@ -32,4 +32,5 @@ You will need to define the following `env` variables on a `.env` file:
 ```
 VITE_INDEXER_URL="INDEXER_URL"
 VITE_SHARED_CONFIG_URL="SHARED_CONFIG_URL"
+VITE_EXPLORER_URLS='[{ "id": number, "url": EXPLORER_URL }]'
 ```
