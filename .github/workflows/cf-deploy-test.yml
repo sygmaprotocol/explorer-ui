@@ -20,7 +20,7 @@ jobs:
         env:
           VITE_INDEXER_URL: "https://api.test.buildwithsygma.com"
           VITE_SHARED_CONFIG_URL: "https://chainbridge-assets-stage.s3.us-east-2.amazonaws.com/shared-config-test.json"
-          VITE_EXPLORER_URL: '[{ "id": 1, "url": "https://goerli.etherscan.io" }, { "id": 2, "url": "https://sepolia.etherscan.io" }]'
+          VITE_EXPLORER_URLS: '[{ "id": 1, "url": "https://goerli.etherscan.io" }, { "id": 2, "url": "https://sepolia.etherscan.io" }]'
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
