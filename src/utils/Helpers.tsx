@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import { intervalToDuration } from "date-fns"
 
 import { BigNumberish, ethers } from "ethers"
 import { SharedConfigDomain, Transfer } from "../types"
@@ -164,21 +165,18 @@ export const sanitizeTransferData = (transfers: Transfer[]): Transfer[] => {
 }
 
 export const formatDistanceDate = (timestamp: string): string => {
-  const diffTime = new Date().getTime() - new Date(timestamp).getTime()
-  const dayDiffs = Math.floor(diffTime / (1000 * 3600 * 24))
-  const hoursDiffs = Math.floor(diffTime / (1000 * 3600))
-  const minDiff = Math.floor(diffTime / (1000 * 60))
-  const hoursRemainder = Math.floor(hoursDiffs % 24)
-  const minutesRemainder = Math.floor(minDiff % 60)
+  const intervalToDurationResult = intervalToDuration({ start: new Date(timestamp), end: new Date() })
 
-  const dateFormated =
-    dayDiffs !== 0
-      ? `${dayDiffs} days ${hoursDiffs > 23 && hoursRemainder !== 0 ? `${hoursRemainder} hours` : `${hoursDiffs} hours`}`
-      : hoursDiffs !== 0
-      ? `${hoursDiffs} hours`
-      : `${minutesRemainder} minutes`
+  const { days, hours, minutes } = intervalToDurationResult
 
-  return dateFormated
+  let dateIntervalResult: string
+  if (days !== undefined && days > 0) {
+    dateIntervalResult = `${days !== undefined ? `${days} days` : ""} ${hours !== undefined && hours > 0 ? `${hours} hours` : ""}`
+  } else {
+    dateIntervalResult = `${hours !== undefined ? `${hours} hours` : ""} ${minutes !== undefined && minutes > 0 ? `${minutes} minutes` : ""}`
+  }
+
+  return dateIntervalResult
 }
 
 export const getFormatedFee = (fee: Transfer["fee"] | string): string => {
