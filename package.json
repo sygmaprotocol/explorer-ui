@@ -17,6 +17,7 @@
     "@mui/styles": "5.12.0",
     "@use-it/interval": "^1.0.0",
     "clsx": "^1.2.1",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.7",
     "ethers": "^6.3.0",
     "react": "17.0.2",
@@ -29,7 +30,9 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@chainsafe/eslint-config": "^1.1.0",
     "@metamask/providers": "^10.2.1",
+    "@rushstack/eslint-patch": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
     "@testing-library/user-event": "^12.1.7",
@@ -50,9 +53,7 @@
     "pretty-quick": "3.0.2",
     "vite": "^4.2.1",
     "vite-plugin-svgr": "^2.4.0",
-    "vite-tsconfig-paths": "^4.1.0",
-    "@rushstack/eslint-patch": "^1.2.0",
-    "@chainsafe/eslint-config": "^1.1.0"
+    "vite-tsconfig-paths": "^4.1.0"
   },
   "scripts": {
     "start": "vite",
