@@ -102,6 +102,7 @@ export type Transfer = {
   fee: { amount: string; tokenAddress: string; tokenSymbol: string }
   resourceID: string
   usdValue: number
+  accountId: string
 }
 
 export type ExplorerState = {

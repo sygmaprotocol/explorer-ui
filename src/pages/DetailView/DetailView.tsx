@@ -168,14 +168,14 @@ export default function DetailView() {
                 }}
                 to={
                   fromDomainInfo!.type !== "evm"
-                    ? `${fromDomainExplorerUrl?.url}/account/${transfer?.sender}`
-                    : `${fromDomainExplorerUrl?.url}/address/${transfer?.sender}`
+                    ? `${fromDomainExplorerUrl?.url}/account/${transfer?.accountId}`
+                    : `${fromDomainExplorerUrl?.url}/address/${transfer?.accountId}`
                 }
               >
-                {transfer?.sender}
+                {transfer?.accountId}
               </Link>
             ) : (
-              <>{transfer?.sender}</>
+              <>{transfer?.accountId}</>
             )}
           </span>
         </div>
