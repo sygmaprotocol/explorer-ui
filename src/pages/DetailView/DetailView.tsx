@@ -1,14 +1,15 @@
-import { CircularProgress, Tooltip, Typography } from "@mui/material";
-import { Box, Container } from "@mui/system";
-import { useReducer } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import { useExplorer } from "../../context";
-import { SharedConfigResource, Transfer } from "../../types";
+import { CircularProgress, Tooltip, Typography } from "@mui/material"
+import { Box, Container } from "@mui/system"
+import { useReducer } from "react"
+import { Link, useLocation, useParams } from "react-router-dom"
+import ContentCopyIcon from "@mui/icons-material/ContentCopy"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import dayjs from "dayjs"
+import localizedFormat from "dayjs/plugin/localizedFormat"
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
+import clsx from "clsx"
+import { useExplorer } from "../../context"
+import { SharedConfigResource, Transfer } from "../../types"
 import {
   formatConvertedAmount,
   formatDistanceDate,
@@ -18,25 +19,23 @@ import {
   getNetworkNames,
   renderNetworkIcon,
   renderStatusIcon,
-} from "../../utils/Helpers";
-import { useStyles } from "./styles";
-import clsx from "clsx";
-import useClipboard from "./hooks/useClipboard";
-import useFetchTransfer from "./hooks/useFetchTransfer";
-import { DetailViewState, reducer } from "./reducer";
-import useUpdateInterval from "./hooks/useUpdateInterval";
+} from "../../utils/Helpers"
+import { useStyles } from "./styles"
+import useClipboard from "./hooks/useClipboard"
+import useFetchTransfer from "./hooks/useFetchTransfer"
+import { DetailViewState, reducer } from "./reducer"
+import useUpdateInterval from "./hooks/useUpdateInterval"
 
-dayjs.extend(localizedFormat);
+dayjs.extend(localizedFormat)
 
 export default function DetailView() {
-  const explorerContext = useExplorer();
+  const explorerContext = useExplorer()
 
-  const { sharedConfig, setSharedConfig, explorerUrls, routes } =
-    explorerContext;
+  const { sharedConfig, setSharedConfig, explorerUrls, routes } = explorerContext
 
-  const { classes } = useStyles();
+  const { classes } = useStyles()
 
-  const { state: transferId } = useLocation();
+  const { state: transferId } = useLocation()
 
   const initState: DetailViewState = {
     transferDetails: null,
@@ -45,72 +44,60 @@ export default function DetailView() {
     clipboardMessageT2: "Copy to clipboard",
     delay: 5000,
     fetchingStatus: "idle",
-  };
+  }
 
-  const [state, dispatcher] = useReducer(reducer, initState);
+  const [state, dispatcher] = useReducer(reducer, initState)
 
-  useClipboard(state, dispatcher);
+  useClipboard(state, dispatcher)
 
-  useFetchTransfer(
-    routes,
-    sharedConfig,
-    setSharedConfig,
-    transferId,
-    dispatcher,
-  );
+  useFetchTransfer(routes, sharedConfig, setSharedConfig, transferId, dispatcher)
 
-  useUpdateInterval(state, dispatcher, transferId, routes);
+  useUpdateInterval(state, dispatcher, transferId, routes)
 
   const renderTransferDetails = (transfer: Transfer | null) => {
-    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig);
-    const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig);
+    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig)
+    const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig)
 
-    const { resource, usdValue } = transfer as Transfer;
+    const { resource, usdValue } = transfer as Transfer
 
-    const { id } = resource;
+    const { id } = resource
 
-    const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!);
-    const toDomainName = getNetworkNames(toDomainInfo?.chainId!);
+    const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!)
+    const toDomainName = getNetworkNames(toDomainInfo?.chainId!)
 
-    const fromDomainTokenName = fromDomainInfo?.resources.find(
-      (resource) => resource.resourceId === id,
-    );
+    const { resources } = fromDomainInfo!
 
-    const { symbol } = fromDomainTokenName as SharedConfigResource;
+    const foundResource = resources.find((resource: SharedConfigResource) => resource.resourceId === id)
 
-    let formatedConvertedAmount;
+    const fromDomainTokenName = fromDomainInfo?.resources.find(resource => resource.resourceId === id)
+
+    const { symbol } = fromDomainTokenName as SharedConfigResource
+
+    let formatedConvertedAmount
 
     if (usdValue) {
-      formatedConvertedAmount = formatConvertedAmount(usdValue);
+      formatedConvertedAmount = formatConvertedAmount(usdValue)
     }
-    const { id: idFromDomain } = fromDomainInfo!;
-    const { id: idToDomain } = toDomainInfo!;
+    const { id: idFromDomain } = fromDomainInfo!
+    const { id: idToDomain } = toDomainInfo!
 
-    const fromDomainExplorerUrl = explorerUrls.find(
-      (exp) => exp.id === idFromDomain,
-    );
-    const toDomainExplorerUrl = explorerUrls.find(
-      (exp) => exp.id === idToDomain,
-    );
+    const fromDomainExplorerUrl = explorerUrls.find(exp => exp.id === idFromDomain)
+    const toDomainExplorerUrl = explorerUrls.find(exp => exp.id === idToDomain)
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
         <div className={classes.detailsContainer}>
           <div className={classes.networkContainer}>
             <span className={classes.networkIconsContainer}>
-              {renderNetworkIcon(fromDomainInfo?.chainId!, classes)}{" "}
-              {fromDomainName}
+              {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
             </span>
             <KeyboardDoubleArrowRightIcon />
             <span className={classes.networkIconsContainer}>
-              {renderNetworkIcon(toDomainInfo?.chainId!, classes)}{" "}
-              {toDomainName}
+              {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
             </span>
           </div>
         </div>
-        <div
-          className={clsx(classes.detailsContainer, classes.statusPillMobile)}
-        >
+        <div className={clsx(classes.detailsContainer, classes.statusPillMobile)}>
           <span className={classes.detailsInnerContentTitle}>Status:</span>
           <span className={classes.detailsInnerContent}>
             <span className={classes.statusPill}>
@@ -120,21 +107,17 @@ export default function DetailView() {
           </span>
         </div>
         <div className={classes.detailsContainer}>
-          <span className={classes.detailsInnerContentTitle}>
-            Source transaction hash:
-          </span>
+          <span className={classes.detailsInnerContentTitle}>Source transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <span className={classes.txHashText}>
-              {transfer?.deposit && transfer?.deposit?.txHash}
-            </span>
+            <span className={classes.txHashText}>{transfer?.deposit && transfer?.deposit?.txHash}</span>
             <span
               className={classes.copyIcon}
               onClick={() => {
-                navigator.clipboard?.writeText(transfer?.deposit?.txHash!);
+                navigator.clipboard?.writeText(transfer?.deposit?.txHash!)
                 dispatcher({
                   type: "set_clipboard_message_t1",
                   payload: "Copied to clipboard!",
-                });
+                })
               }}
             >
               <Tooltip title={state.clipboardMessageT1} placement="top" arrow>
@@ -144,27 +127,19 @@ export default function DetailView() {
           </span>
         </div>
         <div className={classes.detailsContainer}>
-          <span className={classes.detailsInnerContentTitle}>
-            Destination transaction hash:
-          </span>
+          <span className={classes.detailsInnerContentTitle}>Destination transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <span
-              className={
-                toDomainInfo?.type !== "evm"
-                  ? classes.txHashText
-                  : clsx(classes.txHashText, classes.txHashTextEvm)
-              }
-            >
+            <span className={toDomainInfo?.type !== "evm" ? classes.txHashText : clsx(classes.txHashText, classes.txHashTextEvm)}>
               {transfer?.execution && transfer?.execution?.txHash}
             </span>
             <span
               className={classes.copyIcon}
               onClick={() => {
-                navigator.clipboard?.writeText(transfer?.execution?.txHash!);
+                navigator.clipboard?.writeText(transfer?.execution?.txHash!)
                 dispatcher({
                   type: "set_clipboard_message_t2",
                   payload: "Copied to clipboard!",
-                });
+                })
               }}
             >
               <Tooltip title={state.clipboardMessageT2} placement="top" arrow>
@@ -174,18 +149,13 @@ export default function DetailView() {
           </span>
         </div>
         <div className={classes.detailsContainer}>
-          <span className={classes.detailsInnerContentTitle}>
-            Source block number:
-          </span>
-          <span className={classes.detailsInnerContent}>
-            {transfer?.deposit?.blockNumber}
-          </span>
+          <span className={classes.detailsInnerContentTitle}>Source block number:</span>
+          <span className={classes.detailsInnerContent}>{transfer?.deposit?.blockNumber}</span>
         </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Created:</span>
           <span className={classes.detailsInnerContent}>
-            {formatDistanceDate(transfer?.timestamp!)} (
-            {dayjs(transfer?.timestamp!).format("llll")})
+            {formatDistanceDate(transfer?.timestamp!)} ({dayjs(transfer?.timestamp).format("llll")})
           </span>
         </div>
         <div className={classes.detailsContainer}>
@@ -243,13 +213,11 @@ export default function DetailView() {
         </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Fees:</span>
-          <span className={classes.detailsInnerContent}>
-            {getFormatedFee(transfer?.fee!)}
-          </span>
+          <span className={classes.detailsInnerContent}>{getFormatedFee(transfer?.fee!, foundResource!)}</span>
         </div>
       </Container>
-    );
-  };
+    )
+  }
 
   return (
     <Container>
@@ -273,14 +241,12 @@ export default function DetailView() {
             <Typography variant="h4" sx={{ fontSize: "24px" }}>
               Transaction Detail
             </Typography>
-            <Container className={classes.transferDetailsContainer}>
-              {renderTransferDetails(state.transferDetails)}
-            </Container>
+            <Container className={classes.transferDetailsContainer}>{renderTransferDetails(state.transferDetails)}</Container>
           </section>
         ) : (
           <CircularProgress />
         )}
       </Box>
     </Container>
-  );
+  )
 }

@@ -2,7 +2,7 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import { EvmBridgeConfig, SharedConfigDomain, Transfer } from "../../types"
+import { EvmBridgeConfig, ResourceTypes, SharedConfigDomain, SharedConfigResource, Transfer } from "../../types"
 import {
   getDisplayedStatuses,
   shortenAddress,
@@ -14,6 +14,7 @@ import {
   formatDistanceDate,
   getFormatedFee,
   formatConvertedAmount,
+  formatTransferType,
 } from "../../utils/Helpers"
 import { useStyles } from "./styles"
 
@@ -36,14 +37,19 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
     return transferData.map((transfer: Transfer) => {
       const { deposit, status, amount, resource, fromDomainId, toDomainId, id, resourceID, timestamp, fee, usdValue } = transfer
 
-      const formatedFee = getFormatedFee(fee)
+      const { type } = resource
 
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
       const toDomainInfo = getDomainData(toDomainId, sharedConfig)
 
+      const { resources } = fromDomainInfo!
+
+      const foundResource = resources.find((resource: SharedConfigResource) => resource.resourceId === resourceID)
+
+      const formatedFee = getFormatedFee(fee, foundResource!)
+
       const fromDomainType = fromDomainInfo?.type
 
-      const { type } = resource
       let txHash: string | undefined
 
       if (fromDomainType === "evm" && deposit) {
@@ -97,7 +103,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              <span>{type !== undefined ? type : "-"}</span>
+              <span>{type !== undefined ? formatTransferType(type as ResourceTypes) : "-"}</span>
             </span>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
@@ -107,7 +113,6 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              {/* NOTE: hardcoded in the meantime */}
               <span>{formatedFee}</span>
             </span>
           </TableCell>

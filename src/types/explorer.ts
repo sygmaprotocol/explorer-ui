@@ -244,3 +244,14 @@ export type SharedConfigResource = {
   symbol: string
   decimals: number
 }
+
+export type SubstrateSharedConfigResource = Pick<SharedConfigResource, "resourceId" | "type" | "symbol" | "decimals"> & {
+  native: boolean
+  assetName: string
+  xcmMultiAssetId: {
+    concrete: {
+      parents: number
+      interior: string
+    }
+  }
+}
