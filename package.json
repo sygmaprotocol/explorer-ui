@@ -49,17 +49,19 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-only-warn": "^1.0.3",
     "eslint-plugin-prettier": "^4.0.0",
+    "jsdom": "^22.1.0",
     "prettier": "^2.5.0",
     "pretty-quick": "3.0.2",
     "vite": "^4.2.1",
     "vite-plugin-svgr": "^2.4.0",
-    "vite-tsconfig-paths": "^4.1.0"
+    "vite-tsconfig-paths": "^4.1.0",
+    "vitest": "^0.34.6"
   },
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "test": "react-scripts test",
+    "test": "vitest --config ./vite.config.ts",
     "lint": "yarn run lint:style --fix && yarn run lint:types",
     "lint:style": "eslint --color --ext .ts src/",
     "lint:types": "tsc --noEmit --pretty"

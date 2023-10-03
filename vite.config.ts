@@ -8,5 +8,8 @@ export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
   build: {
     outDir: 'dist',
+  },
+  test: {
+    environment: "jsdom"
   }
 });

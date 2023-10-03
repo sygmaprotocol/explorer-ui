@@ -102,6 +102,7 @@ export type Transfer = {
   fee: { amount: string; tokenAddress: string; tokenSymbol: string }
   resourceID: string
   usdValue: number
+  accountId: string
 }
 
 export type ExplorerState = {
@@ -243,4 +244,15 @@ export type SharedConfigResource = {
   address: string
   symbol: string
   decimals: number
+}
+
+export type SubstrateSharedConfigResource = Pick<SharedConfigResource, "resourceId" | "type" | "symbol" | "decimals"> & {
+  native: boolean
+  assetName: string
+  xcmMultiAssetId: {
+    concrete: {
+      parents: number
+      interior: string
+    }
+  }
 }

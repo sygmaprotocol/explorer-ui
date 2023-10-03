@@ -2,17 +2,18 @@ import dayjs from "dayjs"
 import { intervalToDuration } from "date-fns"
 
 import { BigNumberish, ethers } from "ethers"
-import { SharedConfigDomain, Transfer } from "../types"
+import { ResourceTypes, SharedConfigDomain, SharedConfigResource, SubstrateSharedConfigResource, Transfer } from "../types"
 
-export const shortenAddress = (address: string) => {
+export const shortenAddress = (address: string): string => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 6, address.length)}`
 }
 
-export const formatTransferDate = (transferDate: number | undefined) => (transferDate ? dayjs(transferDate * 1000).format("MMM D, h:mmA") : "")
+export const formatTransferDate = (transferDate: number | undefined): string =>
+  transferDate ? dayjs(transferDate * 1000).format("MMM D, h:mmA") : ""
 
-export const formatAmount = (amount: BigNumberish) => ethers.formatUnits(amount)
+export const formatAmount = (amount: BigNumberish): BigNumberish => ethers.formatUnits(amount)
 
-export const getColorSchemaTransferStatus = (status: number | undefined) => {
+export const getColorSchemaTransferStatus = (status: number | undefined): { borderColor: string; background: string } => {
   //TODO: just for now we have passed and executed as provided in figma mockups
   switch (status) {
     case 1:
@@ -40,14 +41,14 @@ export const getColorSchemaTransferStatus = (status: number | undefined) => {
   }
 }
 
-export const computeAndFormatAmount = (amount: string) => {
+export const computeAndFormatAmount = (amount: string): BigNumberish => {
   const amountParsed = parseInt(amount)
   const toBigInt = BigInt(amountParsed)
   return formatAmount(toBigInt)
 }
 
 // This is for only EVM networks
-export const getIconNamePerChainId = (chainId: number) => {
+export const getIconNamePerChainId = (chainId: number): string => {
   switch (chainId) {
     case 5:
     case 11155111: {
@@ -62,35 +63,6 @@ export const getIconNamePerChainId = (chainId: number) => {
     default: {
       return "all.svg"
     }
-  }
-}
-
-export const renderStatusIcon = (status: string, classes: Record<"statusPillIcon", string>) => {
-  switch (status) {
-    case "pending":
-      return <img src={`/assets/icons/pending.svg`} alt="pending" className={classes.statusPillIcon} />
-    case "executed":
-      return <img src={`/assets/icons/success.svg`} alt="completed" className={classes.statusPillIcon} />
-    case "reverted":
-    case "failed":
-      return <img src={`/assets/icons/reverted.svg`} alt="reverted" className={classes.statusPillIcon} />
-    default:
-      return <img src={`/assets/icons/pending.svg`} alt="pending" className={classes.statusPillIcon} />
-  }
-}
-
-export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon" | "substrateNetworkIcon", string>): JSX.Element => {
-  switch (chainId) {
-    case 5:
-    case 11155111:
-      return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
-    case 5231:
-    case 5233:
-      return <img src={`/assets/icons/phala-black.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    case 5232:
-      return <img src={`/assets/icons/khala.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    default:
-      return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
   }
 }
 
@@ -109,7 +81,7 @@ export const getDisplayedStatuses = (status: string): string => {
   }
 }
 
-export const getNetworkNames = (chainId: number) => {
+export const getNetworkNames = (chainId: number): string => {
   switch (chainId) {
     case 5:
       return "Goerli"
@@ -123,6 +95,12 @@ export const getNetworkNames = (chainId: number) => {
       return "Khala"
     case 5233:
       return "Phala"
+    case 84531:
+      return "Base"
+    case 338:
+      return "Cronos"
+    default:
+      return "Ethereum"
   }
 }
 
@@ -173,20 +151,38 @@ export const formatDistanceDate = (timestamp: string): string => {
   if (days !== undefined && days > 0) {
     dateIntervalResult = `${days !== undefined ? `${days} days` : ""} ${hours !== undefined && hours > 0 ? `${hours} hours` : ""}`
   } else {
-    dateIntervalResult = `${hours !== undefined ? `${hours} hours` : ""} ${minutes !== undefined && minutes > 0 ? `${minutes} minutes` : ""}`
+    dateIntervalResult = `${hours !== undefined && hours > 0 ? `${hours} hours` : ""} ${
+      minutes !== undefined && minutes > 0 ? `${minutes} minutes` : ""
+    }`
   }
 
   return dateIntervalResult
 }
 
-export const getFormatedFee = (fee: Transfer["fee"] | string): string => {
+export const getFormatedFee = (fee: Transfer["fee"] | string, resource: SharedConfigResource | SubstrateSharedConfigResource): string => {
   let formatedFee = "50.0 PHA"
 
-  if (typeof fee !== "string") {
-    formatedFee = `${ethers.formatEther(fee.amount).toString()} ETH`
+  if (typeof fee !== "string" && resource) {
+    const { decimals } = resource
+    formatedFee = `${ethers.formatUnits(fee.amount, decimals).toString()} ${resource.symbol}`
   }
 
   return formatedFee
+}
+
+export const formatTransferType = (transferType: ResourceTypes): string => {
+  switch (transferType) {
+    case ResourceTypes.FUNGIBLE:
+      return "Fungible"
+    case ResourceTypes.NON_FUNGIBLE:
+      return "Non Fungible"
+    case ResourceTypes.PERMISSIONED_GENERIC:
+      return "Generic"
+    case ResourceTypes.PERMISSIONLESS_GENERIC:
+      return "Generic"
+    default:
+      return "Fungible"
+  }
 }
 
 export const formatConvertedAmount = (amount: number): string => {
@@ -200,4 +196,37 @@ export const formatConvertedAmount = (amount: number): string => {
     return formatedConvertedAmount
   }
   return "$0.00"
+}
+
+export const renderStatusIcon = (status: string, classes: Record<"statusPillIcon", string>): JSX.Element => {
+  switch (status) {
+    case "pending":
+      return <img src={`/assets/icons/pending.svg`} alt="pending" className={classes.statusPillIcon} />
+    case "executed":
+      return <img src={`/assets/icons/success.svg`} alt="completed" className={classes.statusPillIcon} />
+    case "reverted":
+    case "failed":
+      return <img src={`/assets/icons/reverted.svg`} alt="reverted" className={classes.statusPillIcon} />
+    default:
+      return <img src={`/assets/icons/pending.svg`} alt="pending" className={classes.statusPillIcon} />
+  }
+}
+
+export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon" | "substrateNetworkIcon", string>): JSX.Element => {
+  switch (chainId) {
+    case 5:
+    case 11155111:
+      return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
+    case 5231:
+    case 5233:
+      return <img src={`/assets/icons/phala-black.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
+    case 5232:
+      return <img src={`/assets/icons/khala.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
+    case 84531:
+      return <img src={`/assets/icons/base.svg`} alt="base" className={classes.networkIcon} />
+    case 338:
+      return <img src={`/assets/icons/cronos.svg`} alt="cronos" className={classes.networkIcon} />
+    default:
+      return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
+  }
 }
