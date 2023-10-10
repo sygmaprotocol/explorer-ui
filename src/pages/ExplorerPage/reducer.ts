@@ -21,6 +21,7 @@ export function reducer(state: ExplorerPageState, action: TransferActions): Expl
         ...state,
         transfers: action.payload,
         loading: "loading",
+        error: undefined,
       }
     case "fetch_transfer_error":
       return {
@@ -33,6 +34,7 @@ export function reducer(state: ExplorerPageState, action: TransferActions): Expl
         ...state,
         transfers: action.payload,
         loading: "loading",
+        error: undefined,
       }
     case "fetch_transfer_by_sender_error":
       return {
