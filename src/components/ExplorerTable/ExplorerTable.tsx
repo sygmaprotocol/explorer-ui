@@ -15,6 +15,7 @@ import {
   getFormatedFee,
   formatConvertedAmount,
   formatTransferType,
+  formatAmountDecimals,
 } from "../../utils/Helpers"
 import { useStyles } from "./styles"
 
@@ -65,7 +66,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
 
       let formatedConvertedAmount
 
-      if (usdValue !== null) {
+      const amountWithFormatedDecimals = formatAmountDecimals(amount)
+
+      if (usdValue !== null && typeof usdValue === "number") {
         formatedConvertedAmount = formatConvertedAmount(usdValue)
       }
 
@@ -120,9 +123,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
             <span className={classes.amountInfo}>
               <div className={classes.amountContainer}>
                 <span>
-                  {amount} {resourceID !== "" && getResourceInfo(resourceID, fromDomainInfo!)}
+                  {amountWithFormatedDecimals} {resourceID !== "" && getResourceInfo(resourceID, fromDomainInfo!)}
                 </span>
-                {usdValue !== null && <span>{formatedConvertedAmount}</span>}
+                {usdValue !== null && usdValue !== 0 && <span>{formatedConvertedAmount}</span>}
               </div>
             </span>
           </TableCell>

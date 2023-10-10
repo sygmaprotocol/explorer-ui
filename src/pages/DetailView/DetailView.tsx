@@ -1,7 +1,6 @@
-import { CircularProgress, Tooltip, Typography } from "@mui/material"
-import { Box, Container } from "@mui/system"
+import { CircularProgress, Tooltip, Typography, Container, Box } from "@mui/material"
 import { useReducer } from "react"
-import { Link, useLocation, useParams } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import dayjs from "dayjs"
@@ -207,7 +206,7 @@ export default function DetailView() {
               <span>
                 {transfer?.amount} {symbol}
               </span>
-              {usdValue && <span>${formatedConvertedAmount}</span>}
+              {usdValue !== null && usdValue !== 0 && <span>${formatedConvertedAmount}</span>}
             </div>
           </span>
         </div>
