@@ -131,9 +131,10 @@ export const sanitizeTransferData = (transfers: Transfer[]): Transfer[] => {
         } else if (key === "usdValue") {
           // @ts-ignore-next-line
           sanitizedTransfer[key as keyof Transfer] = 0
+        } else {
+          // @ts-ignore-next-line
+          sanitizedTransfer[key as keyof Transfer] = ""
         }
-        // @ts-ignore-next-line
-        sanitizedTransfer[key as keyof Transfer] = ""
       }
     }
     sanitizedTransferData.push(sanitizedTransfer)
@@ -196,6 +197,16 @@ export const formatConvertedAmount = (amount: number): string => {
     return formatedConvertedAmount
   }
   return "$0.00"
+}
+
+export const formatAmountDecimals = (amount: string): string => {
+  if (!amount) return ""
+
+  const splitedAmount = amount.split(".")
+
+  if (splitedAmount.length === 1) return amount
+
+  return `${splitedAmount[0]}.${splitedAmount[1].slice(0, 3)}`
 }
 
 export const renderStatusIcon = (status: string, classes: Record<"statusPillIcon", string>): JSX.Element => {
