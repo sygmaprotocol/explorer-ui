@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/sygmaprotocol/explorer-ui/compare/v0.3.0...v0.3.1) (2023-10-10)
+
+
+### Miscellaneous
+
+* hide usd value if it is zero ([#88](https://github.com/sygmaprotocol/explorer-ui/issues/88)) ([fd8bee5](https://github.com/sygmaprotocol/explorer-ui/commit/fd8bee57a7278983ec64d22f8f770167b74d87e3))
+
 ## [0.3.0](https://github.com/sygmaprotocol/explorer-ui/compare/v0.2.0...v0.3.0) (2023-09-05)
 
 
