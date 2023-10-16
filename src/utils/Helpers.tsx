@@ -234,8 +234,10 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
     case 5232:
       return <img src={`/assets/icons/khala.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
     case 84531:
+    case 8453:
       return <img src={`/assets/icons/base.svg`} alt="base" className={classes.networkIcon} />
     case 338:
+    case 25:
       return <img src={`/assets/icons/cronos.svg`} alt="cronos" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
