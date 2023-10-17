@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/sygmaprotocol/explorer-ui/compare/v0.4.0...v0.4.1) (2023-10-17)
+
+
+### Miscellaneous
+
+* explorer urls for prod and formating links for source and destination tx hash ([#102](https://github.com/sygmaprotocol/explorer-ui/issues/102)) ([aa8da17](https://github.com/sygmaprotocol/explorer-ui/commit/aa8da17b76f88add3ad545744c884fafeb9ae645))
+
 ## [0.4.0](https://github.com/sygmaprotocol/explorer-ui/compare/v0.3.2...v0.4.0) (2023-10-17)
 
 
