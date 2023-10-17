@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest"
-import { ResourceTypes, SubstrateSharedConfigResource } from "../types"
+import { SharedConfigDomain } from "../types"
 import { getFormatedFee } from "./Helpers"
 
 describe("Helpers", () => {
   describe("getFormatedFee", () => {
-    it("parses ERC20 fee", () => {
+    it("parses ERC20 fee and returns fee with native token", () => {
       const formatedFee = getFormatedFee(
         {
           amount: "1000000000000000",
@@ -12,17 +12,14 @@ describe("Helpers", () => {
           tokenSymbol: "eth",
         },
         {
-          resourceId: "0x0000000000000000000000000000000000000000000000000000000000000300",
-          decimals: 18,
-          address: "0x3F9A68fF29B3d86a6928C44dF171A984F6180009",
-          symbol: "ERC20LRTest",
-          type: ResourceTypes.FUNGIBLE,
-        },
+          nativeTokenDecimals: 18,
+          nativeTokenSymbol: "eth",
+        } as SharedConfigDomain,
       )
 
-      expect(formatedFee).toEqual("0.001 ERC20LRTest")
+      expect(formatedFee).toEqual("0.001 ETH")
     })
-    it("parses PHA transfer fee", () => {
+    it("parses PHA transfer fee and return fee with native token", () => {
       const formatedFee = getFormatedFee(
         {
           amount: "100000000000",
@@ -30,19 +27,9 @@ describe("Helpers", () => {
           tokenSymbol: "PHA",
         },
         {
-          resourceId: "0x0000000000000000000000000000000000000000000000000000000000001000",
-          type: ResourceTypes.FUNGIBLE,
-          native: true,
-          symbol: "PHA",
-          decimals: 12,
-          assetName: "Phala",
-          xcmMultiAssetId: {
-            concrete: {
-              parents: 0,
-              interior: "Here",
-            },
-          },
-        } as SubstrateSharedConfigResource,
+          nativeTokenDecimals: 12,
+          nativeTokenSymbol: "PHA",
+        } as SharedConfigDomain,
       )
 
       expect(formatedFee).toEqual("0.1 PHA")

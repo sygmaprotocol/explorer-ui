@@ -8,14 +8,15 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import clsx from "clsx"
 import { useExplorer } from "../../context"
-import { SharedConfigResource, Transfer } from "../../types"
+import { ResourceTypes, Transfer } from "../../types"
 import {
-  formatConvertedAmount,
   formatDistanceDate,
   getDisplayedStatuses,
   getDomainData,
   getFormatedFee,
   getNetworkNames,
+  renderAmountValue,
+  renderFormatedConvertedAmount,
   renderNetworkIcon,
   renderStatusIcon,
 } from "../../utils/Helpers"
@@ -59,24 +60,11 @@ export default function DetailView() {
 
     const { resource, usdValue } = transfer as Transfer
 
-    const { id } = resource
+    const { id, type } = resource
 
     const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!)
     const toDomainName = getNetworkNames(toDomainInfo?.chainId!)
 
-    const { resources } = fromDomainInfo!
-
-    const foundResource = resources.find((resource: SharedConfigResource) => resource.resourceId === id)
-
-    const fromDomainTokenName = fromDomainInfo?.resources.find(resource => resource.resourceId === id)
-
-    const { symbol } = fromDomainTokenName as SharedConfigResource
-
-    let formatedConvertedAmount
-
-    if (usdValue) {
-      formatedConvertedAmount = formatConvertedAmount(usdValue)
-    }
     const { id: idFromDomain } = fromDomainInfo!
     const { id: idToDomain } = toDomainInfo!
 
@@ -203,16 +191,14 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Value:</span>
           <span className={classes.detailsInnerContent}>
             <div className={classes.convertedValueContainer}>
-              <span>
-                {transfer?.amount} {symbol}
-              </span>
-              {usdValue !== null && usdValue !== 0 && <span>${formatedConvertedAmount}</span>}
+              <span>{renderAmountValue(type as ResourceTypes, transfer?.amount!, id, fromDomainInfo)}</span>
+              {renderFormatedConvertedAmount(type as ResourceTypes, usdValue)}
             </div>
           </span>
         </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Fees:</span>
-          <span className={classes.detailsInnerContent}>{getFormatedFee(transfer?.fee!, foundResource!)}</span>
+          <span className={classes.detailsInnerContent}>{getFormatedFee(transfer?.fee!, fromDomainInfo!)}</span>
         </div>
       </Container>
     )
