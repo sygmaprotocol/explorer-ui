@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { intervalToDuration } from "date-fns"
 
 import { BigNumberish, ethers } from "ethers"
-import { ResourceTypes, SharedConfigDomain, Transfer } from "../types"
+import { DomainTypes, ResourceTypes, SharedConfigDomain, Transfer } from "../types"
 
 export const shortenAddress = (address: string): string => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 6, address.length)}`
@@ -264,4 +264,26 @@ export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: num
     return formatConvertedAmount(usdValue)
   }
   return ""
+}
+
+export const txHashLinks = (type: DomainTypes, txHash: string, domainExplorerUrl: string): string => {
+  switch (type) {
+    case DomainTypes.EVM:
+      return `${domainExplorerUrl}/tx/${txHash}`
+    case DomainTypes.SUBSTRATE:
+      return `${domainExplorerUrl}/extrinsic/${txHash}`
+    default:
+      return ""
+  }
+}
+
+export const accountLinks = (type: DomainTypes, accountId: string, domainExplorerUrl: string): string => {
+  switch (type) {
+    case DomainTypes.EVM:
+      return `${domainExplorerUrl}/address/${accountId}`
+    case DomainTypes.SUBSTRATE:
+      return `${domainExplorerUrl}/account/${accountId}`
+    default:
+      return ""
+  }
 }

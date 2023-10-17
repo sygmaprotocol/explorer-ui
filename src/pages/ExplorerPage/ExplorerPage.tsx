@@ -18,7 +18,7 @@ const initState: ExplorerPageState = {
 
 const ExplorerPage = (): JSX.Element => {
   const explorerContext = useExplorer()
-  const { explorerContextDispatcher, explorerContextState, routes, sharedConfig } = explorerContext
+  const { explorerContextDispatcher, explorerContextState, routes, sharedConfig, explorerUrls } = explorerContext
 
   const { chains } = explorerContextState
 
