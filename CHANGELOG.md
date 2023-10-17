@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/sygmaprotocol/explorer-ui/compare/v0.3.1...v0.3.2) (2023-10-17)
+
+
+### Miscellaneous
+
+* adding chain ids for Base and Cronos mainnet ([#92](https://github.com/sygmaprotocol/explorer-ui/issues/92)) ([654f8ff](https://github.com/sygmaprotocol/explorer-ui/commit/654f8ff1bd7a86f2eafe88d652e15f67deb174b2))
+
 ## [0.3.1](https://github.com/sygmaprotocol/explorer-ui/compare/v0.3.0...v0.3.1) (2023-10-10)
 
 
