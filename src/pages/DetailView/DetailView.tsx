@@ -10,6 +10,7 @@ import clsx from "clsx"
 import { useExplorer } from "../../context"
 import { ResourceTypes, Transfer } from "../../types"
 import {
+  accountLinks,
   formatDistanceDate,
   getDisplayedStatuses,
   getDomainData,
@@ -19,6 +20,7 @@ import {
   renderFormatedConvertedAmount,
   renderNetworkIcon,
   renderStatusIcon,
+  txHashLinks,
 } from "../../utils/Helpers"
 import { useStyles } from "./styles"
 import useClipboard from "./hooks/useClipboard"
@@ -35,7 +37,7 @@ export default function DetailView() {
 
   const { classes } = useStyles()
 
-  const { state: transferId } = useLocation()
+  const { state: transferId } = useLocation() as { state: { id: string } }
 
   const initState: DetailViewState = {
     transferDetails: null,
@@ -54,6 +56,7 @@ export default function DetailView() {
 
   useUpdateInterval(state, dispatcher, transferId, routes)
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig)
     const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig)
@@ -96,11 +99,13 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Source transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <span className={classes.txHashText}>{transfer?.deposit && transfer?.deposit?.txHash}</span>
+            <Link to={txHashLinks(fromDomainInfo!.type, transfer?.deposit?.txHash!, fromDomainExplorerUrl!.url)} style={{ color: "black" }}>
+              {transfer?.deposit && transfer?.deposit?.txHash}
+            </Link>
             <span
               className={classes.copyIcon}
               onClick={() => {
-                navigator.clipboard?.writeText(transfer?.deposit?.txHash!)
+                void navigator.clipboard?.writeText(transfer?.deposit?.txHash!)
                 dispatcher({
                   type: "set_clipboard_message_t1",
                   payload: "Copied to clipboard!",
@@ -116,13 +121,13 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Destination transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <span className={toDomainInfo?.type !== "evm" ? classes.txHashText : clsx(classes.txHashText, classes.txHashTextEvm)}>
+            <Link to={txHashLinks(fromDomainInfo!.type, transfer?.execution?.txHash!, toDomainExplorerUrl!.url)} style={{ color: "black" }}>
               {transfer?.execution && transfer?.execution?.txHash}
-            </span>
+            </Link>
             <span
               className={classes.copyIcon}
               onClick={() => {
-                navigator.clipboard?.writeText(transfer?.execution?.txHash!)
+                void navigator.clipboard?.writeText(transfer?.execution?.txHash!)
                 dispatcher({
                   type: "set_clipboard_message_t2",
                   payload: "Copied to clipboard!",
@@ -153,11 +158,7 @@ export default function DetailView() {
                 style={{
                   color: "black",
                 }}
-                to={
-                  fromDomainInfo!.type !== "evm"
-                    ? `${fromDomainExplorerUrl?.url}/account/${transfer?.accountId}`
-                    : `${fromDomainExplorerUrl?.url}/address/${transfer?.accountId}`
-                }
+                to={accountLinks(fromDomainInfo!.type, transfer?.accountId!, fromDomainExplorerUrl.url)}
               >
                 {transfer?.accountId}
               </Link>
@@ -174,11 +175,7 @@ export default function DetailView() {
                 style={{
                   color: "black",
                 }}
-                to={
-                  toDomainInfo!.type !== "evm"
-                    ? `${toDomainExplorerUrl?.url}/account/${transfer?.destination}`
-                    : `${toDomainExplorerUrl?.url}/address/${transfer?.destination}`
-                }
+                to={accountLinks(toDomainInfo!.type, transfer?.destination!, toDomainExplorerUrl.url)}
               >
                 {transfer?.destination}
               </Link>
