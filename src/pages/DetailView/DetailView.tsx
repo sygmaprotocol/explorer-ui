@@ -99,7 +99,11 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Source transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <Link to={txHashLinks(fromDomainInfo!.type, transfer?.deposit?.txHash!, fromDomainExplorerUrl!.url)} style={{ color: "black" }}>
+            <Link
+              to={txHashLinks(fromDomainInfo!.type, transfer?.deposit?.txHash!, fromDomainExplorerUrl!.url)}
+              style={{ color: "black" }}
+              target="_blank"
+            >
               {transfer?.deposit && transfer?.deposit?.txHash}
             </Link>
             <span
@@ -121,7 +125,11 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Destination transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <Link to={txHashLinks(fromDomainInfo!.type, transfer?.execution?.txHash!, toDomainExplorerUrl!.url)} style={{ color: "black" }}>
+            <Link
+              to={txHashLinks(fromDomainInfo!.type, transfer?.execution?.txHash!, toDomainExplorerUrl!.url)}
+              style={{ color: "black" }}
+              target="_blank"
+            >
               {transfer?.execution && transfer?.execution?.txHash}
             </Link>
             <span
@@ -159,6 +167,7 @@ export default function DetailView() {
                   color: "black",
                 }}
                 to={accountLinks(fromDomainInfo!.type, transfer?.accountId!, fromDomainExplorerUrl.url)}
+                target="_blank"
               >
                 {transfer?.accountId}
               </Link>
@@ -176,6 +185,7 @@ export default function DetailView() {
                   color: "black",
                 }}
                 to={accountLinks(toDomainInfo!.type, transfer?.destination!, toDomainExplorerUrl.url)}
+                target="_blank"
               >
                 {transfer?.destination}
               </Link>
