@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/sygmaprotocol/explorer-ui/compare/v0.3.2...v0.4.0) (2023-10-17)
+
+
+### Features
+
+* misc fixes ([#96](https://github.com/sygmaprotocol/explorer-ui/issues/96)) ([c63807f](https://github.com/sygmaprotocol/explorer-ui/commit/c63807fd0af1779c4774f8c6b1228892a9844cc3))
+
 ## [0.3.2](https://github.com/sygmaprotocol/explorer-ui/compare/v0.3.1...v0.3.2) (2023-10-17)
 
 
