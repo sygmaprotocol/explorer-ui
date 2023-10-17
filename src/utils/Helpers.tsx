@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { intervalToDuration } from "date-fns"
 
 import { BigNumberish, ethers } from "ethers"
-import { ResourceTypes, SharedConfigDomain, SharedConfigResource, SubstrateSharedConfigResource, Transfer } from "../types"
+import { ResourceTypes, SharedConfigDomain, Transfer } from "../types"
 
 export const shortenAddress = (address: string): string => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 6, address.length)}`
@@ -162,12 +162,12 @@ export const formatDistanceDate = (timestamp: string): string => {
   return dateIntervalResult
 }
 
-export const getFormatedFee = (fee: Transfer["fee"] | string, resource: SharedConfigResource | SubstrateSharedConfigResource): string => {
+export const getFormatedFee = (fee: Transfer["fee"] | string, domain: SharedConfigDomain): string => {
   let formatedFee = "50.0 PHA"
 
-  if (typeof fee !== "string" && resource) {
-    const { decimals } = resource
-    formatedFee = `${ethers.formatUnits(fee.amount, decimals).toString()} ${resource.symbol}`
+  if (typeof fee !== "string" && domain) {
+    const { nativeTokenDecimals, nativeTokenSymbol } = domain
+    formatedFee = `${ethers.formatUnits(fee.amount, nativeTokenDecimals).toString()} ${nativeTokenSymbol.toUpperCase()}`
   }
 
   return formatedFee
@@ -244,4 +244,24 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
     default:
       return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
   }
+}
+
+export const renderAmountValue = (
+  type: ResourceTypes,
+  amount: string,
+  resourceID: string,
+  fromDomainInfo: SharedConfigDomain | undefined,
+): string => {
+  if (type !== ResourceTypes.PERMISSIONLESS_GENERIC && resourceID !== "") {
+    return `${amount} ${getResourceInfo(resourceID, fromDomainInfo!)}`
+  }
+
+  return "Contract call"
+}
+
+export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: number): string => {
+  if (type !== ResourceTypes.PERMISSIONLESS_GENERIC && usdValue !== null && usdValue !== 0 && typeof usdValue === "number") {
+    return formatConvertedAmount(usdValue)
+  }
+  return ""
 }

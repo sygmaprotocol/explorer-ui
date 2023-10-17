@@ -2,7 +2,7 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import { EvmBridgeConfig, ResourceTypes, SharedConfigDomain, SharedConfigResource, Transfer } from "../../types"
+import { EvmBridgeConfig, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
 import {
   getDisplayedStatuses,
   shortenAddress,
@@ -10,12 +10,12 @@ import {
   renderStatusIcon,
   getDomainData,
   getNetworkNames,
-  getResourceInfo,
   formatDistanceDate,
   getFormatedFee,
-  formatConvertedAmount,
   formatTransferType,
   formatAmountDecimals,
+  renderAmountValue,
+  renderFormatedConvertedAmount,
 } from "../../utils/Helpers"
 import { useStyles } from "./styles"
 
@@ -43,11 +43,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
       const toDomainInfo = getDomainData(toDomainId, sharedConfig)
 
-      const { resources } = fromDomainInfo!
-
-      const foundResource = resources.find((resource: SharedConfigResource) => resource.resourceId === resourceID)
-
-      const formatedFee = getFormatedFee(fee, foundResource!)
+      const formatedFee = getFormatedFee(fee, fromDomainInfo!)
 
       const fromDomainType = fromDomainInfo?.type
 
@@ -64,13 +60,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
 
       const dateFormated = formatDistanceDate(timestamp!)
 
-      let formatedConvertedAmount
-
       const amountWithFormatedDecimals = formatAmountDecimals(amount)
-
-      if (usdValue !== null && typeof usdValue === "number") {
-        formatedConvertedAmount = formatConvertedAmount(usdValue)
-      }
 
       return (
         <TableRow className={classes.row} key={transfer.id}>
@@ -122,10 +112,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <div className={classes.amountContainer}>
-                <span>
-                  {amountWithFormatedDecimals} {resourceID !== "" && getResourceInfo(resourceID, fromDomainInfo!)}
-                </span>
-                {usdValue !== null && usdValue !== 0 && <span>{formatedConvertedAmount}</span>}
+                <span>{renderAmountValue(type as ResourceTypes, amountWithFormatedDecimals, resourceID, fromDomainInfo)}</span>
+                {renderFormatedConvertedAmount(type as ResourceTypes, usdValue)}
               </div>
             </span>
           </TableCell>
