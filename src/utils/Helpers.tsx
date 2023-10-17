@@ -96,8 +96,10 @@ export const getNetworkNames = (chainId: number): string => {
     case 5233:
       return "Phala"
     case 84531:
+    case 8453:
       return "Base"
     case 338:
+    case 25:
       return "Cronos"
     default:
       return "Ethereum"
