@@ -4,7 +4,7 @@ import { getFormatedFee } from "./Helpers"
 
 describe("Helpers", () => {
   describe("getFormatedFee", () => {
-    it("parses ERC20 fee", () => {
+    it("parses ERC20 fee and returns fee with native token", () => {
       const formatedFee = getFormatedFee(
         {
           amount: "1000000000000000",
@@ -19,7 +19,7 @@ describe("Helpers", () => {
 
       expect(formatedFee).toEqual("0.001 ETH")
     })
-    it("parses PHA transfer fee", () => {
+    it("parses PHA transfer fee and return fee with native token", () => {
       const formatedFee = getFormatedFee(
         {
           amount: "100000000000",
