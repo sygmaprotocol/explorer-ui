@@ -72,7 +72,9 @@ export default function DetailView() {
     const { id: idToDomain } = toDomainInfo!
 
     const fromDomainExplorerUrl = explorerUrls.find(exp => exp.id === idFromDomain)
+    console.log("🚀 ~ file: DetailView.tsx:75 ~ renderTransferDetails ~ fromDomainExplorerUrl:", fromDomainExplorerUrl)
     const toDomainExplorerUrl = explorerUrls.find(exp => exp.id === idToDomain)
+    console.log("🚀 ~ file: DetailView.tsx:77 ~ renderTransferDetails ~ toDomainExplorerUrl:", toDomainExplorerUrl)
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
