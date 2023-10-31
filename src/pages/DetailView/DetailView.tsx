@@ -72,7 +72,7 @@ export default function DetailView() {
     const { id: idToDomain } = toDomainInfo!
 
     const fromDomainExplorerUrl = explorerUrls.find(exp => exp.id === idFromDomain)
-    console.log("🚀 ~ file: DetailView.tsx:75 ~ renderTransferDetails ~ fromDomainExplorerUrl:", fromDomainExplorerUrl)
+    console.log("🚀 ~ file: DetailView.tsx:75 ~ renderTransferDetails ~ fromDomainExplorerUrl:", fromDomainExplorerUrl, explorerUrls)
     const toDomainExplorerUrl = explorerUrls.find(exp => exp.id === idToDomain)
 
     return (
