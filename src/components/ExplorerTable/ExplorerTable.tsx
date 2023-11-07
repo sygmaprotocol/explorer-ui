@@ -36,7 +36,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
 
   const renderTransferList = (transferData: Transfer[]): JSX.Element[] => {
     return transferData.map((transfer: Transfer) => {
-      const { deposit, status, amount, resource, fromDomainId, toDomainId, id, resourceID, timestamp, fee, usdValue } = transfer
+      const { deposit, status, amount, resource, fromDomainId, toDomainId, id, resourceID, fee, usdValue } = transfer
 
       const { type } = resource
 
@@ -58,7 +58,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
       const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!)
       const toDomainName = getNetworkNames(toDomainInfo?.chainId!)
 
-      const dateFormated = formatDistanceDate(timestamp!)
+      const dateFormated = formatDistanceDate(deposit?.timestamp!)
 
       const amountWithFormatedDecimals = formatAmountDecimals(amount)
 

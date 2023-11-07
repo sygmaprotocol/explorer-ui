@@ -72,6 +72,7 @@ export type Deposit = {
   blockNumber: string
   depositData: string
   handlerResponse: string
+  timestamp: string
 }
 
 export type Execution = {
@@ -82,6 +83,7 @@ export type Execution = {
   txHash: string
   blockNumber: string
   executionEvent: string
+  timestamp: string
 }
 
 export type Transfer = {

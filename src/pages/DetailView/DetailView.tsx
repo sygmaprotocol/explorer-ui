@@ -155,7 +155,7 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Created:</span>
           <span className={classes.detailsInnerContent}>
-            {formatDistanceDate(transfer?.timestamp!)} ({dayjs(transfer?.timestamp).format("llll")})
+            {formatDistanceDate(transfer?.deposit?.timestamp!)} ({dayjs(transfer?.deposit?.timestamp).format("llll")})
           </span>
         </div>
         <div className={classes.detailsContainer}>
