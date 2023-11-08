@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.0...v1.0.1) (2023-11-07)
+
+
+### Bug Fixes
+
+* fix render of dates ([#115](https://github.com/sygmaprotocol/explorer-ui/issues/115)) ([6d9edcd](https://github.com/sygmaprotocol/explorer-ui/commit/6d9edcdf63ac0bcec3cd01a17129c94d8173b9a6))
+* minor fix for testnet UI ([#112](https://github.com/sygmaprotocol/explorer-ui/issues/112)) ([8ffb5a6](https://github.com/sygmaprotocol/explorer-ui/commit/8ffb5a63b35bf7105c8127e4efb1b3ffcef05f3c))
+
 ## [0.4.1](https://github.com/sygmaprotocol/explorer-ui/compare/v0.4.0...v0.4.1) (2023-10-17)
 
 
