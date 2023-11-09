@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.1...v1.0.2) (2023-11-09)
+
+
+### Miscellaneous
+
+* fix explorer urls ([#117](https://github.com/sygmaprotocol/explorer-ui/issues/117)) ([ef733cb](https://github.com/sygmaprotocol/explorer-ui/commit/ef733cbc2020ee9a92f5658a2a448715a4684e2f))
+
 ## [1.0.1](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.0...v1.0.1) (2023-11-07)
 
 
