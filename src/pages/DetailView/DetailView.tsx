@@ -126,7 +126,7 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Destination transaction hash:</span>
           <span className={classes.detailsInnerContent}>
             <Link
-              to={txHashLinks(fromDomainInfo!.type, transfer?.execution?.txHash!, toDomainExplorerUrl!.url)}
+              to={txHashLinks(toDomainInfo!.type, transfer?.execution?.txHash!, toDomainExplorerUrl!.url)}
               style={{ color: "black" }}
               target="_blank"
             >
