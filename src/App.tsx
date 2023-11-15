@@ -1,6 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline"
 import { ThemeProvider } from "@mui/material/styles"
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
+import { Alert } from "@mui/material"
 import { ExplorerPage, DetailView } from "./pages"
 import { SygmaTheme } from "./themes/SygmaTheme"
 import { ExplorerProvider } from "./context"
@@ -25,6 +26,20 @@ function App(): JSX.Element {
           </Routes>
         </Router>
       </ExplorerProvider>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "10px",
+          width: "100%",
+        }}
+      >
+        <Alert severity="error" variant="outlined">
+          Currently Rhala network is not available for transfers!
+        </Alert>
+      </div>
       <div
         style={{
           display: "flex",
