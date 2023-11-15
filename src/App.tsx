@@ -33,7 +33,6 @@ function App(): JSX.Element {
           justifyContent: "center",
           alignItems: "center",
           marginTop: "10px",
-          // padding: "30px",
           width: "100%",
         }}
       >
