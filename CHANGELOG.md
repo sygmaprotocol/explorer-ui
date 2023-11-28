@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.3](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.2...v1.0.3) (2023-11-28)
+
+
+### Bug Fixes
+
+* render name and icon for new testnets ([#121](https://github.com/sygmaprotocol/explorer-ui/issues/121)) ([2acac79](https://github.com/sygmaprotocol/explorer-ui/commit/2acac7967ca1cb4ac92451a0e4ba942435532442))
+
+
+### Miscellaneous
+
+* gnosis icon, network name, explorer url and reverting rhala alert message ([#125](https://github.com/sygmaprotocol/explorer-ui/issues/125)) ([64505fb](https://github.com/sygmaprotocol/explorer-ui/commit/64505fb1c7b693eb89b34fe33d0a46732f913a38))
+* message for rhala ([#123](https://github.com/sygmaprotocol/explorer-ui/issues/123)) ([a7d4a78](https://github.com/sygmaprotocol/explorer-ui/commit/a7d4a7849602017b8a1058080690bfa72196f08f))
+
 ## [1.0.2](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.1...v1.0.2) (2023-11-09)
 
 
