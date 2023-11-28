@@ -32,20 +32,6 @@ function App(): JSX.Element {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: "10px",
-          width: "100%",
-        }}
-      >
-        <Alert severity="error" variant="outlined">
-          Currently Rhala network is not available for transfers!
-        </Alert>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
           padding: "30px",
           width: "100%",
         }}
