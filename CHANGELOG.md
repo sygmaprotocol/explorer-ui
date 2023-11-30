@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.4](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.3...v1.0.4) (2023-11-30)
+
+
+### Bug Fixes
+
+* remove fixed amount on fee for no fee wording ([#129](https://github.com/sygmaprotocol/explorer-ui/issues/129)) ([f9ca099](https://github.com/sygmaprotocol/explorer-ui/commit/f9ca0992b2debaa7eed4dbab21d205b88f37fd1c))
+
+
+### Miscellaneous
+
+* holesky and mumbai explorer urls ([#126](https://github.com/sygmaprotocol/explorer-ui/issues/126)) ([5f532fc](https://github.com/sygmaprotocol/explorer-ui/commit/5f532fcd61bb0ab7b23c07124b7daba36d854080))
+
 ## [1.0.3](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.2...v1.0.3) (2023-11-28)
 
 
