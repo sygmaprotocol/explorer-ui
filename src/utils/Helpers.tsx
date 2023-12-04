@@ -172,6 +172,11 @@ export const formatDistanceDate = (timestamp: string): string => {
 
 export const getFormatedFee = (fee: Transfer["fee"] | string, domain: SharedConfigDomain): string => {
   let formatedFee = "No fee"
+  const { type } = domain
+
+  if (type === DomainTypes.SUBSTRATE) {
+    formatedFee = "50 PHA"
+  }
 
   if (typeof fee !== "string" && domain) {
     const { nativeTokenDecimals, nativeTokenSymbol } = domain
