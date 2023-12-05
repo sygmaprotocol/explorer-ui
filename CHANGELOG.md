@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.4...v1.0.5) (2023-12-05)
+
+
+### Bug Fixes
+
+* fees if domain is substrate ([#131](https://github.com/sygmaprotocol/explorer-ui/issues/131)) ([13772d9](https://github.com/sygmaprotocol/explorer-ui/commit/13772d92b50314e6fcc809d21472bf529142aeaa))
+
 ## [1.0.4](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.3...v1.0.4) (2023-11-30)
 
 
