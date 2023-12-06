@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.5...v1.0.6) (2023-12-06)
+
+
+### Bug Fixes
+
+* polygon scan explorer url ([#134](https://github.com/sygmaprotocol/explorer-ui/issues/134)) ([7971964](https://github.com/sygmaprotocol/explorer-ui/commit/7971964b47b87b644fa05c03ca43f9391748cf51))
+
 ## [1.0.5](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.4...v1.0.5) (2023-12-05)
 
 
