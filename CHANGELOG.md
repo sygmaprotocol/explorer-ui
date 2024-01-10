@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.6...v1.1.0) (2024-01-10)
+
+
+### Features
+
+* loader in between renders of pages ([#137](https://github.com/sygmaprotocol/explorer-ui/issues/137)) ([16d3394](https://github.com/sygmaprotocol/explorer-ui/commit/16d3394c120f32b8dadc878cfa684dc8daaf39cf))
+
 ## [1.0.6](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.5...v1.0.6) (2023-12-06)
 
 
