@@ -1,5 +1,5 @@
 import React from "react"
-import { Table, TableHead, TableCell, TableBody, TableRow } from "@mui/material"
+import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
 import { EvmBridgeConfig, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
@@ -144,21 +144,16 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell sx={{ borderTopRightRadius: "12px !important" }}>Value</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>
-        {state.loading === "done" ? (
-          renderTransferList(state.transfers)
-        ) : (
+      {state.loading === "done" && <TableBody>{renderTransferList(state.transfers)}</TableBody>}
+      {state.loading === "loading" && (
+        <TableBody>
           <TableRow>
-            <TableCell>Loading</TableCell>
+            <TableCell colSpan={8} align="center">
+              <CircularProgress />
+            </TableCell>
           </TableRow>
-        )}
-
-        {state.error && (
-          <TableRow>
-            <TableCell>{state.error}</TableCell>
-          </TableRow>
-        )}
-      </TableBody>
+        </TableBody>
+      )}
     </Table>
   )
 }

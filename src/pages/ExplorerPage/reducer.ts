@@ -6,6 +6,7 @@ export type TransferActions =
   | { type: "fetch_transfer_by_sender"; payload: Transfer[] }
   | { type: "fetch_transfer_by_sender_error"; payload: string }
   | { type: "loading_done" }
+  | { type: "loading_transfers" }
 
 export type ExplorerPageState = {
   transfers: Transfer[]
@@ -20,7 +21,6 @@ export function reducer(state: ExplorerPageState, action: TransferActions): Expl
       return {
         ...state,
         transfers: action.payload,
-        loading: "loading",
         error: undefined,
       }
     case "fetch_transfer_error":
@@ -46,6 +46,11 @@ export function reducer(state: ExplorerPageState, action: TransferActions): Expl
       return {
         ...state,
         loading: "done",
+      }
+    case "loading_transfers":
+      return {
+        ...state,
+        loading: "loading",
       }
     default:
       return state

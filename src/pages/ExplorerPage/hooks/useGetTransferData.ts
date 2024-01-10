@@ -15,6 +15,10 @@ const transferData = async (page: number, limit: number, routes: Routes, dispatc
       type: "fetch_transfers",
       payload: sanitizedTransfers,
     })
+
+    dispatcher({
+      type: "loading_done",
+    })
   } catch (e) {
     dispatcher({
       type: "fetch_transfer_error",
@@ -58,18 +62,13 @@ export function useGetTransferData(
   explorerContextState: ExplorerContextState,
 ): void {
   useEffect(() => {
-    if (state.loading === "loading" && state.transfers.length) {
-      dispatcher({
-        type: "loading_done",
-      })
-    }
-  }, [state.loading, state.transfers])
-
-  useEffect(() => {
     if (!explorerContextState.account) {
       const {
         queryParams: { page, limit },
       } = explorerContextState
+      dispatcher({
+        type: "loading_transfers",
+      })
       void transferData(page, limit, routes, dispatcher)
     } else {
       const { account } = explorerContextState
