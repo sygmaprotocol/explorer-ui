@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { intervalToDuration, Duration } from "date-fns"
+import { intervalToDuration, formatDistanceStrict, formatDuration } from "date-fns"
 
 import { BigNumberish, ethers } from "ethers"
 import { DomainTypes, ResourceTypes, SharedConfigDomain, Transfer } from "../types"
@@ -153,63 +153,24 @@ export const sanitizeTransferData = (transfers: Transfer[]): Transfer[] => {
   return sanitizedTransferData
 }
 
-const formatDurationString = (duration: Pick<Duration, "days" | "hours" | "minutes" | "months" | "years">): string => {
-  let formatedDurationString = ""
-
-  if (duration?.years !== undefined && duration?.years > 0) {
-    formatedDurationString = `${duration?.years} ${duration?.years > 1 ? "years" : "year"} ${
-      duration?.months !== undefined ? `and ${duration?.months} months` : ""
-    }`
-  } else if (duration?.months !== undefined && duration?.months > 0) {
-    formatedDurationString = `${duration?.months} ${duration?.months > 1 ? "months" : "month"} ${
-      duration?.days !== undefined ? `and ${duration?.days} days` : ""
-    }`
-  } else if (duration?.days !== undefined && duration?.days > 0) {
-    formatedDurationString = `${duration?.days} ${duration?.days > 1 ? "days" : "day"} ${
-      duration?.hours !== undefined ? `and ${duration?.hours} hours` : ""
-    }`
-  } else if (duration?.hours !== undefined && duration?.hours > 0) {
-    formatedDurationString = `${duration?.hours} ${duration?.hours > 1 ? "hours" : "hour"} ${
-      duration?.minutes !== undefined ? `and ${duration?.minutes} minutes` : ""
-    }`
-  } else if (duration?.minutes !== undefined && duration?.minutes > 0) {
-    formatedDurationString = `${duration?.minutes} minutes`
-  }
-
-  return formatedDurationString
-}
-
-const stripUnusedDurationValues = (duration: Duration): Pick<Duration, "days" | "hours" | "minutes" | "months" | "years"> => {
-  return Object.keys(duration).reduce((acc: unknown, key: string) => {
-    if (key !== "seconds" && key !== "weeks") {
-      acc = {
-        ...(acc as Pick<Duration, "days" | "hours" | "minutes" | "months" | "years">),
-        [key]: duration[key as keyof Duration],
-      }
-    }
-
-    return acc
-  }, {}) as Pick<Duration, "days" | "hours" | "minutes" | "months" | "years">
-}
-
 export const formatDistanceDate = (timestamp: string): string => {
   const intervalToDurationResult = intervalToDuration({ start: new Date(timestamp), end: new Date() })
+  const distanceInDays = formatDistanceStrict(new Date(timestamp), new Date(), { unit: "day" })
+  const { years, months, days, hours, minutes } = intervalToDurationResult
 
-  const strippedUnsedDurationValues = stripUnusedDurationValues(intervalToDurationResult)
-
-  const filtered = Object.entries(strippedUnsedDurationValues).reduce((acc: unknown, [key, value]: [string, unknown]) => {
-    if (strippedUnsedDurationValues[key as keyof Pick<Duration, "days" | "hours" | "minutes" | "months" | "years">] !== 0) {
-      acc = {
-        [key]: value,
-        ...(acc as Duration),
-      }
-    }
-    return acc
-  }, {}) as Duration
-
-  const formatedDistanceDateString = formatDurationString(filtered)
-
-  return formatedDistanceDateString
+  if (years !== 0 || months !== 0) {
+    const formatOptions = ["hours"]
+    const formatInterval = formatDuration(intervalToDurationResult, { format: formatOptions })
+    const formatedString = `${distanceInDays} ${formatInterval !== "" ? `and ${formatInterval} ago` : ""}`.trim()
+    return formatedString
+  } else if (days !== 0) {
+    console.log("here", days, hours)
+    const formatedString = hours !== 0 ? `${distanceInDays} and ${hours!} hours ago` : `${distanceInDays} ago`
+    return formatedString
+  } else {
+    const formatedString = hours !== 0 ? `${hours!} hours and ${minutes!} minutes ago` : `${minutes!} minutes ago`
+    return formatedString
+  }
 }
 
 export const getFormatedFee = (fee: Transfer["fee"] | string, domain: SharedConfigDomain): string => {
