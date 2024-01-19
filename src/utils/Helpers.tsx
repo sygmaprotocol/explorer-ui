@@ -109,6 +109,10 @@ export const getNetworkNames = (chainId: number): string => {
       return "Polygon"
     case 100:
       return "Gnosis"
+    case 421614:
+      return "Arbitrum Sepolia"
+    case 10200:
+      return "Gnosis Chiado"
     default:
       return "Ethereum"
   }
@@ -259,7 +263,10 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
     case 137:
       return <img src={`/assets/icons/polygon.svg`} alt="polygon" className={classes.networkIcon} />
     case 100:
+    case 10200:
       return <img src={`/assets/icons/gnosis.svg`} alt="gnosis" className={classes.networkIcon} />
+    case 421614:
+      return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
   }
