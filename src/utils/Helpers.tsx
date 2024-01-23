@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { intervalToDuration } from "date-fns"
+import { intervalToDuration, formatDistanceStrict, formatDuration } from "date-fns"
 
 import { BigNumberish, ethers } from "ethers"
 import { DomainTypes, ResourceTypes, SharedConfigDomain, Transfer } from "../types"
@@ -159,19 +159,22 @@ export const sanitizeTransferData = (transfers: Transfer[]): Transfer[] => {
 
 export const formatDistanceDate = (timestamp: string): string => {
   const intervalToDurationResult = intervalToDuration({ start: new Date(timestamp), end: new Date() })
+  const distanceInDays = formatDistanceStrict(new Date(timestamp), new Date(), { unit: "day" })
+  const { years, months, days, hours, minutes } = intervalToDurationResult
 
-  const { days, hours, minutes } = intervalToDurationResult
-
-  let dateIntervalResult: string
-  if (days !== undefined && days > 0) {
-    dateIntervalResult = `${days !== undefined ? `${days} days` : ""} ${hours !== undefined && hours > 0 ? `${hours} hours` : ""}`
+  if (years !== 0 || months !== 0) {
+    const formatOptions = ["hours"]
+    const formatInterval = formatDuration(intervalToDurationResult, { format: formatOptions })
+    const formatedString = `${distanceInDays} ${formatInterval !== "" ? `and ${formatInterval} ago` : ""}`.trim()
+    return formatedString
+  } else if (days !== 0) {
+    console.log("here", days, hours)
+    const formatedString = hours !== 0 ? `${distanceInDays} and ${hours!} hours ago` : `${distanceInDays} ago`
+    return formatedString
   } else {
-    dateIntervalResult = `${hours !== undefined && hours > 0 ? `${hours} hours` : ""} ${
-      minutes !== undefined && minutes > 0 ? `${minutes} minutes` : ""
-    }`
+    const formatedString = hours !== 0 ? `${hours!} hours and ${minutes!} minutes ago` : `${minutes!} minutes ago`
+    return formatedString
   }
-
-  return dateIntervalResult
 }
 
 export const getFormatedFee = (fee: Transfer["fee"] | string, domain: SharedConfigDomain): string => {
