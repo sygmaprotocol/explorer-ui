@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.1.0...v1.2.0) (2024-01-23)
+
+
+### Features
+
+* gnosis chiado and arbitrum sepolia ([#142](https://github.com/sygmaprotocol/explorer-ui/issues/142)) ([e8b972c](https://github.com/sygmaprotocol/explorer-ui/commit/e8b972cb8e6c4ffc7212fddf9ec851b0aec41762))
+
+
+### Bug Fixes
+
+* refactor dates logic ([#140](https://github.com/sygmaprotocol/explorer-ui/issues/140)) ([ceb726a](https://github.com/sygmaprotocol/explorer-ui/commit/ceb726a837be8c85e750cb071a0e4dc1b68b5414))
+
 ## [1.1.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.0.6...v1.1.0) (2024-01-10)
 
 
