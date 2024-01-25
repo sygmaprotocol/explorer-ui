@@ -168,7 +168,6 @@ export const formatDistanceDate = (timestamp: string): string => {
     const formatedString = `${distanceInDays} ${formatInterval !== "" ? `and ${formatInterval} ago` : ""}`.trim()
     return formatedString
   } else if (days !== 0) {
-    console.log("here", days, hours)
     const formatedString = hours !== 0 ? `${distanceInDays} and ${hours!} hours ago` : `${distanceInDays} ago`
     return formatedString
   } else {
