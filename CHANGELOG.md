@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.0...v1.2.1) (2024-01-25)
+
+
+### Miscellaneous
+
+* remove log ([#144](https://github.com/sygmaprotocol/explorer-ui/issues/144)) ([721bfbc](https://github.com/sygmaprotocol/explorer-ui/commit/721bfbc9dcd18244b471f5136cb1597f6e3e77da))
+
 ## [1.2.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.1.0...v1.2.0) (2024-01-23)
 
 
