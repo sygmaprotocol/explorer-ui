@@ -18,7 +18,7 @@ function App(): JSX.Element {
     <ThemeProvider theme={SygmaTheme}>
       <CssBaseline />
       <ExplorerProvider>
-        <Router>
+        <Router basename="/transfers">
           <Header />
           <Routes>
             <Route path={ROUTE_LINKS.Explorer} element={<ExplorerPage />} />
