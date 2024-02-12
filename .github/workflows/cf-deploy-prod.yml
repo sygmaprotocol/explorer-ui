@@ -15,8 +15,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: yarn
-          node-version: "18"
-      - run: yarn install --frozen-lockfile
+          node-version: 18
+      - run: corepack enable
+      - run: yarn set version stable
+      - run: yarn install --immutable
       - run: yarn build
         env:
           VITE_INDEXER_URL: "https://api.buildwithsygma.com"
