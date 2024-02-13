@@ -1,4 +1,4 @@
-import { Transfer } from "../../types"
+import type { Transfer } from "../../types"
 
 export type TransferActions =
   | { type: "fetch_transfers"; payload: Transfer[] }

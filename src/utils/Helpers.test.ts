@@ -1,6 +1,8 @@
-import { describe, it, expect } from "vitest"
 import { formatDistanceStrict, sub } from "date-fns"
-import { SharedConfigDomain } from "../types"
+import { describe, it, expect } from "vitest"
+
+import type { SharedConfigDomain } from "../types"
+
 import { formatDistanceDate, getFormatedFee } from "./Helpers"
 
 describe("Helpers", () => {

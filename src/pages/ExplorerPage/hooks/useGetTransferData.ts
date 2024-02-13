@@ -1,8 +1,9 @@
-import { useEffect } from "react"
 import { ethers } from "ethers"
-import { ExplorerContextState, Routes } from "../../../types"
+import { useEffect } from "react"
+
+import type { ExplorerContextState, Routes } from "../../../types"
 import { sanitizeTransferData } from "../../../utils/Helpers"
-import { ExplorerPageState, TransferActions } from "../reducer"
+import type { ExplorerPageState, TransferActions } from "../reducer"
 
 const transferData = async (page: number, limit: number, routes: Routes, dispatcher: React.Dispatch<TransferActions>): Promise<void> => {
   try {
