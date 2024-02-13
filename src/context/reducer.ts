@@ -1,4 +1,4 @@
-import { Actions, ExplorerContextState } from "../types/explorer"
+import type { Actions, ExplorerContextState } from "../types/explorer"
 
 export function reducer(state: ExplorerContextState, action: Actions): ExplorerContextState {
   switch (action.type) {

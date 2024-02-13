@@ -1,5 +1,6 @@
 import { useEffect } from "react"
-import { DetailViewActions, DetailViewState } from "../reducer"
+
+import type { DetailViewActions, DetailViewState } from "../reducer"
 
 export default function useClipboard(state: DetailViewState, dispatcher: React.Dispatch<DetailViewActions>): void {
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Routes, Transfer } from "../../types/explorer"
+import type { Routes, Transfer } from "../../types/explorer"
 
 export const fetchTransfers = async (url: string): Promise<Transfer[]> => {
   const response = await fetch(url)

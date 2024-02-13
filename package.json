@@ -30,7 +30,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@chainsafe/eslint-config": "^1.1.0",
+    "@chainsafe/eslint-config": "2.2.2",
     "@metamask/providers": "^10.2.1",
     "@rushstack/eslint-patch": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.4",
@@ -47,6 +47,7 @@
     "craco": "^0.0.3",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-only-warn": "^1.0.3",
     "eslint-plugin-prettier": "^4.0.0",
     "jsdom": "^22.1.0",

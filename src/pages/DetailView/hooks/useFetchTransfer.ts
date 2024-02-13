@@ -1,8 +1,9 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
+
+import type { Routes, SharedConfig, SharedConfigDomain, Transfer } from "../../../types"
 import { sanitizeTransferData } from "../../../utils/Helpers"
-import { Routes, SharedConfig, SharedConfigDomain, Transfer } from "../../../types"
-import { DetailViewActions } from "../reducer"
+import type { DetailViewActions } from "../reducer"
 
 export default function useFetchTransfer(
   routes: Routes,
