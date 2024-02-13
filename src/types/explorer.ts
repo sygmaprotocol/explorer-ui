@@ -188,7 +188,6 @@ export type Routes = {
 }
 
 export type ExplorerContext = {
-  loadMore: (options: PaginationParams) => void
   explorerContextState: ExplorerContextState
   explorerContextDispatcher: React.Dispatch<Actions>
   getAccount: () => Promise<string>

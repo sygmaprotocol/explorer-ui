@@ -1,29 +1,14 @@
-import React, { useEffect } from "react";
-import {
-  ExplorerContextState,
-  ExplorerContext as ExplorerContextType,
-  ExplorerState,
-  PaginationParams,
-  SharedConfig,
-  SharedConfigDomain,
-} from "../types";
-import { getAccount, getChainId } from "./connection";
-import { routes } from "./data";
-import { reducer } from "./reducer";
+import React, { useEffect } from "react"
 
-const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(
-  undefined,
-);
+import type { ExplorerContextState, ExplorerContext as ExplorerContextType, ExplorerState, SharedConfig, SharedConfigDomain } from "../types"
 
-const ExplorerProvider = ({
-  children,
-}: {
-  children: React.ReactNode | React.ReactNode[];
-}) => {
+import { getAccount, getChainId } from "./connection"
+import { routes } from "./data"
+import { reducer } from "./reducer"
 
-  // TO BE DEFINED
-  const loadMore = (options: PaginationParams) => null;
+const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(undefined)
 
+const ExplorerProvider = ({ children }: { children: React.ReactNode | React.ReactNode[] }) => {
   const explorerPageContextState: ExplorerContextState = {
     queryParams: {
       page: 1, //by default
@@ -36,58 +21,51 @@ const ExplorerProvider = ({
     transferDetails: undefined,
     pillColorStatus: undefined,
     account: undefined,
-  };
+  }
 
-  const [explorerContextState, explorerContextDispatcher] = React.useReducer(
-    reducer,
-    explorerPageContextState,
-  );
+  const [explorerContextState, explorerContextDispatcher] = React.useReducer(reducer, explorerPageContextState)
 
-  const [chainId, setChainId] = React.useState<number | undefined>(undefined);
-  const [account, setAccount] = React.useState<string | undefined>(undefined);
-  const [explorerUrls, setExplorerUrls] = React.useState<
-    [] | ExplorerState["explorerUrls"]
-  >([]);
+  const [chainId, setChainId] = React.useState<number | undefined>(undefined)
+  const [account, setAccount] = React.useState<string | undefined>(undefined)
+  const [explorerUrls, setExplorerUrls] = React.useState<[] | ExplorerState["explorerUrls"]>([])
 
-  const [sharedConfig, setSharedConfig] = React.useState<
-    SharedConfigDomain[] | []
-  >([]);
+  const [sharedConfig, setSharedConfig] = React.useState<SharedConfigDomain[] | []>([])
 
   const getSharedConfig = async (): Promise<void> => {
-    const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL);
-    const domainsData = (await reponse.json()) as SharedConfig;
+    const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL as string)
+    const domainsData = (await reponse.json()) as SharedConfig
 
-    setSharedConfig(domainsData.domains);
-    localStorage.setItem("sharedConfig", JSON.stringify(domainsData));
-  };
+    setSharedConfig(domainsData.domains)
+    localStorage.setItem("sharedConfig", JSON.stringify(domainsData))
+  }
 
   useEffect(() => {
     if (window.ethereum !== undefined) {
-      window.ethereum!.on("chainChanged", (chainId: unknown) => {
-        setChainId(Number(chainId as string));
-      });
+      window.ethereum.on("chainChanged", (chainId: unknown) => {
+        setChainId(Number(chainId as string))
+      })
 
-      window.ethereum!.on("accountsChanged", (accounts: unknown) => {
-        setAccount((accounts as Array<string>)[0] as string);
-      });
+      window.ethereum.on("accountsChanged", (accounts: unknown) => {
+        setAccount((accounts as Array<string>)[0])
+      })
     }
 
-    getSharedConfig();
-    
-    setExplorerUrls(JSON.parse(import.meta.env.VITE_EXPLORER_URLS));
+    void getSharedConfig()
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    setExplorerUrls(JSON.parse(import.meta.env.VITE_EXPLORER_URLS))
 
     return () => {
       if (window.ethereum !== undefined) {
-        window.ethereum!.removeAllListeners("chainChanged");
-        window.ethereum!.removeAllListeners("accountsChanged");
+        window.ethereum.removeAllListeners("chainChanged")
+        window.ethereum.removeAllListeners("accountsChanged")
       }
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <ExplorerCtx.Provider
       value={{
-        loadMore,
         explorerContextState,
         explorerContextDispatcher,
         getAccount,
@@ -102,17 +80,17 @@ const ExplorerProvider = ({
     >
       {children}
     </ExplorerCtx.Provider>
-  );
-};
+  )
+}
 
 const useExplorer = () => {
-  const context = React.useContext(ExplorerCtx);
+  const context = React.useContext(ExplorerCtx)
 
   if (context === undefined) {
-    throw new Error("useExplorer must be used within a ExplorerProvider");
+    throw new Error("useExplorer must be used within a ExplorerProvider")
   }
 
-  return context;
-};
+  return context
+}
 
-export { ExplorerProvider, useExplorer };
+export { ExplorerProvider, useExplorer }

@@ -1,4 +1,4 @@
-import { useState, useReducer } from "react"
+import { useState, useReducer, useEffect } from "react"
 import { Alert, Button, Container, Paper } from "@mui/material"
 
 import { ethers } from "ethers"
@@ -45,6 +45,10 @@ const ExplorerPage = (): JSX.Element => {
     }
   }
 
+  useEffect(() => {
+    history.replaceState(null, "", `?page=${explorerContextState.queryParams.page}`)
+  }, [explorerContextState.queryParams.page])
+
   return (
     <Container sx={{ display: "grid", gridTemplateRows: "1fr 15fr" }}>
       <div>
@@ -82,6 +86,7 @@ const ExplorerPage = (): JSX.Element => {
                     limit: explorerContextState.queryParams.limit,
                   },
                 })
+                history.replaceState(null, "", `?page=${explorerContextState.queryParams.page - 1}`)
               }}
               className={classes.paginationButtons}
               disabled={explorerContextState.queryParams.page === 1}
@@ -108,6 +113,7 @@ const ExplorerPage = (): JSX.Element => {
                     limit: explorerContextState.queryParams.limit,
                   },
                 })
+                history.replaceState(null, "", `?page=${explorerContextState.queryParams.page + 1}`)
               }}
               className={classes.paginationButtons}
             >
