@@ -40,7 +40,11 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
     localStorage.setItem("sharedConfig", JSON.stringify(domainsData))
   }
 
-  useGetTransferData(routes(), explorerContextDispatcher, explorerContextState)
+  const { search } = window.location
+  const urlParams = new URLSearchParams(search)
+  const page = urlParams.get("page")
+
+  useGetTransferData(routes(), explorerContextDispatcher, explorerContextState, Number(page))
 
   useEffect(() => {
     if (window.ethereum !== undefined) {

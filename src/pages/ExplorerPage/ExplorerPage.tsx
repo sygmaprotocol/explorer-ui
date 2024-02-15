@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from "react"
+import { useState } from "react"
 import { Alert, Button, Container, Paper } from "@mui/material"
 
 import { ethers } from "ethers"
@@ -6,15 +6,6 @@ import { ExplorerTable } from "../../components"
 
 import { useExplorer } from "../../context"
 import { useStyles } from "./styles"
-import { ExplorerPageState, reducer } from "./reducer"
-import { useGetTransferData } from "./hooks/useGetTransferData"
-
-const initState: ExplorerPageState = {
-  transfers: [],
-  loading: "none",
-  error: undefined,
-  init: true,
-}
 
 const ExplorerPage = (): JSX.Element => {
   const explorerContext = useExplorer()
@@ -26,10 +17,6 @@ const ExplorerPage = (): JSX.Element => {
 
   const classes = useStyles()
   const [active, setActive] = useState(false)
-
-  const [state, dispatcher] = useReducer(reducer, initState)
-
-  useGetTransferData(explorerContextState.queryParams.page, explorerContextState.queryParams.limit, routes, dispatcher, state, explorerContextState)
 
   const handleRefreshTable = (): void => {
     const { account } = explorerContextState
@@ -48,10 +35,6 @@ const ExplorerPage = (): JSX.Element => {
 
     history.replaceState(null, "", `/`)
   }
-
-  useEffect(() => {
-    history.replaceState(null, "", `?page=${explorerContextState.queryParams.page}`)
-  }, [explorerContextState.queryParams.page])
 
   return (
     <Container sx={{ display: "grid", gridTemplateRows: "1fr 15fr" }}>
