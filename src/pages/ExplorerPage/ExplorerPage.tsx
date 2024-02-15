@@ -18,7 +18,9 @@ const initState: ExplorerPageState = {
 
 const ExplorerPage = (): JSX.Element => {
   const explorerContext = useExplorer()
-  const { explorerContextDispatcher, explorerContextState, routes, sharedConfig } = explorerContext
+  const { explorerContextDispatcher, explorerContextState, sharedConfig } = explorerContext
+
+  const { transfers } = explorerContextState
 
   const { chains } = explorerContextState
 
@@ -43,6 +45,8 @@ const ExplorerPage = (): JSX.Element => {
         payload: { page: 1, limit: 10 },
       })
     }
+
+    history.replaceState(null, "", `/`)
   }
 
   useEffect(() => {
@@ -63,19 +67,19 @@ const ExplorerPage = (): JSX.Element => {
           borderRadius: "12px",
           display: "grid",
           gridTemplateRows: "repeat(1, 1fr)",
-          marginTop: state.transfers.length !== 0 ? "0px" : "10px",
+          marginTop: transfers.length !== 0 ? "0px" : "10px",
         }}
       >
-        <div className={state.transfers.length !== 0 ? classes.explorerTable : classes.errorMessage}>
-          {state.transfers.length !== 0 && sharedConfig.length !== 0 ? (
-            <ExplorerTable active={active} setActive={setActive} chains={chains} state={state} sharedConfig={sharedConfig} />
+        <div className={transfers.length !== 0 ? classes.explorerTable : classes.errorMessage}>
+          {transfers.length !== 0 && sharedConfig.length !== 0 ? (
+            <ExplorerTable active={active} setActive={setActive} chains={chains} state={explorerContextState} sharedConfig={sharedConfig} />
           ) : explorerContextState.account !== undefined ? (
             <Alert severity="error">No transactions for the selected account!</Alert>
           ) : (
             <Alert severity="info">Loading transfers!</Alert>
           )}
         </div>
-        {state.transfers.length !== 0 && (
+        {transfers.length !== 0 && (
           <div className={classes.paginationPanel}>
             <Button
               onClick={() => {
@@ -104,7 +108,7 @@ const ExplorerPage = (): JSX.Element => {
               {explorerContextState.queryParams.page}
             </span>
             <Button
-              disabled={state.transfers.length === 0}
+              disabled={transfers.length === 0}
               onClick={() => {
                 explorerContextDispatcher({
                   type: "set_query_params",

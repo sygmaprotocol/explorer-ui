@@ -13,6 +13,26 @@ export function reducer(state: ExplorerContextState, action: Actions): ExplorerC
         account: action.payload,
       }
     }
+    case "fetch_transfers":
+      return {
+        ...state,
+        transfers: action.payload,
+      }
+    case "loading_done":
+      return {
+        ...state,
+        isLoading: "done",
+      }
+    case "loading_transfers":
+      return {
+        ...state,
+        isLoading: "loading",
+      }
+    case "fetch_transfer_error":
+      return {
+        ...state,
+        error: action.payload,
+      }
     default:
       return state
   }

@@ -5,18 +5,19 @@ import type { ExplorerContextState, ExplorerContext as ExplorerContextType, Expl
 import { getAccount, getChainId } from "./connection"
 import { routes } from "./data"
 import { reducer } from "./reducer"
+import { useGetTransferData } from "./useGetTransferData"
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(undefined)
 
 const ExplorerProvider = ({ children }: { children: React.ReactNode | React.ReactNode[] }) => {
   const explorerPageContextState: ExplorerContextState = {
     queryParams: {
-      page: 1, //by default
+      page: 1,
       limit: 10,
     },
-    isLoading: false,
+    isLoading: "none",
     transfers: [],
-    error: false,
+    error: undefined,
     chains: [],
     transferDetails: undefined,
     pillColorStatus: undefined,
@@ -38,6 +39,8 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
     setSharedConfig(domainsData.domains)
     localStorage.setItem("sharedConfig", JSON.stringify(domainsData))
   }
+
+  useGetTransferData(routes(), explorerContextDispatcher, explorerContextState)
 
   useEffect(() => {
     if (window.ethereum !== undefined) {
