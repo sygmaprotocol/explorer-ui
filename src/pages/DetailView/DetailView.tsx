@@ -37,7 +37,7 @@ export default function DetailView() {
 
   const { classes } = useStyles()
 
-  const { state: transferId } = useLocation() as { state: { id: string } }
+  const { state: data } = useLocation() as { state: { id: string; page: number } }
 
   const initState: DetailViewState = {
     transferDetails: null,
@@ -52,9 +52,9 @@ export default function DetailView() {
 
   useClipboard(state, dispatcher)
 
-  useFetchTransfer(routes, sharedConfig, setSharedConfig, transferId, dispatcher)
+  useFetchTransfer(routes, sharedConfig, setSharedConfig, data, dispatcher)
 
-  useUpdateInterval(state, dispatcher, transferId, routes)
+  useUpdateInterval(state, dispatcher, data, routes)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
@@ -218,7 +218,7 @@ export default function DetailView() {
           <section className={classes.sectionContainer}>
             <span className={classes.backIcon}>
               <Link
-                to="/"
+                to={`/?page=${data.page}`}
                 style={{
                   color: "black",
                   textDecoration: "none",

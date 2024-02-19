@@ -62,7 +62,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell className={clsx(classes.row, classes.dataRow, classes.cellRow)}>
             {txHash !== undefined ? (
-              <Link className={classes.hashAnchorLink} to={`/transfer/${deposit?.txHash!}`} state={{ id: id }}>
+              <Link className={classes.hashAnchorLink} to={`/transfer/${deposit?.txHash!}`} state={{ id: id, page: state.queryParams.page }}>
                 {txHash}
               </Link>
             ) : (
