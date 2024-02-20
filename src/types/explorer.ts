@@ -135,10 +135,10 @@ export type ExplorerContextState = {
     limit: number
     sender?: string
   }
-  isLoading: boolean
+  isLoading: "none" | "loading" | "done"
   transfers: Array<Transfer>
   pageInfo?: PageInfo
-  error: boolean
+  error?: string
   chains: Array<EvmBridgeConfig>
   transferDetails?: any
   pillColorStatus?: {
@@ -154,32 +154,16 @@ export type Actions =
       payload: string | undefined
     }
   | {
-      type: "set_deposit_transaction"
-      payload: string
-    }
-  | {
-      type: "select_from_domain_id"
-      payload: number
-    }
-  | {
-      type: "select_to_domain_id"
-      payload: number
-    }
-  | {
-      type: "set_transfer_details"
-      payload: any
-    }
-  | {
-      type: "clean_transfer_details"
-    }
-  | {
-      type: "set_token_icons_for_detail_view"
-      payload: unknown
-    }
-  | {
       type: "set_query_params"
       payload: { page: number; limit: number; sender?: string }
     }
+  | {
+      type: "fetch_transfers"
+      payload: Transfer[]
+    }
+  | { type: "loading_done" }
+  | { type: "loading_transfers" }
+  | { type: "fetch_transfer_error"; payload: string }
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>
@@ -188,7 +172,6 @@ export type Routes = {
 }
 
 export type ExplorerContext = {
-  loadMore: (options: PaginationParams) => void
   explorerContextState: ExplorerContextState
   explorerContextDispatcher: React.Dispatch<Actions>
   getAccount: () => Promise<string>

@@ -52,7 +52,7 @@ export const getIconNamePerChainId = (chainId: number): string => {
   switch (chainId) {
     case 5:
     case 11155111: {
-      return "all.svg"
+      return "evm.svg"
     }
     case 80001: {
       return "polygon.svg"
@@ -61,7 +61,7 @@ export const getIconNamePerChainId = (chainId: number): string => {
       return "moonbeam.svg"
     }
     default: {
-      return "all.svg"
+      return "evm.svg"
     }
   }
 }
@@ -249,7 +249,7 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
     case 5:
     case 11155111:
     case 17000:
-      return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
+      return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
     case 5231:
     case 5233:
       return <img src={`/assets/icons/phala-black.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
@@ -270,7 +270,7 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
     case 421614:
       return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
-      return <img src={`/assets/icons/all.svg`} alt="ethereum" className={classes.networkIcon} />
+      return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
   }
 }
 

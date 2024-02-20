@@ -1,7 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline"
 import { ThemeProvider } from "@mui/material/styles"
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom"
-import { Alert } from "@mui/material"
 import { ExplorerPage, DetailView } from "./pages"
 import { SygmaTheme } from "./themes/SygmaTheme"
 import { ExplorerProvider } from "./context"
@@ -13,7 +12,6 @@ export const ROUTE_LINKS = {
 }
 
 function App(): JSX.Element {
-  // ADD HERE SHARED CONFIG SUPPORT
   return (
     <ThemeProvider theme={SygmaTheme}>
       <CssBaseline />

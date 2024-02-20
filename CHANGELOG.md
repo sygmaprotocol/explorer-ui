@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.1...v1.2.2) (2024-02-12)
+
+
+### Miscellaneous
+
+* icon renaming ([#149](https://github.com/sygmaprotocol/explorer-ui/issues/149)) ([20aac69](https://github.com/sygmaprotocol/explorer-ui/commit/20aac69b629335f8aad96835b230452f5b8d6a60))
+
 ## [1.2.1](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.0...v1.2.1) (2024-01-25)
 
 
