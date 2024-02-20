@@ -16,6 +16,7 @@ import {
   formatAmountDecimals,
   renderAmountValue,
   renderFormatedConvertedAmount,
+  filterTransfers,
 } from "../../utils/Helpers"
 import { useStyles } from "./styles"
 
@@ -144,7 +145,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell sx={{ borderTopRightRadius: "12px !important" }}>Value</TableCell>
         </TableRow>
       </TableHead>
-      {state.loading === "done" && <TableBody>{renderTransferList(state.transfers)}</TableBody>}
+      {state.loading === "done" && <TableBody>{renderTransferList(filterTransfers(state.transfers, sharedConfig))}</TableBody>}
       {state.loading === "loading" && (
         <TableBody>
           <TableRow>

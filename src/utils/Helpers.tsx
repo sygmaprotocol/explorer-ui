@@ -315,3 +315,18 @@ export const accountLinks = (type: DomainTypes, accountId: string, domainExplore
       return ""
   }
 }
+
+export const filterTransfers = (transfers: Transfer[], sharedConfig: SharedConfigDomain[]) => {
+
+  return transfers.filter((transfer) => {
+    const { fromDomainId, toDomainId } = transfer
+  
+    const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
+    const toDomainInfo = getDomainData(toDomainId, sharedConfig)
+    if(!fromDomainInfo || !toDomainInfo) {
+      return
+    }
+  
+    return transfer
+  })
+}
