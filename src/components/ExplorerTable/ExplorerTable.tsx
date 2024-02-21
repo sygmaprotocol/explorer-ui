@@ -2,7 +2,7 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import { EvmBridgeConfig, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
+import { EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
 import {
   getDisplayedStatuses,
   shortenAddress,
@@ -16,6 +16,7 @@ import {
   formatAmountDecimals,
   renderAmountValue,
   renderFormatedConvertedAmount,
+  filterTransfers,
 } from "../../utils/Helpers"
 import { useStyles } from "./styles"
 
@@ -23,11 +24,7 @@ type ExplorerTable = {
   active: boolean
   setActive: (state: boolean) => void
   chains: Array<EvmBridgeConfig>
-  state: {
-    transfers: Transfer[]
-    loading: "none" | "loading" | "done"
-    error: undefined | string
-  }
+  state: ExplorerContextState
   sharedConfig: SharedConfigDomain[] | []
 }
 
@@ -66,7 +63,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
         <TableRow className={classes.row} key={transfer.id}>
           <TableCell className={clsx(classes.row, classes.dataRow, classes.cellRow)}>
             {txHash !== undefined ? (
-              <Link className={classes.hashAnchorLink} to={`/transfer/${deposit?.txHash!}`} state={{ id: id }}>
+              <Link className={classes.hashAnchorLink} to={`/transfer/${deposit?.txHash!}`} state={{ id: id, page: state.queryParams.page }}>
                 {txHash}
               </Link>
             ) : (
@@ -144,8 +141,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell sx={{ borderTopRightRadius: "12px !important" }}>Value</TableCell>
         </TableRow>
       </TableHead>
-      {state.loading === "done" && <TableBody>{renderTransferList(state.transfers)}</TableBody>}
-      {state.loading === "loading" && (
+      {state.isLoading === "done" && <TableBody>{renderTransferList(filterTransfers(state.transfers, sharedConfig))}</TableBody>}
+      {state.isLoading === "loading" && (
         <TableBody>
           <TableRow>
             <TableCell colSpan={8} align="center">
