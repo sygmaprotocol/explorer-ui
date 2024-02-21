@@ -186,7 +186,7 @@ export type ExplorerContext = {
 
 export const enum ResourceTypes {
   FUNGIBLE = "fungible",
-  NON_FUNGIBLE = "nonFungible",
+  NON_FUNGIBLE = "nonfungible",
   PERMISSIONED_GENERIC = "permissionedGeneric",
   PERMISSIONLESS_GENERIC = "permissionlessGeneric",
 }
