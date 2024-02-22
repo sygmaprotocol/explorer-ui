@@ -279,12 +279,18 @@ export const renderAmountValue = (
   amount: string,
   resourceID: string,
   fromDomainInfo: SharedConfigDomain | undefined,
-): string => {
-  if (type !== ResourceTypes.PERMISSIONLESS_GENERIC && resourceID !== "") {
+): string | undefined => {
+  if (type === ResourceTypes.PERMISSIONLESS_GENERIC) {
+    return "Contract call"
+  }
+
+  if (type === ResourceTypes.FUNGIBLE && resourceID !== "") {
     return `${amount} ${getResourceInfo(resourceID, fromDomainInfo!)}`
   }
 
-  return "Contract call"
+  if (type === ResourceTypes.NON_FUNGIBLE && resourceID !== "") {
+    return `${getResourceInfo(resourceID, fromDomainInfo!)}`
+  }
 }
 
 export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: number): string => {
@@ -317,16 +323,15 @@ export const accountLinks = (type: DomainTypes, accountId: string, domainExplore
 }
 
 export const filterTransfers = (transfers: Transfer[], sharedConfig: SharedConfigDomain[]) => {
-
-  return transfers.filter((transfer) => {
+  return transfers.filter(transfer => {
     const { fromDomainId, toDomainId } = transfer
-  
+
     const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
     const toDomainInfo = getDomainData(toDomainId, sharedConfig)
-    if(!fromDomainInfo || !toDomainInfo) {
+    if (!fromDomainInfo || !toDomainInfo) {
       return
     }
-  
+
     return transfer
   })
 }
