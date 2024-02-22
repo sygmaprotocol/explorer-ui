@@ -8,16 +8,21 @@ export default function useFetchTransfer(
   routes: Routes,
   sharedConfig: SharedConfigDomain[] | [],
   setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>,
-  transferId: { id: string } | null,
+  txHash: string,
   dispatcher: React.Dispatch<DetailViewActions>,
 ): void {
   const fetchTransfer = async (): Promise<void> => {
-    const transfer = await routes.transfer(transferId!.id)
-    const sanitizedTransfer = sanitizeTransferData([transfer])
+    dispatcher({
+      type: "fetch_transfer",
+    })
+
+    const transfer = await routes.transferByTransactionHash(txHash)
+
+    const sanitizedTransfer = Array.isArray(transfer) ? sanitizeTransferData([...transfer]) : sanitizeTransferData([transfer])
 
     dispatcher({
       type: "set_transfer_details",
-      payload: sanitizedTransfer[0],
+      payload: sanitizedTransfer,
     })
 
     dispatcher({
@@ -66,7 +71,7 @@ export default function useFetchTransfer(
   }
 
   useEffect(() => {
-    if (transferId !== null) {
+    if (txHash !== null) {
       void fetchTransfer()
     } else {
       getTransfersFromLocalStorage()

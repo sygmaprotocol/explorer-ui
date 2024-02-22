@@ -12,6 +12,12 @@ export const fetchTransfer = async (url: string): Promise<Transfer> => {
   return transfer
 }
 
+export const fetchTransferByTxHash = async (url: string): Promise<Transfer | Transfer[]> => {
+  const response = await fetch(url)
+  const data = (await response.json()) as Transfer | Transfer[]
+  return data
+}
+
 export const routes = (): Routes => {
   const { VITE_INDEXER_URL } = import.meta.env
 
@@ -23,5 +29,6 @@ export const routes = (): Routes => {
     transfer: async (id: string) => await fetchTransfer(`${indexerUrl}/transfers/${id}`),
     transferBySender: async (sender: string, page: string, limit: string) =>
       await fetchTransfers(`${indexerUrl}/sender/${sender}/transfers?limit=${limit}&page=${page}`),
+    transferByTransactionHash: async (txHash: string) => await fetchTransferByTxHash(`${indexerUrl}/transfers/txHash/${txHash}`),
   }
 }

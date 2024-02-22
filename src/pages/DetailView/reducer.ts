@@ -1,20 +1,22 @@
 import { Transfer } from "../../types"
 
 export type DetailViewState = {
-  transferDetails: Transfer | null
+  transferDetails: Transfer | Transfer[] | null
   transferStatus: "none" | "completed"
   clipboardMessageT1: string
   clipboardMessageT2: string
   delay: number
   fetchingStatus: "fetching" | "idle"
+  isLoading: "none" | "loading" | "done"
 }
 
 export type DetailViewActions =
-  | { type: "set_transfer_details"; payload: Transfer }
+  | { type: "set_transfer_details"; payload: Transfer | Transfer[] }
   | { type: "set_transfer_status"; payload: "none" | "completed" }
   | { type: "set_clipboard_message_t1"; payload: string }
   | { type: "set_clipboard_message_t2"; payload: string }
   | { type: "update_fetching_status"; payload: "fetching" | "idle" }
+  | { type: "fetch_transfer" }
 
 export function reducer(state: DetailViewState, action: DetailViewActions): DetailViewState {
   switch (action.type) {
@@ -22,9 +24,11 @@ export function reducer(state: DetailViewState, action: DetailViewActions): Deta
       return {
         ...state,
         transferDetails: action.payload,
+        isLoading: "done",
       }
     }
     case "set_transfer_status": {
+      console.log("set_transfer_status", action.payload)
       return {
         ...state,
         transferStatus: action.payload,
@@ -46,6 +50,12 @@ export function reducer(state: DetailViewState, action: DetailViewActions): Deta
       return {
         ...state,
         fetchingStatus: action.payload,
+      }
+    }
+    case "fetch_transfer": {
+      return {
+        ...state,
+        isLoading: "loading",
       }
     }
     default:

@@ -169,6 +169,7 @@ export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>
   transfer: (id: string) => Promise<Transfer>
   transferBySender: (sender: string, page: string, limit: string) => Promise<Transfer[]>
+  transferByTransactionHash: (txHash: string) => Promise<Transfer | Transfer[]>
 }
 
 export type ExplorerContext = {

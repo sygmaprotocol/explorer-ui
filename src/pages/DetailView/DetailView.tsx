@@ -30,6 +30,10 @@ import useUpdateInterval from "./hooks/useUpdateInterval"
 
 dayjs.extend(localizedFormat)
 
+type Location = {
+  state: { id: string; page: number; txHash: string }
+}
+
 export default function DetailView() {
   const explorerContext = useExplorer()
 
@@ -37,7 +41,7 @@ export default function DetailView() {
 
   const { classes } = useStyles()
 
-  const { state: data } = useLocation() as { state: { id: string; page: number } }
+  const { state: data } = useLocation() as Location
 
   const initState: DetailViewState = {
     transferDetails: null,
@@ -46,15 +50,16 @@ export default function DetailView() {
     clipboardMessageT2: "Copy to clipboard",
     delay: 5000,
     fetchingStatus: "idle",
+    isLoading: "none",
   }
 
   const [state, dispatcher] = useReducer(reducer, initState)
 
   useClipboard(state, dispatcher)
 
-  useFetchTransfer(routes, sharedConfig, setSharedConfig, data, dispatcher)
+  useFetchTransfer(routes, sharedConfig, setSharedConfig, data.txHash, dispatcher)
 
-  useUpdateInterval(state, dispatcher, data, routes)
+  useUpdateInterval(state, dispatcher, data.txHash, routes)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
@@ -207,6 +212,7 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Fees:</span>
           <span className={classes.detailsInnerContent}>{getFormatedFee(transfer?.fee!, fromDomainInfo!)}</span>
         </div>
+        {Array.isArray(state.transferDetails) && <br />}
       </Container>
     )
   }
@@ -214,7 +220,7 @@ export default function DetailView() {
   return (
     <Container>
       <Box className={classes.boxContainer}>
-        {state.transferStatus !== "none" ? (
+        {state.isLoading === "done" && (
           <section className={classes.sectionContainer}>
             <span className={classes.backIcon}>
               <Link
@@ -233,10 +239,17 @@ export default function DetailView() {
             <Typography variant="h4" sx={{ fontSize: "24px" }}>
               Transaction Detail
             </Typography>
-            <Container className={classes.transferDetailsContainer}>{renderTransferDetails(state.transferDetails)}</Container>
+            <Container className={classes.transferDetailsContainer}>
+              {Array.isArray(state.transferDetails)
+                ? state.transferDetails.map(transfer => renderTransferDetails(transfer))
+                : renderTransferDetails(state.transferDetails)}
+            </Container>
           </section>
-        ) : (
-          <CircularProgress />
+        )}
+        {state.isLoading === "loading" && (
+          <Container className={classes.circularProgress}>
+            <CircularProgress />
+          </Container>
         )}
       </Box>
     </Container>

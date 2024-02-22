@@ -6,22 +6,30 @@ import { Routes } from "../../../types"
 export default function useUpdateInterval(
   state: DetailViewState,
   dispatcher: React.Dispatch<DetailViewActions>,
-  transferId: { id: string } | null,
+  txHash: string,
   routes: Routes,
 ): void {
   const fetchUpdatedTransfer = async (): Promise<void> => {
-    const transfer = await routes.transfer(transferId!.id)
-    const sanitizedTransfer = sanitizeTransferData([transfer])
+    dispatcher({
+      type: "fetch_transfer",
+    })
+
+    const transfer = await routes.transferByTransactionHash(txHash)
+    const sanitizedTransfer = Array.isArray(transfer) ? sanitizeTransferData([...transfer]) : sanitizeTransferData([transfer])
 
     dispatcher({
       type: "set_transfer_details",
-      payload: sanitizedTransfer[0],
+      payload: sanitizedTransfer,
     })
   }
 
   useInterval(
     () => {
-      if (state.transferDetails?.status !== "executed") {
+      const isExecuted = Array.isArray(state.transferDetails)
+        ? state.transferDetails.every(transfer => transfer.status === "executed")
+        : state.transferDetails?.status === "executed"
+
+      if (!isExecuted) {
         void fetchUpdatedTransfer()
       } else {
         dispatcher({
