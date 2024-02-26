@@ -29,7 +29,6 @@ export function reducer(state: DetailViewState, action: DetailViewActions): Deta
       }
     }
     case "set_transfer_status": {
-      console.log("set_transfer_status", action.payload)
       return {
         ...state,
         transferStatus: action.payload,
