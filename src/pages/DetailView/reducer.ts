@@ -8,6 +8,7 @@ export type DetailViewState = {
   delay: number
   fetchingStatus: "fetching" | "idle"
   isLoading: "none" | "loading" | "done"
+  fallbackPage: number
 }
 
 export type DetailViewActions =

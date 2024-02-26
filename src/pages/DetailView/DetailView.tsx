@@ -30,18 +30,18 @@ import useUpdateInterval from "./hooks/useUpdateInterval"
 
 dayjs.extend(localizedFormat)
 
-type Location = {
+export type LocationT = {
   state: { id: string; page: number; txHash: string }
 }
 
 export default function DetailView() {
   const explorerContext = useExplorer()
 
-  const { sharedConfig, setSharedConfig, explorerUrls, routes } = explorerContext
+  const { explorerUrls, routes, explorerContextState } = explorerContext
 
   const { classes } = useStyles()
 
-  const { state: data } = useLocation() as Location
+  const { state: data } = useLocation() as LocationT
 
   const initState: DetailViewState = {
     transferDetails: null,
@@ -51,20 +51,21 @@ export default function DetailView() {
     delay: 5000,
     fetchingStatus: "idle",
     isLoading: "none",
+    fallbackPage: 1,
   }
 
   const [state, dispatcher] = useReducer(reducer, initState)
 
   useClipboard(state, dispatcher)
 
-  useFetchTransfer(routes, sharedConfig, setSharedConfig, data.txHash, dispatcher)
+  useFetchTransfer(routes, data?.txHash, dispatcher)
 
-  useUpdateInterval(state, dispatcher, data.txHash, routes)
+  useUpdateInterval(state, dispatcher, data?.txHash, routes)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
-    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, sharedConfig)
-    const toDomainInfo = getDomainData(transfer?.toDomainId!, sharedConfig)
+    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, explorerContextState.sharedConfig)
+    const toDomainInfo = getDomainData(transfer?.toDomainId!, explorerContextState.sharedConfig)
 
     const { resource, usdValue } = transfer as Transfer
 
@@ -220,11 +221,11 @@ export default function DetailView() {
   return (
     <Container>
       <Box className={classes.boxContainer}>
-        {state.isLoading === "done" && (
+        {state.isLoading === "done" && explorerContextState.sharedConfig.length && (
           <section className={classes.sectionContainer}>
             <span className={classes.backIcon}>
               <Link
-                to={`/?page=${data.page}`}
+                to={`/?page=${data?.page || state.fallbackPage}`}
                 style={{
                   color: "black",
                   textDecoration: "none",

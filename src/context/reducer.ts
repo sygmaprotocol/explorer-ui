@@ -33,6 +33,11 @@ export function reducer(state: ExplorerContextState, action: Actions): ExplorerC
         ...state,
         error: action.payload,
       }
+    case "fetch_shared_config":
+      return {
+        ...state,
+        sharedConfig: action.payload,
+      }
     default:
       return state
   }

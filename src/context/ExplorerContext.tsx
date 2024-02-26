@@ -1,11 +1,12 @@
 import React, { useEffect } from "react"
 
-import type { ExplorerContextState, ExplorerContext as ExplorerContextType, ExplorerState, SharedConfig, SharedConfigDomain } from "../types"
+import type { ExplorerContextState, ExplorerContext as ExplorerContextType, ExplorerState } from "../types"
 
 import { getAccount, getChainId } from "./connection"
 import { routes } from "./data"
 import { reducer } from "./reducer"
 import { useGetTransferData } from "./useGetTransferData"
+import { useGetSharedConfig } from "./useGetSharedConfig"
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(undefined)
 
@@ -22,6 +23,7 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
     transferDetails: undefined,
     pillColorStatus: undefined,
     account: undefined,
+    sharedConfig: [],
   }
 
   const [explorerContextState, explorerContextDispatcher] = React.useReducer(reducer, explorerPageContextState)
@@ -30,19 +32,11 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
   const [account, setAccount] = React.useState<string | undefined>(undefined)
   const [explorerUrls, setExplorerUrls] = React.useState<[] | ExplorerState["explorerUrls"]>([])
 
-  const [sharedConfig, setSharedConfig] = React.useState<SharedConfigDomain[] | []>([])
-
-  const getSharedConfig = async (): Promise<void> => {
-    const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL as string)
-    const domainsData = (await reponse.json()) as SharedConfig
-
-    setSharedConfig(domainsData.domains)
-    localStorage.setItem("sharedConfig", JSON.stringify(domainsData))
-  }
-
   const { search } = window.location
   const urlParams = new URLSearchParams(search)
   const page = urlParams.get("page")
+
+  useGetSharedConfig(explorerContextDispatcher)
 
   useGetTransferData(routes(), explorerContextDispatcher, explorerContextState, Number(page))
 
@@ -56,8 +50,6 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
         setAccount((accounts as Array<string>)[0])
       })
     }
-
-    void getSharedConfig()
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     setExplorerUrls(JSON.parse(import.meta.env.VITE_EXPLORER_URLS))
@@ -80,8 +72,6 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
         chainId,
         account,
         routes: routes(),
-        sharedConfig,
-        setSharedConfig,
         explorerUrls,
       }}
     >
