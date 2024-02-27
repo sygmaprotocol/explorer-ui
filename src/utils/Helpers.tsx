@@ -184,7 +184,7 @@ export const getFormatedFee = (fee: Transfer["fee"]): string => {
       resource: { decimals },
       tokenSymbol,
     } = fee
-    formatedFee = `${ethers.formatUnits(fee.amount, decimals).toString()} ${tokenSymbol.toUpperCase()}`
+    formatedFee = `${ethers.formatUnits(fee.amount, decimals !== 0 ? decimals : 18).toString()} ${tokenSymbol.toUpperCase()}`
   }
 
   return formatedFee
