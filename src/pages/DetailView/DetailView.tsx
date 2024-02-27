@@ -205,7 +205,7 @@ export default function DetailView() {
         </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Fees:</span>
-          <span className={classes.detailsInnerContent}>{getFormatedFee(transfer?.fee!, fromDomainInfo!)}</span>
+          <span className={classes.detailsInnerContent}>{getFormatedFee(transfer?.fee!)}</span>
         </div>
       </Container>
     )
