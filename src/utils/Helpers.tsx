@@ -209,13 +209,9 @@ export const formatTransferType = (transferType: ResourceTypes): string => {
 
 export const formatConvertedAmount = (amount: number): string => {
   if (typeof amount === "number") {
-    const splitedConvertedAmount = amount !== 0 ? amount.toString().split(".") : ["0", "00"]
+    const convertedAmount = amount !== 0 ? `$${amount.toFixed(1)}` : "$0.00"
 
-    const formatedConvertedAmount = `$${splitedConvertedAmount[0]}.${
-      splitedConvertedAmount[1].length >= 3 ? splitedConvertedAmount[1].slice(0, 3) : splitedConvertedAmount[1]
-    }`
-
-    return formatedConvertedAmount
+    return convertedAmount
   }
   return "$0.00"
 }
