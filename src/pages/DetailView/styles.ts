@@ -17,6 +17,13 @@ export const useStyles = makeStyles()(theme => {
         gridTemplateColumns: "repeat(12, 1fr)",
       },
     },
+    circularProgress: {
+      gridColumn: "6 / span 2",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100%",
+    },
     sectionContainer: {
       display: "flex",
       flexDirection: "column",

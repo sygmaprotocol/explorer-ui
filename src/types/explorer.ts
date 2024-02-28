@@ -146,6 +146,7 @@ export type ExplorerContextState = {
     background: string
   }
   account: string | undefined
+  sharedConfig: SharedConfigDomain[] | []
 }
 
 export type Actions =
@@ -164,11 +165,13 @@ export type Actions =
   | { type: "loading_done" }
   | { type: "loading_transfers" }
   | { type: "fetch_transfer_error"; payload: string }
+  | { type: "fetch_shared_config"; payload: SharedConfigDomain[] }
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>
   transfer: (id: string) => Promise<Transfer>
   transferBySender: (sender: string, page: string, limit: string) => Promise<Transfer[]>
+  transferByTransactionHash: (txHash: string) => Promise<Transfer | Transfer[]>
 }
 
 export type ExplorerContext = {
@@ -179,8 +182,6 @@ export type ExplorerContext = {
   chainId: number | undefined
   account: string | undefined
   routes: Routes
-  sharedConfig: SharedConfigDomain[] | []
-  setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>
   explorerUrls: [] | ExplorerState["explorerUrls"]
 }
 
