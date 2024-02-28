@@ -176,17 +176,15 @@ export const formatDistanceDate = (timestamp: string): string => {
   }
 }
 
-export const getFormatedFee = (fee: Transfer["fee"] | string, domain: SharedConfigDomain): string => {
+export const getFormatedFee = (fee: Transfer["fee"]): string => {
   let formatedFee = "No fee"
-  const { type } = domain
 
-  if (type === DomainTypes.SUBSTRATE) {
-    formatedFee = "50 PHA"
-  }
-
-  if (typeof fee !== "string" && domain) {
-    const { nativeTokenDecimals, nativeTokenSymbol } = domain
-    formatedFee = `${ethers.formatUnits(fee.amount, nativeTokenDecimals).toString()} ${nativeTokenSymbol.toUpperCase()}`
+  if (fee && Object.keys(fee).length) {
+    const {
+      resource: { decimals },
+      tokenSymbol,
+    } = fee
+    formatedFee = `${ethers.formatUnits(fee.amount, decimals !== 0 ? decimals : 18).toString()} ${tokenSymbol.toUpperCase()}`
   }
 
   return formatedFee

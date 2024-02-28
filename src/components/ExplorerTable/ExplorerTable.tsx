@@ -40,7 +40,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
       const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
       const toDomainInfo = getDomainData(toDomainId, sharedConfig)
 
-      const formatedFee = getFormatedFee(fee, fromDomainInfo!)
+      const formatedFee = getFormatedFee(fee)
 
       const fromDomainType = fromDomainInfo?.type
 

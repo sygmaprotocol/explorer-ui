@@ -86,6 +86,16 @@ export type Execution = {
   timestamp: string
 }
 
+export type Fee = {
+  amount: string
+  id: string
+  resource: { decimals: number; id: string; type: string }
+  resourceID: string
+  tokenAddress: string
+  tokenSymbol: string
+  transferId: string
+}
+
 export type Transfer = {
   id: string
   depositNonce: number
@@ -101,7 +111,7 @@ export type Transfer = {
   status: TransferStatus
   deposit?: Deposit
   execution?: Execution
-  fee: { amount: string; tokenAddress: string; tokenSymbol: string }
+  fee: Fee
   resourceID: string
   usdValue: number
   accountId: string
