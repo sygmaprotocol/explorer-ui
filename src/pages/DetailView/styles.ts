@@ -18,11 +18,19 @@ export const useStyles = makeStyles()(theme => {
       },
     },
     circularProgress: {
-      gridColumn: "6 / span 2",
+      gridColumn: "6 / span 3",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       height: "100%",
+
+      "& > div": {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "20px",
+      },
     },
     sectionContainer: {
       display: "flex",
