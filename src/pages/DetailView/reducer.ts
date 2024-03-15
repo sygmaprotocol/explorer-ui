@@ -57,7 +57,7 @@ export function reducer(state: DetailViewState, action: DetailViewActions): Deta
     case "fetching_transfer": {
       return {
         ...state,
-        isLoading: state.transferDetails?.length ? "loading" : "none",
+        isLoading: state.transferDetails?.length ? "done" : "loading",
       }
     }
     case "update_transfer_details": {
@@ -70,6 +70,7 @@ export function reducer(state: DetailViewState, action: DetailViewActions): Deta
       return {
         ...state,
         delay: action.payload,
+        fetchingStatus: "idle",
       }
     }
     default:

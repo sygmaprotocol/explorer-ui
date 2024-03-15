@@ -17,10 +17,24 @@ export default function useUpdateInterval(
     const transfer = await routes.transferByTransactionHash(txHash)
     const sanitizedTransfer = Array.isArray(transfer) ? sanitizeTransferData([...transfer]) : sanitizeTransferData([transfer])
 
+    dispatcher({
+      type: "update_fetching_status",
+      payload: "fetching",
+    })
+
     if (Array.isArray(sanitizedTransfer) && sanitizedTransfer.length > 0) {
       dispatcher({
         type: "update_transfer_details",
         payload: sanitizedTransfer,
+      })
+    }
+
+    const isExecuted = sanitizedTransfer.length && sanitizedTransfer.every(t => t.status === "executed")
+
+    if (isExecuted) {
+      dispatcher({
+        type: "set_delay",
+        payload: null,
       })
 
       dispatcher({
@@ -28,24 +42,15 @@ export default function useUpdateInterval(
         payload: "completed",
       })
     }
-
-    const isExecuted = sanitizedTransfer.length && sanitizedTransfer.every(t => t.status === "executed")
-    if (isExecuted) {
-      dispatcher({
-        type: "set_delay",
-        payload: null,
-      })
-    }
   }
+
   useInterval(() => {
     const isExecuted =
       Array.isArray(state.transferDetails) &&
       state.transferDetails.length > 0 &&
       state.transferDetails.every(transfer => transfer.status === "executed")
 
-    console.log("🚀 ~ isExecuted:", isExecuted)
-
-    if (!isExecuted || state.isLoading === "loading") {
+    if (!isExecuted || state.fetchingStatus === "fetching") {
       void fetchUpdatedTransfer()
     }
   }, state.delay)

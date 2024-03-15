@@ -69,8 +69,6 @@ export default function DetailView() {
 
   useUpdateInterval(state, dispatcher, data?.txHash || txHashFromPathname, routes)
 
-  useUpdateInterval(state, dispatcher, data?.txHash, routes)
-
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
     const fromDomainInfo = getDomainData(transfer?.fromDomainId!, explorerContextState.sharedConfig)
