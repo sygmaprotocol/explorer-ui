@@ -11,33 +11,47 @@ export default function useUpdateInterval(
 ): void {
   const fetchUpdatedTransfer = async (): Promise<void> => {
     dispatcher({
-      type: "fetch_transfer",
+      type: "fetching_transfer",
     })
 
     const transfer = await routes.transferByTransactionHash(txHash)
     const sanitizedTransfer = Array.isArray(transfer) ? sanitizeTransferData([...transfer]) : sanitizeTransferData([transfer])
 
     dispatcher({
-      type: "set_transfer_details",
-      payload: sanitizedTransfer,
+      type: "update_fetching_status",
+      payload: "fetching",
     })
+
+    if (Array.isArray(sanitizedTransfer) && sanitizedTransfer.length > 0) {
+      dispatcher({
+        type: "update_transfer_details",
+        payload: sanitizedTransfer,
+      })
+    }
+
+    const isExecuted = sanitizedTransfer.length && sanitizedTransfer.every(t => t.status === "executed")
+
+    if (isExecuted) {
+      dispatcher({
+        type: "set_delay",
+        payload: null,
+      })
+
+      dispatcher({
+        type: "set_transfer_status",
+        payload: "completed",
+      })
+    }
   }
 
-  useInterval(
-    () => {
-      const isExecuted = Array.isArray(state.transferDetails)
-        ? state.transferDetails.every(transfer => transfer.status === "executed")
-        : state.transferDetails?.status === "executed"
+  useInterval(() => {
+    const isExecuted =
+      Array.isArray(state.transferDetails) &&
+      state.transferDetails.length > 0 &&
+      state.transferDetails.every(transfer => transfer.status === "executed")
 
-      if (!isExecuted) {
-        void fetchUpdatedTransfer()
-      } else {
-        dispatcher({
-          type: "update_fetching_status",
-          payload: "idle",
-        })
-      }
-    },
-    state.fetchingStatus === "fetching" ? state.delay : null,
-  )
+    if (!isExecuted || state.fetchingStatus === "fetching") {
+      void fetchUpdatedTransfer()
+    }
+  }, state.delay)
 }

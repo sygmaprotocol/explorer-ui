@@ -1,6 +1,6 @@
-import { CircularProgress, Tooltip, Typography, Container, Box } from "@mui/material"
-import { useReducer } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { CircularProgress, Tooltip, Typography, Container, Box, Alert } from "@mui/material"
+import { useEffect, useReducer, useState } from "react"
+import { Link, Location, useLocation } from "react-router-dom"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import dayjs from "dayjs"
@@ -30,9 +30,7 @@ import useUpdateInterval from "./hooks/useUpdateInterval"
 
 dayjs.extend(localizedFormat)
 
-export type LocationT = {
-  state: { id: string; page: number; txHash: string }
-}
+export type LocationState = { id: string; page: number; txHash: string }
 
 export default function DetailView() {
   const explorerContext = useExplorer()
@@ -41,7 +39,9 @@ export default function DetailView() {
 
   const { classes } = useStyles()
 
-  const { state: data } = useLocation() as LocationT
+  const { state: data, pathname } = useLocation() as Location<LocationState>
+
+  const [txHashFromPathname, setTxHashFromPathname] = useState<string>("")
 
   const initState: DetailViewState = {
     transferDetails: null,
@@ -54,13 +54,20 @@ export default function DetailView() {
     fallbackPage: 1,
   }
 
+  useEffect(() => {
+    if (data?.txHash === undefined) {
+      const splitedPath = pathname.split("/")
+      setTxHashFromPathname(splitedPath[splitedPath.length - 1])
+    }
+  }, [data, txHashFromPathname])
+
   const [state, dispatcher] = useReducer(reducer, initState)
 
   useClipboard(state, dispatcher)
 
-  useFetchTransfer(routes, data?.txHash, dispatcher)
+  useFetchTransfer(routes, data?.txHash || txHashFromPathname, dispatcher)
 
-  useUpdateInterval(state, dispatcher, data?.txHash, routes)
+  useUpdateInterval(state, dispatcher, data?.txHash || txHashFromPathname, routes)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
@@ -247,12 +254,15 @@ export default function DetailView() {
             </Container>
           </section>
         )}
-        {state.isLoading === "loading" && (
-          <Container className={classes.circularProgress}>
-            <CircularProgress />
-          </Container>
-        )}
       </Box>
+      {state.isLoading === "loading" && (
+        <Container className={classes.circularProgress}>
+          <div>
+            <Alert severity="info">Loading transfer details</Alert>
+            <CircularProgress />
+          </div>
+        </Container>
+      )}
     </Container>
   )
 }

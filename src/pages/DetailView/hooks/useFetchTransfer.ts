@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import history from "history/browser"
 import { sanitizeTransferData } from "../../../utils/Helpers"
 import { Routes, Transfer } from "../../../types"
 import { DetailViewActions } from "../reducer"
@@ -7,7 +6,7 @@ import { DetailViewActions } from "../reducer"
 export default function useFetchTransfer(routes: Routes, txHash: string, dispatcher: React.Dispatch<DetailViewActions>): void {
   const fetchTransfer = async (txHashFallback?: string): Promise<void> => {
     dispatcher({
-      type: "fetch_transfer",
+      type: "fetching_transfer",
     })
 
     let transfer: Transfer | Transfer[]
@@ -20,30 +19,29 @@ export default function useFetchTransfer(routes: Routes, txHash: string, dispatc
 
     const sanitizedTransfer = Array.isArray(transfer) ? sanitizeTransferData([...transfer]) : sanitizeTransferData([transfer])
 
-    dispatcher({
-      type: "set_transfer_details",
-      payload: sanitizedTransfer,
-    })
+    if (Array.isArray(sanitizedTransfer) && sanitizedTransfer.length > 0) {
+      dispatcher({
+        type: "set_transfer_details",
+        payload: sanitizedTransfer,
+      })
 
-    dispatcher({
-      type: "set_transfer_status",
-      payload: "completed",
-    })
+      dispatcher({
+        type: "set_transfer_status",
+        payload: "completed",
+      })
 
-    dispatcher({
-      type: "update_fetching_status",
-      payload: "fetching",
-    })
+      const isExecuted = sanitizedTransfer.length && sanitizedTransfer.every(t => t.status === "executed")
+
+      if (isExecuted) {
+        dispatcher({
+          type: "set_delay",
+          payload: null,
+        })
+      }
+    }
   }
 
   useEffect(() => {
-    if (txHash !== undefined) {
-      void fetchTransfer()
-    } else {
-      const { pathname } = history.location
-      const txHashFallback = pathname.split("/").filter(Boolean)[1]
-      history.replace(history.location.pathname, { txHash, page: 1, id: "" })
-      void fetchTransfer(txHashFallback)
-    }
+    void fetchTransfer()
   }, [txHash])
 }
