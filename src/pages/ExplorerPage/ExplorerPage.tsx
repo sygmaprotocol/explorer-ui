@@ -9,7 +9,7 @@ import { useStyles } from "./styles"
 
 const ExplorerPage = (): JSX.Element => {
   const explorerContext = useExplorer()
-  const { explorerContextDispatcher, explorerContextState, sharedConfig } = explorerContext
+  const { explorerContextDispatcher, explorerContextState } = explorerContext
 
   const { transfers } = explorerContextState
 
@@ -54,8 +54,14 @@ const ExplorerPage = (): JSX.Element => {
         }}
       >
         <div className={transfers.length !== 0 ? classes.explorerTable : classes.errorMessage}>
-          {transfers.length !== 0 && sharedConfig.length !== 0 ? (
-            <ExplorerTable active={active} setActive={setActive} chains={chains} state={explorerContextState} sharedConfig={sharedConfig} />
+          {transfers.length !== 0 && explorerContextState.sharedConfig.length !== 0 ? (
+            <ExplorerTable
+              active={active}
+              setActive={setActive}
+              chains={chains}
+              state={explorerContextState}
+              sharedConfig={explorerContextState.sharedConfig}
+            />
           ) : explorerContextState.account !== undefined ? (
             <Alert severity="error">No transactions for the selected account!</Alert>
           ) : (

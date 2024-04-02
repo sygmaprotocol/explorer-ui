@@ -176,17 +176,15 @@ export const formatDistanceDate = (timestamp: string): string => {
   }
 }
 
-export const getFormatedFee = (fee: Transfer["fee"] | string, domain: SharedConfigDomain): string => {
+export const getFormatedFee = (fee: Transfer["fee"]): string => {
   let formatedFee = "No fee"
-  const { type } = domain
 
-  if (type === DomainTypes.SUBSTRATE) {
-    formatedFee = "50 PHA"
-  }
-
-  if (typeof fee !== "string" && domain) {
-    const { nativeTokenDecimals, nativeTokenSymbol } = domain
-    formatedFee = `${ethers.formatUnits(fee.amount, nativeTokenDecimals).toString()} ${nativeTokenSymbol.toUpperCase()}`
+  if (fee && Object.keys(fee).length) {
+    const {
+      resource: { decimals },
+      tokenSymbol,
+    } = fee
+    formatedFee = `${ethers.formatUnits(fee.amount, decimals !== 0 ? decimals : 18).toString()} ${tokenSymbol.toUpperCase()}`
   }
 
   return formatedFee
@@ -209,13 +207,9 @@ export const formatTransferType = (transferType: ResourceTypes): string => {
 
 export const formatConvertedAmount = (amount: number): string => {
   if (typeof amount === "number") {
-    const splitedConvertedAmount = amount !== 0 ? amount.toString().split(".") : ["0", "00"]
+    const convertedAmount = amount !== 0 ? `$${amount.toFixed(1)}` : "$0.00"
 
-    const formatedConvertedAmount = `$${splitedConvertedAmount[0]}.${
-      splitedConvertedAmount[1].length >= 3 ? splitedConvertedAmount[1].slice(0, 3) : splitedConvertedAmount[1]
-    }`
-
-    return formatedConvertedAmount
+    return convertedAmount
   }
   return "$0.00"
 }
@@ -279,12 +273,18 @@ export const renderAmountValue = (
   amount: string,
   resourceID: string,
   fromDomainInfo: SharedConfigDomain | undefined,
-): string => {
-  if (type !== ResourceTypes.PERMISSIONLESS_GENERIC && resourceID !== "") {
+): string | undefined => {
+  if (type === ResourceTypes.PERMISSIONLESS_GENERIC) {
+    return "Contract call"
+  }
+
+  if (type === ResourceTypes.FUNGIBLE && resourceID !== "") {
     return `${amount} ${getResourceInfo(resourceID, fromDomainInfo!)}`
   }
 
-  return "Contract call"
+  if (type === ResourceTypes.NON_FUNGIBLE && resourceID !== "") {
+    return `${getResourceInfo(resourceID, fromDomainInfo!)}`
+  }
 }
 
 export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: number): string => {
@@ -317,16 +317,15 @@ export const accountLinks = (type: DomainTypes, accountId: string, domainExplore
 }
 
 export const filterTransfers = (transfers: Transfer[], sharedConfig: SharedConfigDomain[]) => {
-
-  return transfers.filter((transfer) => {
+  return transfers.filter(transfer => {
     const { fromDomainId, toDomainId } = transfer
-  
+
     const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
     const toDomainInfo = getDomainData(toDomainId, sharedConfig)
-    if(!fromDomainInfo || !toDomainInfo) {
+    if (!fromDomainInfo || !toDomainInfo) {
       return
     }
-  
+
     return transfer
   })
 }

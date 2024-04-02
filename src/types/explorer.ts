@@ -86,6 +86,16 @@ export type Execution = {
   timestamp: string
 }
 
+export type Fee = {
+  amount: string
+  id: string
+  resource: { decimals: number; id: string; type: string }
+  resourceID: string
+  tokenAddress: string
+  tokenSymbol: string
+  transferId: string
+}
+
 export type Transfer = {
   id: string
   depositNonce: number
@@ -101,7 +111,7 @@ export type Transfer = {
   status: TransferStatus
   deposit?: Deposit
   execution?: Execution
-  fee: { amount: string; tokenAddress: string; tokenSymbol: string }
+  fee: Fee
   resourceID: string
   usdValue: number
   accountId: string
@@ -146,6 +156,7 @@ export type ExplorerContextState = {
     background: string
   }
   account: string | undefined
+  sharedConfig: SharedConfigDomain[] | []
 }
 
 export type Actions =
@@ -164,11 +175,13 @@ export type Actions =
   | { type: "loading_done" }
   | { type: "loading_transfers" }
   | { type: "fetch_transfer_error"; payload: string }
+  | { type: "fetch_shared_config"; payload: SharedConfigDomain[] }
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>
   transfer: (id: string) => Promise<Transfer>
   transferBySender: (sender: string, page: string, limit: string) => Promise<Transfer[]>
+  transferByTransactionHash: (txHash: string) => Promise<Transfer | Transfer[]>
 }
 
 export type ExplorerContext = {
@@ -179,14 +192,12 @@ export type ExplorerContext = {
   chainId: number | undefined
   account: string | undefined
   routes: Routes
-  sharedConfig: SharedConfigDomain[] | []
-  setSharedConfig: React.Dispatch<React.SetStateAction<SharedConfigDomain[] | []>>
   explorerUrls: [] | ExplorerState["explorerUrls"]
 }
 
 export const enum ResourceTypes {
   FUNGIBLE = "fungible",
-  NON_FUNGIBLE = "nonFungible",
+  NON_FUNGIBLE = "nonfungible",
   PERMISSIONED_GENERIC = "permissionedGeneric",
   PERMISSIONLESS_GENERIC = "permissionlessGeneric",
 }
