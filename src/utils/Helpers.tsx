@@ -95,7 +95,6 @@ export const getNetworkNames = (chainId: number): string => {
       return "Khala"
     case 5233:
       return "Phala"
-    case 84531:
     case 8453:
       return "Base"
     case 338:
@@ -113,6 +112,8 @@ export const getNetworkNames = (chainId: number): string => {
       return "Arbitrum Sepolia"
     case 10200:
       return "Gnosis Chiado"
+    case 84532:
+      return "Base Sepolia"
     default:
       return "Ethereum"
   }
@@ -249,7 +250,6 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
       return <img src={`/assets/icons/phala-black.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
     case 5232:
       return <img src={`/assets/icons/khala.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    case 84531:
     case 8453:
       return <img src={`/assets/icons/base.svg`} alt="base" className={classes.networkIcon} />
     case 338:
@@ -263,6 +263,8 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
       return <img src={`/assets/icons/gnosis.svg`} alt="gnosis" className={classes.networkIcon} />
     case 421614:
       return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
+    case 84532:
+      return <img src={`/assets/icons/base.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
   }
