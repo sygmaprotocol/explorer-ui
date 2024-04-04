@@ -10,8 +10,7 @@ describe("Helpers", () => {
         tokenAddress: "0x0000000000000000000000000000000000000000",
         tokenSymbol: "eth",
         transferId: "0x",
-        resource: { decimals: 18, id: "0x", type: "fungible" },
-        resourceID: "0x",
+        decimals: 6,
         id: "0x",
       })
 
@@ -23,8 +22,7 @@ describe("Helpers", () => {
         tokenAddress: '{"Concrete":{"parents":"0","interior":"Here"}}',
         tokenSymbol: "PHA",
         transferId: "0x",
-        resource: { decimals: 6, id: "0x", type: "fungible" },
-        resourceID: "0x",
+        decimals: 6,
         id: "0x",
       })
 
