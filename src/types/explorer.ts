@@ -89,11 +89,10 @@ export type Execution = {
 export type Fee = {
   amount: string
   id: string
-  resource: { decimals: number; id: string; type: string }
-  resourceID: string
   tokenAddress: string
   tokenSymbol: string
   transferId: string
+  decimals: number
 }
 
 export type Transfer = {
