@@ -182,7 +182,7 @@ export const getFormatedFee = (fee: Transfer["fee"]): string => {
 
   if (fee && Object.keys(fee).length) {
     const { decimals, tokenSymbol } = fee
-    formatedFee = `${ethers.formatUnits(fee.amount, decimals !== 0 ? decimals : 18).toString()} ${tokenSymbol.toUpperCase()}`
+    formatedFee = `${fee.amount !== "" ? ethers.formatUnits(fee.amount, decimals !== 0 ? decimals : 18).toString() : 0} ${tokenSymbol.toUpperCase()}`
   }
 
   return formatedFee
