@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.3.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.2...v1.3.0) (2024-04-03)
+
+
+### Features
+
+* direct link ([#161](https://github.com/sygmaprotocol/explorer-ui/issues/161)) ([e6fa560](https://github.com/sygmaprotocol/explorer-ui/commit/e6fa560878251f0416054361560b075fac77f6bc))
+* query param base impl ([#153](https://github.com/sygmaprotocol/explorer-ui/issues/153)) ([aa60682](https://github.com/sygmaprotocol/explorer-ui/commit/aa6068228b1eb2cec442295471d683cd2f2b012d))
+
+
+### Bug Fixes
+
+* decimals for amounts ([#162](https://github.com/sygmaprotocol/explorer-ui/issues/162)) ([6640eb6](https://github.com/sygmaprotocol/explorer-ui/commit/6640eb6e436b631d64d5d5cf3269f824f7aec680))
+* fetch transfer details on intervals ([#166](https://github.com/sygmaprotocol/explorer-ui/issues/166)) ([ced1fe3](https://github.com/sygmaprotocol/explorer-ui/commit/ced1fe39ec14e026cb4c3a4a73e88679f95d8661))
+* fixing fee render logic ([#147](https://github.com/sygmaprotocol/explorer-ui/issues/147)) ([723978c](https://github.com/sygmaprotocol/explorer-ui/commit/723978c58a9255a007f7a0415cfb39b3993260be))
+* non fungible label ([#160](https://github.com/sygmaprotocol/explorer-ui/issues/160)) ([2056a92](https://github.com/sygmaprotocol/explorer-ui/commit/2056a92cf32ab9c2d14c5c4eefbc30281e5901e8))
+* remove unsupported networks from ui ([#156](https://github.com/sygmaprotocol/explorer-ui/issues/156)) ([b3267ae](https://github.com/sygmaprotocol/explorer-ui/commit/b3267ae3e2b985c993bf2484b620d1ff07fae34e))
+
+
+### Miscellaneous
+
+* base sepolia explorer url ([#172](https://github.com/sygmaprotocol/explorer-ui/issues/172)) ([4df7b79](https://github.com/sygmaprotocol/explorer-ui/commit/4df7b791a14c23bc95241b4f29737e08717cbb48))
+* remove cache of yarn ([#171](https://github.com/sygmaprotocol/explorer-ui/issues/171)) ([a1f35d1](https://github.com/sygmaprotocol/explorer-ui/commit/a1f35d13365fdc35aa07a175fa4c22f09c9091a1))
+* using stable version of yarn instead of classic ([#151](https://github.com/sygmaprotocol/explorer-ui/issues/151)) ([a5d41f3](https://github.com/sygmaprotocol/explorer-ui/commit/a5d41f311da3584815baefef9e013c38915cfdbf))
+
 ## [1.2.2](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.1...v1.2.2) (2024-02-12)
 
 
