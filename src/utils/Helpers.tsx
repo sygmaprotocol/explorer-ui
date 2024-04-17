@@ -198,6 +198,8 @@ export const formatTransferType = (transferType: ResourceTypes): string => {
       return "Generic"
     case ResourceTypes.PERMISSIONLESS_GENERIC:
       return "Generic"
+    case ResourceTypes.SEMI_FUNGIBLE:
+      return "Semifungible"
     default:
       return "Fungible"
   }
