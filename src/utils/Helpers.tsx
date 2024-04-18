@@ -275,7 +275,7 @@ export const renderAmountValue = (
   resourceID: string,
   fromDomainInfo: SharedConfigDomain | undefined,
 ): string | undefined => {
-  if (type === ResourceTypes.PERMISSIONLESS_GENERIC) {
+  if (type === ResourceTypes.PERMISSIONLESS_GENERIC || type === ResourceTypes.SEMI_FUNGIBLE) {
     return "Contract call"
   }
 
