@@ -311,7 +311,7 @@ export const txHashLinks = (type: DomainTypes, txHash: string, domainExplorerUrl
     case DomainTypes.EVM:
       return `${domainExplorerUrl}/tx/${txHash}`
     case DomainTypes.SUBSTRATE:
-      return `${domainExplorerUrl}/extrinsic/${txHash}`
+      return `${domainExplorerUrl}/${txHash.split("-")[0]}`
     default:
       return ""
   }
