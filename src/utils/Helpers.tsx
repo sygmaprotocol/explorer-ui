@@ -114,6 +114,12 @@ export const getNetworkNames = (chainId: number): string => {
       return "Gnosis Chiado"
     case 84532:
       return "Base Sepolia"
+    case 3799:
+      return "Tangle"
+    case 80002:
+      return "Amoy"
+    case 1993:
+      return "B3 Sepolia"
     default:
       return "Ethereum"
   }
@@ -256,6 +262,7 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
       return <img src={`/assets/icons/cronos.svg`} alt="cronos" className={classes.networkIcon} />
     case 80001:
     case 137:
+    case 80002:
       return <img src={`/assets/icons/polygon.svg`} alt="polygon" className={classes.networkIcon} />
     case 100:
     case 10200:
@@ -264,6 +271,10 @@ export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon"
       return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
     case 84532:
       return <img src={`/assets/icons/base.svg`} alt="gnosis" className={classes.networkIcon} />
+    case 3799:
+      return <img src={`/assets/icons/tangle-logo.svg`} alt="gnosis" className={classes.networkIcon} />
+    case 1993:
+      return <img src={`/assets/icons/b3-sepolia.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
   }
@@ -300,7 +311,7 @@ export const txHashLinks = (type: DomainTypes, txHash: string, domainExplorerUrl
     case DomainTypes.EVM:
       return `${domainExplorerUrl}/tx/${txHash}`
     case DomainTypes.SUBSTRATE:
-      return `${domainExplorerUrl}/extrinsic/${txHash}`
+      return `${domainExplorerUrl}/${txHash.split("-")[0]}`
     default:
       return ""
   }
