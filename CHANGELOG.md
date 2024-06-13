@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.3.0...v1.4.0) (2024-06-13)
+
+
+### Features
+
+* new type for transfer ([#177](https://github.com/sygmaprotocol/explorer-ui/issues/177)) ([ce9016a](https://github.com/sygmaprotocol/explorer-ui/commit/ce9016aa454a011e979de36bfe4e3f379ab035c1))
+
+
+### Miscellaneous
+
+* misc fixes ([#181](https://github.com/sygmaprotocol/explorer-ui/issues/181)) ([7cc589f](https://github.com/sygmaprotocol/explorer-ui/commit/7cc589fd05dd4add5aac554218b0accbb36c5a65))
+
 ## [1.3.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.2...v1.3.0) (2024-04-03)
 
 
