@@ -306,12 +306,12 @@ export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: num
   return ""
 }
 
-export const txHashLinks = (type: DomainTypes, txHash: string, domainExplorerUrl: string): string => {
+export const txHashLinks = (type: DomainTypes, domainExplorerUrl: string, txHash?: string): string => {
   switch (type) {
     case DomainTypes.EVM:
       return `${domainExplorerUrl}/tx/${txHash}`
     case DomainTypes.SUBSTRATE:
-      return `${domainExplorerUrl}/${txHash.split("-")[0]}`
+      return `${domainExplorerUrl}/${txHash?.split("-")[0] || ""}`
     default:
       return ""
   }

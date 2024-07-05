@@ -113,7 +113,7 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Source transaction hash:</span>
           <span className={classes.detailsInnerContent}>
             <Link
-              to={txHashLinks(fromDomainInfo!.type, transfer?.deposit?.txHash!, fromDomainExplorerUrl!.url)}
+              to={txHashLinks(fromDomainInfo!.type, fromDomainExplorerUrl!.url, transfer?.deposit?.txHash!)}
               style={{ color: "black" }}
               target="_blank"
             >
@@ -139,26 +139,30 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Destination transaction hash:</span>
           <span className={classes.detailsInnerContent}>
             <Link
-              to={txHashLinks(toDomainInfo!.type, transfer?.execution?.txHash!, toDomainExplorerUrl!.url)}
+              to={txHashLinks(toDomainInfo!.type, toDomainExplorerUrl!.url, transfer?.execution?.txHash!)}
               style={{ color: "black" }}
               target="_blank"
             >
               {transfer?.execution && transfer?.execution?.txHash}
             </Link>
-            <span
-              className={classes.copyIcon}
-              onClick={() => {
-                void navigator.clipboard?.writeText(transfer?.execution?.txHash!)
-                dispatcher({
-                  type: "set_clipboard_message_t2",
-                  payload: "Copied to clipboard!",
-                })
-              }}
-            >
-              <Tooltip title={state.clipboardMessageT2} placement="top" arrow>
-                <ContentCopyIcon fontSize="small" />
-              </Tooltip>
-            </span>
+            {transfer?.execution ? (
+              <span
+                className={classes.copyIcon}
+                onClick={() => {
+                  void navigator.clipboard?.writeText(transfer?.execution?.txHash!)
+                  dispatcher({
+                    type: "set_clipboard_message_t2",
+                    payload: "Copied to clipboard!",
+                  })
+                }}
+              >
+                <Tooltip title={state.clipboardMessageT2} placement="top" arrow>
+                  <ContentCopyIcon fontSize="small" />
+                </Tooltip>
+              </span>
+            ) : (
+              <span>Pending proposal execution</span>
+            )}
           </span>
         </div>
         <div className={classes.detailsContainer}>
