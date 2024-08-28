@@ -38,6 +38,12 @@ export function reducer(state: ExplorerContextState, action: Actions): ExplorerC
         ...state,
         sharedConfig: action.payload,
       }
+    case "fetch_domain_metadata": {
+      return {
+        ...state,
+        domainMetadata: action.payload,
+      }
+    }
     default:
       return state
   }

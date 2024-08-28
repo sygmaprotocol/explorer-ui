@@ -54,13 +54,14 @@ const ExplorerPage = (): JSX.Element => {
         }}
       >
         <div className={transfers.length !== 0 ? classes.explorerTable : classes.errorMessage}>
-          {transfers.length !== 0 && explorerContextState.sharedConfig.length !== 0 ? (
+          {transfers.length !== 0 && explorerContextState.domainMetadata ? (
             <ExplorerTable
               active={active}
               setActive={setActive}
               chains={chains}
               state={explorerContextState}
               sharedConfig={explorerContextState.sharedConfig}
+              domainMetadata={explorerContextState.domainMetadata}
             />
           ) : explorerContextState.account !== undefined ? (
             <Alert severity="error">No transactions for the selected account!</Alert>

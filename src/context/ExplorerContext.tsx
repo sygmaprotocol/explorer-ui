@@ -24,6 +24,7 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
     pillColorStatus: undefined,
     account: undefined,
     sharedConfig: [],
+    domainMetadata: {},
   }
 
   const [explorerContextState, explorerContextDispatcher] = React.useReducer(reducer, explorerPageContextState)

@@ -1,14 +1,14 @@
 import { useEffect } from "react"
-import { Actions, SharedConfig } from "../types"
+import { Actions, EnvironmentMetadata } from "../types"
 
 export function useGetSharedConfig(explorerContextDispatcher: React.Dispatch<Actions>): void {
   const getSharedConfig = async (): Promise<void> => {
-    const reponse = await fetch(import.meta.env.VITE_SHARED_CONFIG_URL as string)
-    const domainsData = (await reponse.json()) as SharedConfig
+    const reponse = await fetch(`${import.meta.env.VITE_SHARED_CONFIG_URL as string}/api/domains/metadata`)
+    const domainsData = (await reponse.json()) as EnvironmentMetadata
 
     explorerContextDispatcher({
-      type: "fetch_shared_config",
-      payload: domainsData.domains,
+      type: "fetch_domain_metadata",
+      payload: domainsData,
     })
   }
 

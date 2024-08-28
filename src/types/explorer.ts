@@ -138,6 +138,20 @@ export type PaginationParams = {
   after?: string
 }
 
+export type DomainMetadata = {
+  url: string // icon url
+  name: string
+  type: string
+  caipId: string
+  nativeTokenSymbol: string
+  nativeTokenDecimals: number
+  nativeTokenFullName: string
+  blockExplorerUrl: string
+  renderName: string
+}
+
+export type EnvironmentMetadata = Record<number, DomainMetadata>
+
 export type ExplorerContextState = {
   queryParams: {
     page: number
@@ -156,6 +170,7 @@ export type ExplorerContextState = {
   }
   account: string | undefined
   sharedConfig: SharedConfigDomain[] | []
+  domainMetadata: EnvironmentMetadata | {}
 }
 
 export type Actions =
@@ -175,6 +190,7 @@ export type Actions =
   | { type: "loading_transfers" }
   | { type: "fetch_transfer_error"; payload: string }
   | { type: "fetch_shared_config"; payload: SharedConfigDomain[] }
+  | { type: "fetch_domain_metadata"; payload: EnvironmentMetadata }
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>

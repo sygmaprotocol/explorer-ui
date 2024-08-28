@@ -2,22 +2,19 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import { EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
+import { EnvironmentMetadata, EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
 import {
   getDisplayedStatuses,
   shortenAddress,
   renderNetworkIcon,
   renderStatusIcon,
-  getDomainData,
-  getNetworkNames,
   formatDistanceDate,
   getFormatedFee,
   formatTransferType,
   formatAmountDecimals,
-  renderAmountValue,
   renderFormatedConvertedAmount,
-  filterTransfers,
 } from "../../utils/Helpers"
+import { filterTransfers } from "../../utils/transferHelpers"
 import { useStyles } from "./styles"
 
 type ExplorerTable = {
@@ -26,9 +23,10 @@ type ExplorerTable = {
   chains: Array<EvmBridgeConfig>
   state: ExplorerContextState
   sharedConfig: SharedConfigDomain[] | []
+  domainMetadata: EnvironmentMetadata | {}
 }
 
-const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: ExplorerTable) => {
+const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: ExplorerTable) => {
   const { classes } = useStyles()
 
   const renderTransferList = (transferData: Transfer[]): JSX.Element[] => {
@@ -37,8 +35,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
 
       const { type } = resource
 
-      const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
-      const toDomainInfo = getDomainData(toDomainId, sharedConfig)
+      const fromDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(fromDomainId)]
+
+      const toDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(toDomainId)]
 
       const formatedFee = getFormatedFee(fee)
 
@@ -52,8 +51,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
         txHash = deposit?.txHash
       }
 
-      const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!)
-      const toDomainName = getNetworkNames(toDomainInfo?.chainId!)
+      const fromDomainName = fromDomainInfo.renderName
+      const toDomainName = toDomainInfo.renderName
 
       const dateFormated = formatDistanceDate(deposit?.timestamp!)
 
@@ -84,14 +83,14 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div style={{ width: "100%" }}>
               <span style={{ display: "flex" }}>
-                {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
+                {renderNetworkIcon(fromDomainInfo?.caipId, classes)} {fromDomainName}
               </span>
             </div>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div style={{ width: "100%" }}>
               <span style={{ display: "flex" }}>
-                {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
+                {renderNetworkIcon(toDomainInfo?.caipId, classes)} {toDomainName}
               </span>
             </div>
           </TableCell>
@@ -145,7 +144,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell sx={{ borderTopRightRadius: "12px !important" }}>Value</TableCell>
         </TableRow>
       </TableHead>
-      {state.isLoading === "done" && <TableBody>{renderTransferList(filterTransfers(state.transfers, sharedConfig))}</TableBody>}
+      {state.isLoading === "done" && <TableBody>{renderTransferList(filterTransfers(state.transfers, domainMetadata))}</TableBody>}
       {state.isLoading === "loading" && (
         <TableBody>
           <TableRow>

@@ -130,12 +130,6 @@ export const getDomainData = (domainId: string, domains: SharedConfigDomain[]): 
   return domainData
 }
 
-export const getResourceInfo = (resourceID: string, domain: SharedConfigDomain): string => {
-  const resource = domain.resources.find(resource => resource.resourceId === resourceID)
-  const { symbol: tokenSymbol } = resource!
-  return tokenSymbol
-}
-
 export const sanitizeTransferData = (transfers: Transfer[]): Transfer[] => {
   const sanitizedTransferData = [] as Transfer[]
 
@@ -244,60 +238,42 @@ export const renderStatusIcon = (status: string, classes: Record<"statusPillIcon
   }
 }
 
-export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon" | "substrateNetworkIcon", string>): JSX.Element => {
-  switch (chainId) {
-    case 5:
-    case 11155111:
-    case 17000:
+export const renderNetworkIcon = (caipId: string, classes: Record<"networkIcon" | "substrateNetworkIcon", string>): JSX.Element => {
+  switch (caipId) {
+    case "eip155:11155111":
+    case "eip155:1":
+    case "eip155:17000":
       return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
-    case 5231:
-    case 5233:
+    case "polkadot:5231":
+    case "polkadot:5233":
       return <img src={`/assets/icons/phala-black.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    case 5232:
+    case "polkadot:5232":
       return <img src={`/assets/icons/khala.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    case 8453:
+    case "eip155:8453":
       return <img src={`/assets/icons/base.svg`} alt="base" className={classes.networkIcon} />
-    case 338:
-    case 25:
+    case "eip155:338":
+    case "eip155:25":
       return <img src={`/assets/icons/cronos.svg`} alt="cronos" className={classes.networkIcon} />
-    case 80001:
-    case 137:
-    case 80002:
+    case "eip155:80001":
+    case "eip155:137":
+    case "eip155:80002":
       return <img src={`/assets/icons/polygon.svg`} alt="polygon" className={classes.networkIcon} />
-    case 100:
-    case 10200:
+    case "eip155:100":
+    case "eip155:10200":
       return <img src={`/assets/icons/gnosis.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 421614:
+    case "eip155:421614":
       return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 84532:
+    case "eip155:84532":
       return <img src={`/assets/icons/base.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 3799:
+    case "polkadot:3799":
       return <img src={`/assets/icons/tangle-logo.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 1993:
+    case "eip155:1993":
       return <img src={`/assets/icons/b3-sepolia.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
   }
 }
 
-export const renderAmountValue = (
-  type: ResourceTypes,
-  amount: string,
-  resourceID: string,
-  fromDomainInfo: SharedConfigDomain | undefined,
-): string | undefined => {
-  if (type === ResourceTypes.PERMISSIONLESS_GENERIC || type === ResourceTypes.SEMI_FUNGIBLE) {
-    return "Contract call"
-  }
-
-  if (type === ResourceTypes.FUNGIBLE && resourceID !== "") {
-    return `${amount} ${getResourceInfo(resourceID, fromDomainInfo!)}`
-  }
-
-  if (type === ResourceTypes.NON_FUNGIBLE && resourceID !== "") {
-    return `${getResourceInfo(resourceID, fromDomainInfo!)}`
-  }
-}
 
 export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: number): string => {
   if (type !== ResourceTypes.PERMISSIONLESS_GENERIC && usdValue !== null && usdValue !== 0 && typeof usdValue === "number") {
@@ -326,18 +302,4 @@ export const accountLinks = (type: DomainTypes, accountId: string, domainExplore
     default:
       return ""
   }
-}
-
-export const filterTransfers = (transfers: Transfer[], sharedConfig: SharedConfigDomain[]) => {
-  return transfers.filter(transfer => {
-    const { fromDomainId, toDomainId } = transfer
-
-    const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
-    const toDomainInfo = getDomainData(toDomainId, sharedConfig)
-    if (!fromDomainInfo || !toDomainInfo) {
-      return
-    }
-
-    return transfer
-  })
 }
