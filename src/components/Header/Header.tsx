@@ -1,11 +1,12 @@
-import { AppBar, Box, Container, Toolbar, Typography } from "@mui/material";
-import TopBarNetworkConnect from "../TopBarNetworkComponent";
-import { useStyles } from "./styles";
-import { useExplorer } from "../../context";
+import { AppBar, Box, Container, Toolbar, Typography } from "@mui/material"
+import TopBarNetworkConnect from "../TopBarNetworkComponent"
+import { useExplorer } from "../../context"
+import { useStyles } from "./styles"
 
 export default function Header() {
-  const { classes } = useStyles();
-  const explorerContext = useExplorer();
+  const { classes } = useStyles()
+  const explorerContext = useExplorer()
+  const { explorerContextState } = explorerContext
   return (
     <AppBar position="static" color="transparent" className={classes.root}>
       <Container maxWidth="xl" className={classes.mainAppBar}>
@@ -35,12 +36,11 @@ export default function Header() {
             getChainId={explorerContext.getChainId}
             chainId={explorerContext.chainId}
             account={explorerContext.account}
-            explorerContextDispatcher={
-              explorerContext.explorerContextDispatcher
-            }
+            explorerContextDispatcher={explorerContext.explorerContextDispatcher}
+            explorerContextState={explorerContextState}
           />
         </div>
       </Container>
     </AppBar>
-  );
+  )
 }

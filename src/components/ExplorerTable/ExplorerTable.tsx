@@ -3,18 +3,18 @@ import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } fr
 import clsx from "clsx"
 import { Link } from "react-router-dom"
 import { EnvironmentMetadata, EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
+import { renderNetworkIcon, renderStatusIcon } from "../../utils/renderUtils"
 import {
-  getDisplayedStatuses,
-  shortenAddress,
-  renderNetworkIcon,
-  renderStatusIcon,
-  formatDistanceDate,
-  getFormatedFee,
-  formatTransferType,
+  filterTransfers,
   formatAmountDecimals,
+  formatDistanceDate,
+  formatTransferType,
+  displayStatus,
+  getFormatedFee,
+  renderAmountValue,
   renderFormatedConvertedAmount,
-} from "../../utils/Helpers"
-import { filterTransfers } from "../../utils/transferHelpers"
+  shortenAddress,
+} from "../../utils/transferHelpers"
 import { useStyles } from "./styles"
 
 type ExplorerTable = {
@@ -76,7 +76,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div className={classes.accountAddress}>
               <span className={classes.statusPill}>
-                {renderStatusIcon(status, classes)} {getDisplayedStatuses(status)}
+                {renderStatusIcon(status, classes)} {displayStatus(status)}
               </span>
             </div>
           </TableCell>
@@ -112,7 +112,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <div className={classes.amountContainer}>
-                <span>{renderAmountValue(type as ResourceTypes, amountWithFormatedDecimals, resourceID, fromDomainInfo)}</span>
+                <span>{renderAmountValue(type as ResourceTypes, amountWithFormatedDecimals, resourceID, state.resourcesPerPage)}</span>
                 {renderFormatedConvertedAmount(type as ResourceTypes, usdValue)}
               </div>
             </span>

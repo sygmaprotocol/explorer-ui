@@ -1,7 +1,7 @@
 import { useInterval } from "usehooks-ts"
 import { DetailViewActions, DetailViewState } from "../reducer"
-import { sanitizeTransferData } from "../../../utils/Helpers"
 import { Routes } from "../../../types"
+import { sanitizeTransferData } from "../../../utils/transferHelpers"
 
 export default function useUpdateInterval(
   state: DetailViewState,

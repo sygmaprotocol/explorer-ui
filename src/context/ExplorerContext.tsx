@@ -6,7 +6,7 @@ import { getAccount, getChainId } from "./connection"
 import { routes } from "./data"
 import { reducer } from "./reducer"
 import { useGetTransferData } from "./useGetTransferData"
-import { useGetSharedConfig } from "./useGetSharedConfig"
+import { useGetResorceInfoPerDomain, useGetSharedConfig } from "./useGetDomainMetadata"
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(undefined)
 
@@ -25,6 +25,8 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
     account: undefined,
     sharedConfig: [],
     domainMetadata: {},
+    resourcesPerPage: [],
+    sourceDomainsIds: [],
   }
 
   const [explorerContextState, explorerContextDispatcher] = React.useReducer(reducer, explorerPageContextState)
@@ -40,6 +42,8 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
   useGetSharedConfig(explorerContextDispatcher)
 
   useGetTransferData(routes(), explorerContextDispatcher, explorerContextState, Number(page))
+
+  useGetResorceInfoPerDomain(explorerContextDispatcher, explorerContextState.sourceDomainsIds)
 
   useEffect(() => {
     if (window.ethereum !== undefined) {

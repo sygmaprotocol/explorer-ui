@@ -100,9 +100,9 @@ export type Transfer = {
   depositNonce: number
   resource: Resource
   fromDomain: Domain
-  fromDomainId: string
+  fromDomainId: number
   toDomain: Domain
-  toDomainId: string
+  toDomainId: number
   sender: string
   destination: string
   amount: string
@@ -150,7 +150,16 @@ export type DomainMetadata = {
   renderName: string
 }
 
+export type ResourceMetadata = {
+  caip19: string
+  symbol: string
+  decimals: number
+  resourceId: string
+}
+
 export type EnvironmentMetadata = Record<number, DomainMetadata>
+
+export type EnvironmentResourcesMetadata = Record<number, ResourceMetadata[]>
 
 export type ExplorerContextState = {
   queryParams: {
@@ -171,6 +180,8 @@ export type ExplorerContextState = {
   account: string | undefined
   sharedConfig: SharedConfigDomain[] | []
   domainMetadata: EnvironmentMetadata | {}
+  resourcesPerPage: ResourceMetadata[] | []
+  sourceDomainsIds: number[] | []
 }
 
 export type Actions =
@@ -191,6 +202,8 @@ export type Actions =
   | { type: "fetch_transfer_error"; payload: string }
   | { type: "fetch_shared_config"; payload: SharedConfigDomain[] }
   | { type: "fetch_domain_metadata"; payload: EnvironmentMetadata }
+  | { type: "set_resources_per_page"; payload: ResourceMetadata[] }
+  | { type: "set_source_domains_ids"; payload: number[] }
 
 export type Routes = {
   transfers: (page: string, limit: string, status?: string) => Promise<Transfer[]>
