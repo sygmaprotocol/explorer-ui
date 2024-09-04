@@ -141,7 +141,7 @@ export type PaginationParams = {
 export type DomainMetadata = {
   url: string // icon url
   name: string
-  type: string
+  type: DomainTypes
   caipId: string
   nativeTokenSymbol: string
   nativeTokenDecimals: number
@@ -238,6 +238,7 @@ export type SharedConfig = {
 export enum DomainTypes {
   EVM = "evm",
   SUBSTRATE = "substrate",
+  BTC = "bitcoin",
 }
 
 export type SharedConfigDomain = {
