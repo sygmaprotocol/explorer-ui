@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { formatDistanceStrict, sub } from "date-fns"
-import { formatDistanceDate, getFormatedFee } from "./Helpers"
+import { formatDistanceDate, getFormatedFee } from "./transferHelpers"
 
 describe("Helpers", () => {
   describe("getFormatedFee", () => {

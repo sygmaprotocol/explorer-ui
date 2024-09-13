@@ -1,7 +1,7 @@
 import { useEffect } from "react"
-import { sanitizeTransferData } from "../../../utils/Helpers"
 import { Routes, Transfer } from "../../../types"
 import { DetailViewActions } from "../reducer"
+import { sanitizeTransferData } from "../../../utils/transferHelpers"
 
 export default function useFetchTransfer(routes: Routes, txHash: string, dispatcher: React.Dispatch<DetailViewActions>): void {
   const fetchTransfer = async (txHashFallback?: string): Promise<void> => {

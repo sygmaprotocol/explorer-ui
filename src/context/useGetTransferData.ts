@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { Actions, ExplorerContextState, Routes } from "../types"
-import { sanitizeTransferData } from "../utils/Helpers"
+import { sanitizeTransferData } from "../utils/transferHelpers"
 
 export function useGetTransferData(routes: Routes, dispatcher: React.Dispatch<Actions>, state: ExplorerContextState, page: number): void {
   const pageToUse = page !== 0 && page !== state.queryParams.page ? page : state.queryParams.page
@@ -13,10 +13,17 @@ export function useGetTransferData(routes: Routes, dispatcher: React.Dispatch<Ac
     try {
       const transfers = await routes.transfers(`${pageToUse}`, `${state.queryParams.limit}`)
       const sanitizedTransfers = sanitizeTransferData(transfers)
+      const sourceDomainsSet = new Set<number>()
+      transfers.forEach(transfer => sourceDomainsSet.add(transfer.fromDomainId))
 
       dispatcher({
         type: "fetch_transfers",
         payload: sanitizedTransfers,
+      })
+
+      dispatcher({
+        type: "set_source_domains_ids",
+        payload: Array.from(sourceDomainsSet),
       })
 
       dispatcher({

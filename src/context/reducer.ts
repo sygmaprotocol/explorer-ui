@@ -38,6 +38,24 @@ export function reducer(state: ExplorerContextState, action: Actions): ExplorerC
         ...state,
         sharedConfig: action.payload,
       }
+    case "fetch_domain_metadata": {
+      return {
+        ...state,
+        domainMetadata: action.payload,
+      }
+    }
+    case "set_resources_per_page": {
+      return {
+        ...state,
+        resourcesPerPage: action.payload,
+      }
+    }
+    case "set_source_domains_ids": {
+      return {
+        ...state,
+        sourceDomainsIds: action.payload,
+      }
+    }
     default:
       return state
   }

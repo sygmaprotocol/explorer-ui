@@ -2,22 +2,19 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import { EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
+import { EnvironmentMetadata, EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
+import { renderNetworkIcon, renderStatusIcon } from "../../utils/renderUtils"
 import {
-  getDisplayedStatuses,
-  shortenAddress,
-  renderNetworkIcon,
-  renderStatusIcon,
-  getDomainData,
-  getNetworkNames,
-  formatDistanceDate,
-  getFormatedFee,
-  formatTransferType,
+  filterTransfers,
   formatAmountDecimals,
+  formatDistanceDate,
+  formatTransferType,
+  displayStatus,
+  getFormatedFee,
   renderAmountValue,
   renderFormatedConvertedAmount,
-  filterTransfers,
-} from "../../utils/Helpers"
+  shortenAddress,
+} from "../../utils/transferHelpers"
 import { useStyles } from "./styles"
 
 type ExplorerTable = {
@@ -26,9 +23,10 @@ type ExplorerTable = {
   chains: Array<EvmBridgeConfig>
   state: ExplorerContextState
   sharedConfig: SharedConfigDomain[] | []
+  domainMetadata: EnvironmentMetadata | {}
 }
 
-const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: ExplorerTable) => {
+const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: ExplorerTable) => {
   const { classes } = useStyles()
   const NATIVE_RESOURCE_ID = "0x1000000000000000000000000000000000000000000000000000000000000000"
 
@@ -38,8 +36,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
 
       const { type } = resource
 
-      const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
-      const toDomainInfo = getDomainData(toDomainId, sharedConfig)
+      const fromDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(fromDomainId)]
+
+      const toDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(toDomainId)]
 
       const formatedFee = getFormatedFee(fee)
 
@@ -53,8 +52,8 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
         txHash = deposit?.txHash
       }
 
-      const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!)
-      const toDomainName = getNetworkNames(toDomainInfo?.chainId!)
+      const fromDomainName = fromDomainInfo.renderName
+      const toDomainName = toDomainInfo.renderName
 
       const dateFormated = formatDistanceDate(deposit?.timestamp!)
 
@@ -78,21 +77,21 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div className={classes.accountAddress}>
               <span className={classes.statusPill}>
-                {renderStatusIcon(status, classes)} {getDisplayedStatuses(status)}
+                {renderStatusIcon(status, classes)} {displayStatus(status)}
               </span>
             </div>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div style={{ width: "100%" }}>
               <span style={{ display: "flex" }}>
-                {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
+                {renderNetworkIcon(fromDomainInfo?.caipId, classes)} {fromDomainName}
               </span>
             </div>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div style={{ width: "100%" }}>
               <span style={{ display: "flex" }}>
-                {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
+                {renderNetworkIcon(toDomainInfo?.caipId, classes)} {toDomainName}
               </span>
             </div>
           </TableCell>
@@ -116,7 +115,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <div className={classes.amountContainer}>
-                <span>{renderAmountValue(type as ResourceTypes, amountWithFormatedDecimals, resourceID, fromDomainInfo)}</span>
+                <span>{renderAmountValue(type as ResourceTypes, amountWithFormatedDecimals, resourceID, state.resourcesPerPage)}</span>
                 {renderFormatedConvertedAmount(type as ResourceTypes, usdValue)}
               </div>
             </span>
@@ -148,7 +147,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           <TableCell sx={{ borderTopRightRadius: "12px !important" }}>Value</TableCell>
         </TableRow>
       </TableHead>
-      {state.isLoading === "done" && <TableBody>{renderTransferList(filterTransfers(state.transfers, sharedConfig))}</TableBody>}
+      {state.isLoading === "done" && <TableBody>{renderTransferList(filterTransfers(state.transfers, domainMetadata))}</TableBody>}
       {state.isLoading === "loading" && (
         <TableBody>
           <TableRow>

@@ -1,8 +1,7 @@
 import dayjs from "dayjs"
 import { intervalToDuration, formatDistanceStrict, formatDuration } from "date-fns"
-
 import { BigNumberish, ethers } from "ethers"
-import { DomainTypes, ResourceTypes, SharedConfigDomain, Transfer } from "../types"
+import { DomainTypes, EnvironmentMetadata, ResourceMetadata, ResourceTypes, Transfer } from "../types"
 
 export const shortenAddress = (address: string): string => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 6, address.length)}`
@@ -66,7 +65,7 @@ export const getIconNamePerChainId = (chainId: number): string => {
   }
 }
 
-export const getDisplayedStatuses = (status: string): string => {
+export const displayStatus = (status: string): string => {
   switch (status) {
     case "pending":
       return "Pending"
@@ -79,61 +78,6 @@ export const getDisplayedStatuses = (status: string): string => {
     default:
       return "Pending"
   }
-}
-
-export const getNetworkNames = (chainId: number): string => {
-  switch (chainId) {
-    case 5:
-      return "Goerli"
-    case 11155111:
-      return "Sepolia"
-    case 5231:
-      return "Rhala"
-    case 1:
-      return "Ethereum"
-    case 5232:
-      return "Khala"
-    case 5233:
-      return "Phala"
-    case 8453:
-      return "Base"
-    case 338:
-    case 25:
-      return "Cronos"
-    case 17000:
-      return "Holesky"
-    case 80001:
-      return "Mumbai"
-    case 137:
-      return "Polygon"
-    case 100:
-      return "Gnosis"
-    case 421614:
-      return "Arbitrum Sepolia"
-    case 10200:
-      return "Gnosis Chiado"
-    case 84532:
-      return "Base Sepolia"
-    case 3799:
-      return "Tangle"
-    case 80002:
-      return "Amoy"
-    case 1993:
-      return "B3 Sepolia"
-    default:
-      return "Ethereum"
-  }
-}
-
-export const getDomainData = (domainId: string, domains: SharedConfigDomain[]): SharedConfigDomain | undefined => {
-  const domainData = domains.find((domain: SharedConfigDomain) => domain.id === Number(domainId))
-  return domainData
-}
-
-export const getResourceInfo = (resourceID: string, domain: SharedConfigDomain): string => {
-  const resource = domain.resources.find(resource => resource.resourceId === resourceID)
-  const { symbol: tokenSymbol } = resource!
-  return tokenSymbol
 }
 
 export const sanitizeTransferData = (transfers: Transfer[]): Transfer[] => {
@@ -232,72 +176,49 @@ export const formatAmountDecimals = (amount: string): string => {
   return `${splitedAmount[0]}.${splitedAmount[1].slice(0, 3)}`
 }
 
-export const renderStatusIcon = (status: string, classes: Record<"statusPillIcon", string>): JSX.Element => {
-  switch (status) {
-    case "pending":
-      return <img src={`/assets/icons/pending.svg`} alt="pending" className={classes.statusPillIcon} />
-    case "executed":
-      return <img src={`/assets/icons/success.svg`} alt="completed" className={classes.statusPillIcon} />
-    case "reverted":
-    case "failed":
-      return <img src={`/assets/icons/reverted.svg`} alt="reverted" className={classes.statusPillIcon} />
-    default:
-      return <img src={`/assets/icons/pending.svg`} alt="pending" className={classes.statusPillIcon} />
-  }
+export const filterTransfers = (transfers: Transfer[], domainMetadata: EnvironmentMetadata): Transfer[] => {
+  return transfers.filter(transfer => {
+    const { fromDomainId, toDomainId } = transfer
+
+    const fromDomainInfo = domainMetadata[Number(fromDomainId)]
+    const toDomainInfo = domainMetadata[Number(toDomainId)]
+    if (!fromDomainInfo || !toDomainInfo) {
+      return
+    }
+
+    return transfer
+  })
 }
 
-export const renderNetworkIcon = (chainId: number, classes: Record<"networkIcon" | "substrateNetworkIcon", string>): JSX.Element => {
-  switch (chainId) {
-    case 5:
-    case 11155111:
-    case 17000:
-      return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
-    case 5231:
-    case 5233:
-      return <img src={`/assets/icons/phala-black.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    case 5232:
-      return <img src={`/assets/icons/khala.svg`} alt="substrate" className={classes.substrateNetworkIcon} />
-    case 8453:
-      return <img src={`/assets/icons/base.svg`} alt="base" className={classes.networkIcon} />
-    case 338:
-    case 25:
-      return <img src={`/assets/icons/cronos.svg`} alt="cronos" className={classes.networkIcon} />
-    case 80001:
-    case 137:
-    case 80002:
-      return <img src={`/assets/icons/polygon.svg`} alt="polygon" className={classes.networkIcon} />
-    case 100:
-    case 10200:
-      return <img src={`/assets/icons/gnosis.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 421614:
-      return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 84532:
-      return <img src={`/assets/icons/base.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 3799:
-      return <img src={`/assets/icons/tangle-logo.svg`} alt="gnosis" className={classes.networkIcon} />
-    case 1993:
-      return <img src={`/assets/icons/b3-sepolia.svg`} alt="gnosis" className={classes.networkIcon} />
-    default:
-      return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
-  }
+export const getResourceInfo = (resourceID: string, resourcePerPage: ResourceMetadata[]): string => {
+  const resource = resourcePerPage.find(resource => resource.resourceId === resourceID)
+  if (!resource) return ""
+  const { symbol: tokenSymbol } = resource
+  return tokenSymbol
 }
 
 export const renderAmountValue = (
   type: ResourceTypes,
   amount: string,
   resourceID: string,
-  fromDomainInfo: SharedConfigDomain | undefined,
+  resourcePerPage: [] | ResourceMetadata[],
 ): string | undefined => {
   if (type === ResourceTypes.PERMISSIONLESS_GENERIC || type === ResourceTypes.SEMI_FUNGIBLE) {
     return "Contract call"
   }
 
-  if (type === ResourceTypes.FUNGIBLE && resourceID !== "") {
-    return `${amount} ${getResourceInfo(resourceID, fromDomainInfo!)}`
-  }
-
-  if (type === ResourceTypes.NON_FUNGIBLE && resourceID !== "") {
-    return `${getResourceInfo(resourceID, fromDomainInfo!)}`
+  if (resourcePerPage.length !== 0) {
+    switch (type) {
+      case ResourceTypes.FUNGIBLE: {
+        return `${amount} ${getResourceInfo(resourceID, resourcePerPage)}`
+      }
+      case ResourceTypes.NON_FUNGIBLE: {
+        return `${getResourceInfo(resourceID, resourcePerPage)}`
+      }
+      default: {
+        return ""
+      }
+    }
   }
 }
 
@@ -311,7 +232,7 @@ export const renderFormatedConvertedAmount = (type: ResourceTypes, usdValue: num
 export const txHashLinks = (type: DomainTypes, domainExplorerUrl: string, txHash?: string): string => {
   switch (type) {
     case DomainTypes.EVM:
-      return `${domainExplorerUrl}/tx/${txHash}`
+      return `${domainExplorerUrl}/tx/${txHash!}`
     case DomainTypes.SUBSTRATE:
       return `${domainExplorerUrl}/${txHash?.split("-")[0] || ""}`
     default:
@@ -328,18 +249,4 @@ export const accountLinks = (type: DomainTypes, accountId: string, domainExplore
     default:
       return ""
   }
-}
-
-export const filterTransfers = (transfers: Transfer[], sharedConfig: SharedConfigDomain[]) => {
-  return transfers.filter(transfer => {
-    const { fromDomainId, toDomainId } = transfer
-
-    const fromDomainInfo = getDomainData(fromDomainId, sharedConfig)
-    const toDomainInfo = getDomainData(toDomainId, sharedConfig)
-    if (!fromDomainInfo || !toDomainInfo) {
-      return
-    }
-
-    return transfer
-  })
 }

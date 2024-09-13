@@ -8,20 +8,17 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import clsx from "clsx"
 import { useExplorer } from "../../context"
-import { ResourceTypes, Transfer } from "../../types"
+import { EnvironmentMetadata, ResourceTypes, Transfer } from "../../types"
+import { renderNetworkIcon, renderStatusIcon } from "../../utils/renderUtils"
 import {
   accountLinks,
   formatDistanceDate,
-  getDisplayedStatuses,
-  getDomainData,
+  displayStatus,
   getFormatedFee,
-  getNetworkNames,
   renderAmountValue,
   renderFormatedConvertedAmount,
-  renderNetworkIcon,
-  renderStatusIcon,
   txHashLinks,
-} from "../../utils/Helpers"
+} from "../../utils/transferHelpers"
 import { useStyles } from "./styles"
 import useClipboard from "./hooks/useClipboard"
 import useFetchTransfer from "./hooks/useFetchTransfer"
@@ -35,7 +32,8 @@ export type LocationState = { id: string; page: number; txHash: string }
 export default function DetailView() {
   const explorerContext = useExplorer()
 
-  const { explorerUrls, routes, explorerContextState } = explorerContext
+  const { routes, explorerContextState } = explorerContext
+  const { domainMetadata } = explorerContextState
 
   const { classes } = useStyles()
 
@@ -71,32 +69,28 @@ export default function DetailView() {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
-    const fromDomainInfo = getDomainData(transfer?.fromDomainId!, explorerContextState.sharedConfig)
-    const toDomainInfo = getDomainData(transfer?.toDomainId!, explorerContextState.sharedConfig)
-
-    const { resource, usdValue } = transfer as Transfer
+    const { fromDomainId, toDomainId, resource, usdValue } = transfer as Transfer
+    const fromDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(fromDomainId)]
+    const toDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(toDomainId)]
 
     const { id, type } = resource
 
-    const fromDomainName = getNetworkNames(fromDomainInfo?.chainId!)
-    const toDomainName = getNetworkNames(toDomainInfo?.chainId!)
+    const fromDomainName = fromDomainInfo.renderName
+    const toDomainName = toDomainInfo.renderName
 
-    const { id: idFromDomain } = fromDomainInfo!
-    const { id: idToDomain } = toDomainInfo!
-
-    const fromDomainExplorerUrl = explorerUrls.find(exp => exp.id === idFromDomain)
-    const toDomainExplorerUrl = explorerUrls.find(exp => exp.id === idToDomain)
+    const { blockExplorerUrl: fromDomainExplorerUrl } = fromDomainInfo
+    const { blockExplorerUrl: toDomainExplorerUrl } = toDomainInfo
 
     return (
       <Container className={classes.innerTransferDetailContainer}>
         <div className={classes.detailsContainer}>
           <div className={classes.networkContainer}>
             <span className={classes.networkIconsContainer}>
-              {renderNetworkIcon(fromDomainInfo?.chainId!, classes)} {fromDomainName}
+              {renderNetworkIcon(fromDomainInfo.caipId, classes)} {fromDomainName}
             </span>
             <KeyboardDoubleArrowRightIcon />
             <span className={classes.networkIconsContainer}>
-              {renderNetworkIcon(toDomainInfo?.chainId!, classes)} {toDomainName}
+              {renderNetworkIcon(toDomainInfo?.caipId, classes)} {toDomainName}
             </span>
           </div>
         </div>
@@ -105,18 +99,14 @@ export default function DetailView() {
           <span className={classes.detailsInnerContent}>
             <span className={classes.statusPill}>
               {renderStatusIcon(transfer?.status!, classes)}
-              {getDisplayedStatuses(transfer?.status!)}
+              {displayStatus(transfer?.status!)}
             </span>
           </span>
         </div>
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Source transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <Link
-              to={txHashLinks(fromDomainInfo!.type, fromDomainExplorerUrl!.url, transfer?.deposit?.txHash!)}
-              style={{ color: "black" }}
-              target="_blank"
-            >
+            <Link to={txHashLinks(fromDomainInfo.type, fromDomainExplorerUrl, transfer?.deposit?.txHash)} style={{ color: "black" }} target="_blank">
               {transfer?.deposit && transfer?.deposit?.txHash}
             </Link>
             <span
@@ -138,11 +128,7 @@ export default function DetailView() {
         <div className={classes.detailsContainer}>
           <span className={classes.detailsInnerContentTitle}>Destination transaction hash:</span>
           <span className={classes.detailsInnerContent}>
-            <Link
-              to={txHashLinks(toDomainInfo!.type, toDomainExplorerUrl!.url, transfer?.execution?.txHash!)}
-              style={{ color: "black" }}
-              target="_blank"
-            >
+            <Link to={txHashLinks(toDomainInfo.type, toDomainExplorerUrl, transfer?.execution?.txHash)} style={{ color: "black" }} target="_blank">
               {transfer?.execution && transfer?.execution?.txHash}
             </Link>
             {transfer?.execution ? (
@@ -183,7 +169,7 @@ export default function DetailView() {
                 style={{
                   color: "black",
                 }}
-                to={accountLinks(fromDomainInfo!.type, transfer?.accountId!, fromDomainExplorerUrl.url)}
+                to={accountLinks(fromDomainInfo.type, transfer?.accountId!, fromDomainExplorerUrl)}
                 target="_blank"
               >
                 {transfer?.accountId}
@@ -201,7 +187,7 @@ export default function DetailView() {
                 style={{
                   color: "black",
                 }}
-                to={accountLinks(toDomainInfo!.type, transfer?.destination!, toDomainExplorerUrl.url)}
+                to={accountLinks(toDomainInfo.type, transfer?.destination!, toDomainExplorerUrl)}
                 target="_blank"
               >
                 {transfer?.destination}
@@ -215,7 +201,7 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Value:</span>
           <span className={classes.detailsInnerContent}>
             <div className={classes.convertedValueContainer}>
-              <span>{renderAmountValue(type as ResourceTypes, transfer?.amount!, id, fromDomainInfo)}</span>
+              <span>{renderAmountValue(type as ResourceTypes, transfer?.amount!, id, explorerContextState.resourcesPerPage)}</span>
               {renderFormatedConvertedAmount(type as ResourceTypes, usdValue)}
             </div>
           </span>
@@ -232,7 +218,7 @@ export default function DetailView() {
   return (
     <Container>
       <Box className={classes.boxContainer}>
-        {state.isLoading === "done" && explorerContextState.sharedConfig.length && (
+        {state.isLoading === "done" && Object.keys(explorerContextState.domainMetadata) && explorerContextState.resourcesPerPage.length && (
           <section className={classes.sectionContainer}>
             <span className={classes.backIcon}>
               <Link
