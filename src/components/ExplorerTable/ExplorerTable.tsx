@@ -30,6 +30,7 @@ type ExplorerTable = {
 
 const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: ExplorerTable) => {
   const { classes } = useStyles()
+  const NATIVE_RESOURCE_ID = "0x1000000000000000000000000000000000000000000000000000000000000000"
 
   const renderTransferList = (transferData: Transfer[]): JSX.Element[] => {
     return transferData.map((transfer: Transfer) => {
@@ -97,7 +98,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, sharedConfig }: Explore
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
-              <span>{type !== undefined ? formatTransferType(type as ResourceTypes) : "-"}</span>
+              <span>
+                {type !== undefined ? formatTransferType(resourceID !== NATIVE_RESOURCE_ID ? (type as ResourceTypes) : ResourceTypes.NATIVE) : "-"}
+              </span>
             </span>
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>

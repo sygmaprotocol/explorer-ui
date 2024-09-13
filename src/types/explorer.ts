@@ -200,6 +200,7 @@ export const enum ResourceTypes {
   PERMISSIONED_GENERIC = "permissionedGeneric",
   PERMISSIONLESS_GENERIC = "permissionlessGeneric",
   SEMI_FUNGIBLE = "semifungible",
+  NATIVE = "native",
 }
 
 export type SharedConfig = {
