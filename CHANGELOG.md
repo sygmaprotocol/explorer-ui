@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.4.0...v1.5.0) (2024-09-13)
+
+
+### Features
+
+* remove shared config dependency ([#185](https://github.com/sygmaprotocol/explorer-ui/issues/185)) ([da081cd](https://github.com/sygmaprotocol/explorer-ui/commit/da081cd957c4f13fc80d8ccd784a8ba4b6bcf168))
+
 ## [1.4.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.3.0...v1.4.0) (2024-09-13)
 
 
