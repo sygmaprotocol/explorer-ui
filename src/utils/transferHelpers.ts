@@ -150,6 +150,8 @@ export const formatTransferType = (transferType: ResourceTypes): string => {
       return "Generic"
     case ResourceTypes.SEMI_FUNGIBLE:
       return "Semifungible"
+    case ResourceTypes.NATIVE:
+      return "Native"
     default:
       return "Fungible"
   }
