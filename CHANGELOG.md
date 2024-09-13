@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.4.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.3.0...v1.4.0) (2024-09-13)
+
+
+### Features
+
+* new type for transfer ([#177](https://github.com/sygmaprotocol/explorer-ui/issues/177)) ([ce9016a](https://github.com/sygmaprotocol/explorer-ui/commit/ce9016aa454a011e979de36bfe4e3f379ab035c1))
+* special logic for native type of transfer ([#186](https://github.com/sygmaprotocol/explorer-ui/issues/186)) ([85f9329](https://github.com/sygmaprotocol/explorer-ui/commit/85f9329828896f5638d0abbe16e1f07e11f9b06e))
+
+
+### Bug Fixes
+
+* render issue on detail view for transfers with execution property as null ([#182](https://github.com/sygmaprotocol/explorer-ui/issues/182)) ([040c9c3](https://github.com/sygmaprotocol/explorer-ui/commit/040c9c37250e6719452475f8ca66744a3bf05574))
+
+
+### Miscellaneous
+
+* misc fixes ([#181](https://github.com/sygmaprotocol/explorer-ui/issues/181)) ([7cc589f](https://github.com/sygmaprotocol/explorer-ui/commit/7cc589fd05dd4add5aac554218b0accbb36c5a65))
+
 ## [1.3.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.2.2...v1.3.0) (2024-04-03)
 
 
