@@ -6,7 +6,7 @@ import { getAccount, getChainId } from "./connection"
 import { routes } from "./data"
 import { reducer } from "./reducer"
 import { useGetTransferData } from "./useGetTransferData"
-import { useGetResorceInfoPerDomain, useGetSharedConfig } from "./useGetDomainMetadata"
+import { useGetResorceInfoPerDomain, useGetDomainMetadata } from "./useGetDomainMetadata"
 
 const ExplorerCtx = React.createContext<ExplorerContextType | undefined>(undefined)
 
@@ -39,7 +39,7 @@ const ExplorerProvider = ({ children }: { children: React.ReactNode | React.Reac
   const urlParams = new URLSearchParams(search)
   const page = urlParams.get("page")
 
-  useGetSharedConfig(explorerContextDispatcher)
+  useGetDomainMetadata(explorerContextDispatcher)
 
   useGetTransferData(routes(), explorerContextDispatcher, explorerContextState, Number(page))
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Actions, EnvironmentMetadata, ResourceMetadata } from "../types"
 
-export function useGetSharedConfig(explorerContextDispatcher: React.Dispatch<Actions>): void {
+export function useGetDomainMetadata(explorerContextDispatcher: React.Dispatch<Actions>): void {
   const getSharedConfig = async (): Promise<void> => {
     const reponse = await fetch(`${import.meta.env.VITE_INDEXER_URL as string}/api/domains/metadata`)
     const domainsData = (await reponse.json()) as EnvironmentMetadata
