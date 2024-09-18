@@ -2,7 +2,15 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import { EnvironmentMetadata, EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer } from "../../types"
+import {
+  EnvironmentMetadata,
+  EvmBridgeConfig,
+  ExplorerContextState,
+  ResourceTypes,
+  SharedConfigDomain,
+  Transfer,
+  TransferStatus,
+} from "../../types"
 import { renderNetworkIcon, renderStatusIcon } from "../../utils/renderUtils"
 import {
   filterTransfers,
@@ -16,6 +24,7 @@ import {
   shortenAddress,
 } from "../../utils/transferHelpers"
 import { useStyles } from "./styles"
+import { add, isAfter } from "date-fns"
 
 type ExplorerTable = {
   active: boolean
@@ -32,7 +41,12 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
 
   const renderTransferList = (transferData: Transfer[]): JSX.Element[] => {
     return transferData.map((transfer: Transfer) => {
-      const { deposit, status, amount, resource, fromDomainId, toDomainId, id, resourceID, fee, usdValue } = transfer
+      const { deposit, amount, resource, fromDomainId, toDomainId, id, resourceID, fee, usdValue, timestamp } = transfer
+      let { status } = transfer
+
+      if (deposit && deposit.timestamp && status === "pending" && isAfter(Date.now(), add(new Date(deposit.timestamp), {hours: 2}))) {
+        status = "failed" as TransferStatus
+      }
 
       const { type } = resource
 

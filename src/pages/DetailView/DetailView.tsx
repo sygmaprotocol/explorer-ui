@@ -8,7 +8,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import clsx from "clsx"
 import { useExplorer } from "../../context"
-import { EnvironmentMetadata, ResourceTypes, Transfer } from "../../types"
+import { EnvironmentMetadata, ResourceTypes, Transfer, TransferStatus } from "../../types"
 import { renderNetworkIcon, renderStatusIcon } from "../../utils/renderUtils"
 import {
   accountLinks,
@@ -24,6 +24,7 @@ import useClipboard from "./hooks/useClipboard"
 import useFetchTransfer from "./hooks/useFetchTransfer"
 import { DetailViewState, reducer } from "./reducer"
 import useUpdateInterval from "./hooks/useUpdateInterval"
+import { add, isAfter } from "date-fns"
 
 dayjs.extend(localizedFormat)
 
@@ -69,9 +70,14 @@ export default function DetailView() {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const renderTransferDetails = (transfer: Transfer | null) => {
-    const { fromDomainId, toDomainId, resource, usdValue } = transfer as Transfer
+    const { fromDomainId, toDomainId, resource, usdValue, deposit } = transfer as Transfer
     const fromDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(fromDomainId)]
     const toDomainInfo = (domainMetadata as EnvironmentMetadata)[Number(toDomainId)]
+
+    let { status } = transfer as Transfer
+    if (deposit && deposit.timestamp && status === "pending" && isAfter(Date.now(), add(new Date(deposit.timestamp), {hours: 2}))) {
+      status = "failed" as TransferStatus
+    }
 
     const { id, type } = resource
 
@@ -98,8 +104,8 @@ export default function DetailView() {
           <span className={classes.detailsInnerContentTitle}>Status:</span>
           <span className={classes.detailsInnerContent}>
             <span className={classes.statusPill}>
-              {renderStatusIcon(transfer?.status!, classes)}
-              {displayStatus(transfer?.status!)}
+              {renderStatusIcon(status!, classes)}
+              {displayStatus(status!)}
             </span>
           </span>
         </div>
