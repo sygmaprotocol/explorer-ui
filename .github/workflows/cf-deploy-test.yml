@@ -21,6 +21,7 @@ jobs:
           VITE_INDEXER_URL: "https://api.test.buildwithsygma.com"
           VITE_SHARED_CONFIG_URL: "https://chainbridge-assets-stage.s3.us-east-2.amazonaws.com/shared-config-test.json"
           VITE_EXPLORER_URLS: '[{ "id": 2, "url": "https://sepolia.etherscan.io" }, { "id": 3, "url": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frhala-node.phala.network%2Fws#/explorer/query" }, { "id": 5,  "url": "https://explorer.cronos.org/testnet" }, { "id": 6, "url": "https://holesky.etherscan.io"}, { "id": 7, "url": "https://mumbai.polygonscan.com" },  { "id": 8, "url": "https://sepolia.arbiscan.io" }, { "id": 9, "url": "https://gnosis-chiado.blockscout.com" },  { "id": 10, "url": "https://sepolia.basescan.org" }, { "id": 11, "url": "https://amoy.polygonscan.com" },  { "id": 12, "url": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Ftestnet-rpc.tangle.tools#/explorer/query" }, { "id": 15, "url": "https://sepolia.explorer.b3.fun" }]'
+          VITE_NATIVE_TOKEN_TRANSFER_RESOURCE_ID: "0x1000000000000000000000000000000000000000000000000000000000000000"
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
