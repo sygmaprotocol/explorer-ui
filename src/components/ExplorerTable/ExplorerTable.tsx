@@ -37,7 +37,7 @@ type ExplorerTable = {
 
 const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: ExplorerTable) => {
   const { classes } = useStyles()
-  const NATIVE_RESOURCE_ID = "0x1000000000000000000000000000000000000000000000000000000000000000"
+  const { VITE_NATIVE_TOKEN_TRANSFER_RESOURCE_ID } = import.meta.env
 
   const renderTransferList = (transferData: Transfer[]): JSX.Element[] => {
     return transferData.map((transfer: Transfer) => {
@@ -112,7 +112,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <span>
-                {type !== undefined ? formatTransferType(resourceID !== NATIVE_RESOURCE_ID ? (type as ResourceTypes) : ResourceTypes.NATIVE) : "-"}
+                {type !== undefined ? formatTransferType(resourceID !== VITE_NATIVE_TOKEN_TRANSFER_RESOURCE_ID ? (type as ResourceTypes) : ResourceTypes.NATIVE) : "-"}
               </span>
             </span>
           </TableCell>
