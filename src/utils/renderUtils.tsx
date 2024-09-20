@@ -42,6 +42,7 @@ export const renderNetworkIcon = (caipId: string, classes: Record<"networkIcon" 
     case "polkadot:3799":
       return <img src={`/assets/icons/tangle-logo.svg`} alt="gnosis" className={classes.networkIcon} />
     case "eip155:1993":
+    case "eip155:8333":
       return <img src={`/assets/icons/b3-sepolia.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
