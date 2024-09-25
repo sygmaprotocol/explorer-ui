@@ -36,6 +36,7 @@ export const renderNetworkIcon = (caipId: string, classes: Record<"networkIcon" 
     case "eip155:10200":
       return <img src={`/assets/icons/gnosis.svg`} alt="gnosis" className={classes.networkIcon} />
     case "eip155:421614":
+    case "eip155:42161":
       return <img src={`/assets/icons/arbitrum.svg`} alt="gnosis" className={classes.networkIcon} />
     case "eip155:84532":
       return <img src={`/assets/icons/base.svg`} alt="gnosis" className={classes.networkIcon} />
@@ -44,6 +45,8 @@ export const renderNetworkIcon = (caipId: string, classes: Record<"networkIcon" 
     case "eip155:1993":
     case "eip155:8333":
       return <img src={`/assets/icons/b3-sepolia.svg`} alt="gnosis" className={classes.networkIcon} />
+    case "eip155:10":
+      return <img src={`/assets/icons/optimism.svg`} alt="gnosis" className={classes.networkIcon} />
     default:
       return <img src={`/assets/icons/evm.svg`} alt="ethereum" className={classes.networkIcon} />
   }
