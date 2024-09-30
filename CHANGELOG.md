@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.3](https://github.com/sygmaprotocol/explorer-ui/compare/v1.5.2...v1.5.3) (2024-09-30)
+
+
+### Bug Fixes
+
+* adding optimism icon ([#193](https://github.com/sygmaprotocol/explorer-ui/issues/193)) ([0bcedfb](https://github.com/sygmaprotocol/explorer-ui/commit/0bcedfb0f7be657b0147a7aca36f0b0c363aceb2))
+
+
+### Miscellaneous
+
+* B3 mainnet icon ([#191](https://github.com/sygmaprotocol/explorer-ui/issues/191)) ([7e260b7](https://github.com/sygmaprotocol/explorer-ui/commit/7e260b7fbf1643af010ca944995be983ebac00f4))
+
 ## [1.5.0](https://github.com/sygmaprotocol/explorer-ui/compare/v1.4.0...v1.5.0) (2024-09-13)
 
 
