@@ -2,15 +2,7 @@ import React from "react"
 import { Table, TableHead, TableCell, TableBody, TableRow, CircularProgress } from "@mui/material"
 import clsx from "clsx"
 import { Link } from "react-router-dom"
-import {
-  EnvironmentMetadata,
-  EvmBridgeConfig,
-  ExplorerContextState,
-  ResourceTypes,
-  SharedConfigDomain,
-  Transfer,
-  TransferStatus,
-} from "../../types"
+import { EnvironmentMetadata, EvmBridgeConfig, ExplorerContextState, ResourceTypes, SharedConfigDomain, Transfer, TransferStatus } from "../../types"
 import { renderNetworkIcon, renderStatusIcon } from "../../utils/renderUtils"
 import {
   filterTransfers,
@@ -44,7 +36,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
       const { deposit, amount, resource, fromDomainId, toDomainId, id, resourceID, fee, usdValue, timestamp } = transfer
       let { status } = transfer
 
-      if (deposit && deposit.timestamp && status === "pending" && isAfter(Date.now(), add(new Date(deposit.timestamp), {hours: 2}))) {
+      if (deposit && deposit.timestamp && status === "pending" && isAfter(Date.now(), add(new Date(deposit.timestamp), { hours: 2 }))) {
         status = "failed" as TransferStatus
       }
 
@@ -90,7 +82,7 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
           </TableCell>
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <div className={classes.accountAddress}>
-              <span className={classes.statusPill}>
+              <span>
                 {renderStatusIcon(status, classes)} {displayStatus(status)}
               </span>
             </div>
@@ -112,7 +104,9 @@ const ExplorerTable: React.FC<ExplorerTable> = ({ state, domainMetadata }: Explo
           <TableCell className={clsx(classes.row, classes.dataRow)}>
             <span className={classes.amountInfo}>
               <span>
-                {type !== undefined ? formatTransferType(resourceID !== VITE_NATIVE_TOKEN_TRANSFER_RESOURCE_ID ? (type as ResourceTypes) : ResourceTypes.NATIVE) : "-"}
+                {type !== undefined
+                  ? formatTransferType(resourceID !== VITE_NATIVE_TOKEN_TRANSFER_RESOURCE_ID ? (type as ResourceTypes) : ResourceTypes.NATIVE)
+                  : "-"}
               </span>
             </span>
           </TableCell>

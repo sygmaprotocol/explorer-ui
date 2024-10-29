@@ -11,6 +11,7 @@ export const useStyles = makeStyles()(theme => {
       flexDirection: "row",
       justifyContent: "space-between",
       marginTop: 25,
+      marginBottom: 25,
     },
     toolBar: {
       display: "flex",

@@ -68,7 +68,7 @@ export default function TopBarNetworkConnect({ getAccount, getChainId, chainId, 
       <section className={classes.state}>
         {window.ethereum !== undefined &&
           (!isReady ? (
-            <Button fullWidth variant="contained" onClick={handleClickOpen} sx={{ px: 3, fontSize: 18 }}>
+            <Button fullWidth variant="contained" onClick={handleClickOpen} sx={{ px: 3 }}>
               Connect Wallet
             </Button>
           ) : (
@@ -82,13 +82,13 @@ export default function TopBarNetworkConnect({ getAccount, getChainId, chainId, 
                   borderRadius: 10,
                 }}
               >
-                <Typography variant="h6" className={classes.address}>
+                <Typography variant="button" className={classes.address}>
                   {currentChainId !== undefined && (
                     <img src={`/assets/icons/${getIconNamePerChainId(currentChainId)}`} alt={"native token icon"} className={classes.indicator} />
                   )}
                 </Typography>
                 <div className={classes.accountInfo}>
-                  <Typography variant="h6" className={classes.address}>
+                  <Typography variant="button" textTransform={"lowercase"} className={classes.address}>
                     {shortenAddress(localAddress!)}
                   </Typography>
                   <div className={classes.logoutContainer}>

@@ -12,6 +12,7 @@ export const useStyles = makeStyles()(theme => {
       },
     },
     row: {
+      padding: "20px",
       fontWeight: 400,
       fontSize: 14,
       verticalAlign: "middle",
