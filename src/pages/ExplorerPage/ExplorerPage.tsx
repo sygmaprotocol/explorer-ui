@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Alert, Button, Container, Paper } from "@mui/material"
+import { Alert, Box, Button, Container, Paper } from "@mui/material"
 
 import { ethers } from "ethers"
 import { ExplorerTable } from "../../components"
@@ -38,11 +38,11 @@ const ExplorerPage = (): JSX.Element => {
 
   return (
     <Container sx={{ display: "grid", gridTemplateRows: "1fr 15fr" }}>
-      <div>
-        <Button variant="contained" className={classes.refreshTableButton} onClick={handleRefreshTable}>
+      <Box display={"flex"} justifyContent={"end"} marginBottom={"10px"}>
+        <Button variant="contained" onClick={handleRefreshTable}>
           Refresh Table
         </Button>
-      </div>
+      </Box>
       <Paper
         elevation={3}
         sx={{
